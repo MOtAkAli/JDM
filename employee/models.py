@@ -9,6 +9,16 @@ class City(models.Model):
         return self.name
 
 
+class Agency(models.Model):
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    address = models.CharField(max_length=200)
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.id) + " " + self.city.name
+
+
 class Employee(models.Model):
     ROLES = (
         ('A', 'Admin'),
@@ -27,6 +37,7 @@ class Employee(models.Model):
     active = models.BooleanField()
     address = models.CharField(max_length=200)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
+    agency = models.ForeignKey(Agency, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.nic + " " + self.firstname + " " + self.lastname
@@ -72,16 +83,6 @@ class CarModel(models.Model):
         return self.carBrand.name + " " + self.name
 
 
-class Agency(models.Model):
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    address = models.CharField(max_length=200)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return str(self.id) + " " + self.city.name
-
-
 class Car(models.Model):
     GEARBOXES = (
         ('AMT', 'Automated Manual Transmission'),
@@ -116,4 +117,4 @@ class Reservation(models.Model):
     price = models.FloatField()
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True)
