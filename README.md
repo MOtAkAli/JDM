@@ -11,6 +11,10 @@
 <hr>
 
 ## Set up environment (Use `Git Bash` terminal):
+### Install `virtualenv`
+```bash
+  pip install virtualenv
+```
 ### Change current directory to `JDM`
 ```bash
   cd JDM
@@ -37,5 +41,5 @@
 ```
 ### Run server
 ```bash
-    python manage.py runserver
+  python manage.py runserver
 ```
