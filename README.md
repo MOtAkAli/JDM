@@ -43,3 +43,8 @@
 ```bash
   python manage.py runserver
 ```
+
+<hr>
+
+# DB
+![JDM-MLD](https://user-images.githubusercontent.com/79842485/166304950-ea016a99-ecd0-4664-a05d-025f62b81285.png)
