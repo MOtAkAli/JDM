@@ -2,7 +2,7 @@ from django.db import models
 
 
 class User(models.Model):
-    nic = models.CharField(max_length=8)
+    idn = models.CharField(max_length=8)
     firstname = models.CharField(max_length=64)
     lastname = models.CharField(max_length=64)
     birthday = models.DateField()
@@ -15,4 +15,4 @@ class User(models.Model):
     city = models.ForeignKey('employee.City', on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.nic + " " + self.firstname + " " + self.lastname
+        return self.idn + " " + self.firstname + " " + self.lastname
