@@ -14,17 +14,31 @@
                 <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
                     <div class="card mb-5">
                         <div class="card-body p-sm-5">
-                            <form method="post">
-                                <div class="mb-3"><input class="form-control" type="text" id="name-2" name="name"
+                            <form method="post" >
+                                {% csrf_token %}
+                                {{form}}
+                                <div class="mb-3"><input class="form-control" type="text" id="fname" name="firstname"
                                                          placeholder="First Name"></div>
-                                <div class="mb-3"><input class="form-control" type="text" id="name-3" name="name"
+                                <div class="mb-3"><input class="form-control" type="text" id="lname" name="lastname"
                                                          placeholder="Last Name"></div>
-                                <div class="mb-3"><input class="form-control" type="email" id="email-1" name="email"
+                                <div class="mb-3"><input class="form-control" type="email" id="email" name="email"
                                                          placeholder="Email"></div>
-                                <div class="mb-3"><input class="form-control" type="password" id="pass-1"
+                                <div class="mb-3"><input class="form-control" type="tel" id="tel" name="phone"
+                                                         placeholder="Phone"></div>
+                                <div class="mb-3"><input class="form-control" type="text" id="IDN" name="idn"
+                                                         placeholder="ID Number"></div>
+                                <div class="mb-3"><input class="form-control" type="text" id="address" name="address"
+                                                         placeholder="Address"></div>
+                                <div class="mb-3"><input class="form-control" type="text" id="city" name="city"
+                                                         placeholder="City"></div>
+                                <div class="mb-3"><input class="form-control" type="date" id="date" name="birthday"
+                                                         placeholder="birth date"></div>
+                                <div class="mb-3"><input class="form-control" type="password" id="pass" name="password"
                                                          placeholder="Password"></div>
-                                <div class="mb-3"><input class="form-control" type="password" id="pass-2"
+                                <div class="mb-3"><input class="form-control" type="password" id="passc"
                                                          placeholder="Confirm Password"></div>
+                                <div class="mb-3"><input class="form-control" type="text" id="picture" name="picture"
+                                                         placeholder="picture"></div>
                                 <div class="mb-3"></div>
                                 <div id="divlog" class="mb-3">
                                     <button class="btn btn-primary d-block w-100" type="submit"
