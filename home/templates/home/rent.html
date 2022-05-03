@@ -1,0 +1,222 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Rent
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'home/rent-assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'home/uikit/all.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'home/uikit/uikit.min.css' %}"/>
+{% endblock %}
+{% block js %}
+    <script src=" {% static 'home/uikit/all.min.js' %}"></script>
+    <script src=" {% static 'home/uikit/uikit.min.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="section-head">
+        <!--  upper part  -->
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col">
+                <div class="card p-3 text-left">
+                    <div class="card-body">
+                        <h3 class="card-title">Rent a Car</h3>
+                        <h6 class="card-subtitle mb-2 text-muted">Specify the dates and place of rental</h6>
+                        <p class="card-text">You can choose the dates of rental and place where you can return the car.</p>
+                        <form class="row g-2">
+                            <div class="col-12 mb-3">
+                                <label for="inputAddress2" class="form-label">Pick Up Location</label>
+                                <div id="location" class="form-group has-search">
+                                    <span class="fa-solid fa-street-view form-control-feedback">
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="City, Airport, or Country">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="date" class="form-control" id="DateField">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="date" class="form-control" id="DateField2">
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary w-100">SEARCH</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div align="center">
+
+        <div class="uk-width-2-3@s uk-child-width-1-2@s uk-child-width-1-3@m uk-text-left" uk-grid>
+
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-media-top uk-position-relative uk-visible-toggle uk-dark" tabindex="-1"
+                         uk-slideshow>
+                        <ul class="uk-slideshow-items" uk-lightbox="animation: fade">
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/car.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/car.jpg' %}" uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/back.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/back.jpg' %}"
+                                         uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="uk-slidenav-small uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-previous uk-slideshow-item="previous"></a>
+                        <a class="uk-slidenav-small uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-next uk-slideshow-item="next"></a>
+                    </div>
+                    <div class="uk-card-body">
+                        <h5 class="uk-card-title">Renault Megane</h5>
+                        <div class="infos">
+                            <span><i class="fa-solid fa-chair"></i> 4</span>
+                            <span><i class="fa-solid fa-car"></i> 5</span>
+                            <span><i class="fa-solid fa-calendar-days"></i> 2022</span>
+                        </div>
+                        <p class="uk-card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="uk-card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-media-top uk-position-relative uk-visible-toggle uk-dark" tabindex="-1"
+                         uk-slideshow>
+                        <ul class="uk-slideshow-items" uk-lightbox="animation: fade">
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/car.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/car.jpg' %}" uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/back.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/back.jpg' %}"
+                                         uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="uk-slidenav-small uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-previous uk-slideshow-item="previous"></a>
+                        <a class="uk-slidenav-small uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-next uk-slideshow-item="next"></a>
+                    </div>
+                    <div class="uk-card-body">
+                        <h5 class="uk-card-title">Renault Megane</h5>
+                        <div class="infos">
+                            <span><i class="fa-solid fa-chair"></i> 4</span>
+                            <span><i class="fa-solid fa-car"></i> 5</span>
+                            <span><i class="fa-solid fa-calendar-days"></i> 2022</span>
+                        </div>
+                        <p class="uk-card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="uk-card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-media-top uk-position-relative uk-visible-toggle uk-dark" tabindex="-1"
+                         uk-slideshow>
+                        <ul class="uk-slideshow-items" uk-lightbox="animation: fade">
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/car.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/car.jpg' %}" uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/back.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/back.jpg' %}"
+                                         uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="uk-slidenav-small uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-previous uk-slideshow-item="previous"></a>
+                        <a class="uk-slidenav-small uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-next uk-slideshow-item="next"></a>
+                    </div>
+                    <div class="uk-card-body">
+                        <h5 class="uk-card-title">Renault Megane</h5>
+                        <div class="infos">
+                            <span><i class="fa-solid fa-chair"></i> 4</span>
+                            <span><i class="fa-solid fa-car"></i> 5</span>
+                            <span><i class="fa-solid fa-calendar-days"></i> 2022</span>
+                        </div>
+                        <p class="uk-card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="uk-card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-media-top uk-position-relative uk-visible-toggle uk-dark" tabindex="-1"
+                         uk-slideshow>
+                        <ul class="uk-slideshow-items" uk-lightbox="animation: fade">
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/car.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/car.jpg' %}" uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% static 'home/rent-assets/img/back.jpg' %}" data-caption="Megane Renault">
+                                    <img src="{% static 'home/rent-assets/img/back.jpg' %}"
+                                         uk-lightbox="animation: fade"
+                                         width="1800"
+                                         height="1200" alt="">
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="uk-slidenav-small uk-position-center-left uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-previous uk-slideshow-item="previous"></a>
+                        <a class="uk-slidenav-small uk-position-center-right uk-position-small uk-hidden-hover" href="#"
+                           uk-slidenav-next uk-slideshow-item="next"></a>
+                    </div>
+                    <div class="uk-card-body">
+                        <h5 class="uk-card-title">Renault Megane</h5>
+                        <div class="infos">
+                            <span><i class="fa-solid fa-chair"></i> 4</span>
+                            <span><i class="fa-solid fa-car"></i> 5</span>
+                            <span><i class="fa-solid fa-calendar-days"></i> 2022</span>
+                        </div>
+                        <p class="uk-card-text">This is a wider card with supporting text below as a natural lead-in to
+                            additional content. This content is a little bit longer.</p>
+                        <p class="uk-card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
