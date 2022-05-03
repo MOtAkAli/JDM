@@ -10,7 +10,7 @@ class User(models.Model):
     email = models.EmailField()
     password = models.CharField(max_length=255)
     picture = models.CharField(max_length=260)
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
     address = models.CharField(max_length=200)
     city = models.ForeignKey('employee.City', on_delete=models.PROTECT)
 
