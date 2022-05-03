@@ -27,9 +27,9 @@
 ```bash
   source venv/Scripts/activate
 ```
-### Install `Django`
+### Install `virtualenv requirements`
 ```bash
-  pip install django
+  pip install -r requirements.txt
 ```
 ### Apply `migrations`
 ```bash
