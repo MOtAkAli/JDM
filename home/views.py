@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, auth
 from .forms import ClientForm
 from employee.models import City
+from user.models import User as Client
 
 
 def index(request):
@@ -22,12 +23,18 @@ def register(request):
     if request.method == 'POST':
         password1 = request.POST['password']
         password2 = request.POST['passwordc']
+        idn = request.POST['idn']
         form = ClientForm(request.POST)
         print(form.errors)
-        if form.is_valid() and password1 == password2:
-            form.save()
-            print("saved")
-        return redirect('/')
+        if form.is_valid():
+            if password1 == password2:
+                    form.save()
+                    print("saved..")
+                    return redirect('/')
+            else:
+                print("password not matching..")
+        else:
+            print(form.errors)
     else:
         results = City.objects.all
         return render(request, 'home/register.html', {"Citys": results})
