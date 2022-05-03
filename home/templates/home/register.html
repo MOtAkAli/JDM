@@ -14,9 +14,9 @@
                 <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
                     <div class="card mb-5">
                         <div class="card-body p-sm-5">
-                            <form method="post" >
+                            <form method="post">
                                 {% csrf_token %}
-                                {{form}}
+                                {{ form }}
                                 <div class="mb-3"><input class="form-control" type="text" id="fname" name="firstname"
                                                          placeholder="First Name"></div>
                                 <div class="mb-3"><input class="form-control" type="text" id="lname" name="lastname"
@@ -29,15 +29,19 @@
                                                          placeholder="ID Number"></div>
                                 <div class="mb-3"><input class="form-control" type="text" id="address" name="address"
                                                          placeholder="Address"></div>
-                                <div class="mb-3"><input class="form-control" type="text" id="city" name="city"
-                                                         placeholder="City"></div>
+                                <div class="mb-3"><select class="form-control" name="city" id="city">
+                                    <option value="Select">select a city</option>
+                                    {% for results in Citys %}
+                                    <option value=" {{ results.id }}">{{ results.name }}</option>
+                                    {% endfor %}
+                                </select></div>
                                 <div class="mb-3"><input class="form-control" type="date" id="date" name="birthday"
                                                          placeholder="birth date"></div>
                                 <div class="mb-3"><input class="form-control" type="password" id="pass" name="password"
                                                          placeholder="Password"></div>
-                                <div class="mb-3"><input class="form-control" type="password" id="passc"
+                                <div class="mb-3"><input class="form-control" type="password" id="passc" name="passwordc"
                                                          placeholder="Confirm Password"></div>
-                                <div class="mb-3"><input class="form-control" type="text" id="picture" name="picture"
+                                <div class="mb-3"><input class="form-control" type="file" id="picture" name="picture"
                                                          placeholder="picture"></div>
                                 <div class="mb-3"></div>
                                 <div id="divlog" class="mb-3">
