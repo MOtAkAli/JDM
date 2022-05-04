@@ -33,7 +33,7 @@ venv\Scripts\activate.bat
 source /path/to/ENV/bin/activate
 ```
 - `PowerShell`
-no scripts like the activate script are allowed to be executed so you need to run PowerShell as `admin` and change `ExecutionPolicy` to `AllSigned` then type `A` to `Always run` ->`the command is under`<- in the end use `the command above` to activate virtual environment
+no scripts like the activate script are allowed to be executed so you need to run PowerShell as `admin` and change `ExecutionPolicy` to `AllSigned` then type `A` to `Always run` `the command is under` in the end use `the command above` to activate virtual environment
 ```bash
 Set-ExecutionPolicy AllSigned
 ```
