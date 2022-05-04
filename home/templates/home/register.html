@@ -16,33 +16,30 @@
                         <div class="card-body p-sm-5">
                             <form method="post">
                                 {% csrf_token %}
-                                {{ form }}
-                                <div class="mb-3"><input class="form-control" type="text" id="fname" name="firstname"
-                                                         placeholder="First Name"></div>
-                                <div class="mb-3"><input class="form-control" type="text" id="lname" name="lastname"
-                                                         placeholder="Last Name"></div>
-                                <div class="mb-3"><input class="form-control" type="email" id="email" name="email"
-                                                         placeholder="Email"></div>
-                                <div class="mb-3"><input class="form-control" type="tel" id="tel" name="phone"
-                                                         placeholder="Phone"></div>
-                                <div class="mb-3"><input class="form-control" type="text" id="IDN" name="idn"
-                                                         placeholder="ID Number"></div>
-                                <div class="mb-3"><input class="form-control" type="text" id="address" name="address"
-                                                         placeholder="Address"></div>
-                                <div class="mb-3"><select class="form-control" name="city" id="city">
-                                    <option value="Select">select a city</option>
+                                <div class="mb-3"><input class="form-control" type="text" name="firstname"
+                                                         placeholder="First Name" required></div>
+                                <div class="mb-3"><input class="form-control" type="text"  name="lastname"
+                                                         placeholder="Last Name" required></div>
+                                <div class="mb-3"><input class="form-control" type="email"  name="email"
+                                                         placeholder="Email" required></div>
+                                <div class="mb-3"><input class="form-control" type="tel"  name="phone"
+                                                         placeholder="Phone" required></div>
+                                <div class="mb-3"><input class="form-control" type="text"  name="idn"
+                                                         placeholder="ID Number" required></div>
+                                <div class="mb-3"><input class="form-control" type="text"  name="address"
+                                                         placeholder="Address" required></div>
+                                <div class="mb-3"><select class="form-control" name="city">
+                                    <default value="Select">select a city</default>
                                     {% for results in Citys %}
                                     <option value=" {{ results.id }}">{{ results.name }}</option>
                                     {% endfor %}
                                 </select></div>
-                                <div class="mb-3"><input class="form-control" type="date" id="date" name="birthday"
-                                                         placeholder="birth date"></div>
-                                <div class="mb-3"><input class="form-control" type="password" id="pass" name="password"
-                                                         placeholder="Password"></div>
-                                <div class="mb-3"><input class="form-control" type="password" id="passc" name="passwordc"
-                                                         placeholder="Confirm Password"></div>
-                                <div class="mb-3"><input class="form-control" type="file" id="picture" name="picture"
-                                                         placeholder="picture"></div>
+                                <div class="mb-3"><input class="form-control" type="date" name="birthday" required></div>
+                                <div class="mb-3"><input class="form-control" type="password"  name="password"
+                                                         placeholder="Password" required></div>
+                                <div class="mb-3"><input class="form-control" type="password"  name="passwordc"
+                                                         placeholder="Confirm Password" required></div>
+                                <div class="mb-3"><input class="form-control" type="file" name="picture" required></div>
                                 <div class="mb-3"></div>
                                 <div id="divlog" class="mb-3">
                                     <button class="btn btn-primary d-block w-100" type="submit"
