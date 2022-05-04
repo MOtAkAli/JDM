@@ -25,7 +25,7 @@
                                 <div class="mb-3"><input class="form-control" type="tel"  name="phone"
                                                          placeholder="Phone" required></div>
                                 <div class="mb-3"><input class="form-control" type="text"  name="idn"
-                                                         placeholder="ID Number" required></div>
+                                                         placeholder="ID Number" maxlength="8"  required></div>
                                 <div class="mb-3"><input class="form-control" type="text"  name="address"
                                                          placeholder="Address" required></div>
                                 <div class="mb-3"><select class="form-control" name="city">
@@ -53,15 +53,4 @@
             </div>
         </div>
     </section>
-    <script>
-            const form = document.getElementById("form")
-            const idn = document.getElementsByName("idn")
-            form.addEventListener('submit',(e) => {
-                if (idn.length > 8 || idn.length < 2 ){
-                    alert("IDN should is not correct!!")
-                    e.preventDefault()
-                    location.reload()
-                }
-            } )
-    </script>
 {% endblock %}
