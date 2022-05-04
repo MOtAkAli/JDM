@@ -14,7 +14,7 @@
                 <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
                     <div class="card mb-5">
                         <div class="card-body p-sm-5">
-                            <form method="post">
+                            <form method="post" id="form">
                                 {% csrf_token %}
                                 <div class="mb-3"><input class="form-control" type="text" name="firstname"
                                                          placeholder="First Name" required></div>
@@ -53,4 +53,15 @@
             </div>
         </div>
     </section>
+    <script>
+            const form = document.getElementById("form")
+            const idn = document.getElementsByName("idn")
+            form.addEventListener('submit',(e) => {
+                if (idn.length > 8 || idn.length < 2 ){
+                    alert("IDN should is not correct!!")
+                    e.preventDefault()
+                    location.reload()
+                }
+            } )
+    </script>
 {% endblock %}
