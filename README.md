@@ -5,46 +5,58 @@
 
 ## Clone repository
 ```bash
-  git clone https://github.com/MOtAkAli/JDM.git
+git clone https://github.com/MOtAkAli/JDM.git
 ```
 
 <hr>
 
-## Set up environment (Use `Git Bash` terminal):
+## Set up environment
 ### Install `virtualenv`
 ```bash
-  pip install virtualenv
+pip install virtualenv
 ```
 ### Change current directory to `JDM`
 ```bash
-  cd JDM
+cd JDM
 ```
 ### Create python virtual environment
 ```bash
-  python -m venv venv
+python -m venv venv
 ```
 ### Activate it
+- `Command Prompt`
 ```bash
-  source venv/Scripts/activate
+venv\Scripts\activate.bat
+```
+- `Linux`
+```bash
+source /path/to/ENV/bin/activate
+```
+- `PowerShell`
+no scripts like the activate script are allowed to be executed so you need to run PowerShell as `admin` and change `ExecutionPolicy` to `AllSigned` then type `A` to `Always run` `the command is under` in the end use `the command above` to activate virtual environment
+```bash
+Set-ExecutionPolicy AllSigned
 ```
 ### Install `virtualenv requirements`
 ```bash
-  pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 ### Apply `migrations`
 ```bash
-  python manage.py migrate
+python manage.py migrate
 ```
 ### Create your `superuser` for `django admin panel`
 ```bash
-  python manage.py createsuperuser
+python manage.py createsuperuser
 ```
 ### Run server
 ```bash
-  python manage.py runserver
+python manage.py runserver
 ```
 
 <hr>
 
 # DB
+- `LDM` (Logical Data Model)
+
 ![JDM-MLD](https://user-images.githubusercontent.com/79842485/166304950-ea016a99-ecd0-4664-a05d-025f62b81285.png)
