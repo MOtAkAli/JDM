@@ -1,0 +1,122 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block title %}
+    Users
+{% endblock %}
+{% block content %}
+    <h3 class="text-dark mb-4">Users</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Info</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">
+                            Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" id="show">
+                                <option value="10" {% if setof == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if setof == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if setof == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if setof == 100 %} selected {% endif %}>100</option>
+                            </select>
+                            &nbsp;
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input
+                            type="search" class="form-control form-control-sm" aria-controls="dataTable"
+                            placeholder="Search"></label></div>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Active</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users_page %}
+                            <tr>
+                                <td>{{ user.idn }}</td>
+                                <td>
+                                    <img class="rounded-circle me-2" width="30" height="30"
+                                         src="{% static 'user/avatars/'|add:user.picture %}" alt="user avatar">
+                                    {{ user.firstname }} {{ user.lastname }}
+                                </td>
+                                <td>{{ user.birthday }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.address }} {{ user.city }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" name="active" {% if user.active %} checked {% endif %}>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td><strong>ID</strong></td>
+                        <td><strong>Name</strong></td>
+                        <td><strong>Birthday</strong></td>
+                        <td><strong>Phone</strong></td>
+                        <td><strong>Email</strong></td>
+                        <td><strong>Address</strong></td>
+                        <td><strong>Active</strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6 align-self-center">
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to {{ setof }} of {{ count }}</p>
+                </div>
+                {% if page_has_previous or page_has_next %}
+                    <div class="col-md-6">
+                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+                                {% if page_has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" aria-label="Previous"  href="/employee/users/{{ setof }}/{{ num_page_previous }}">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if page_has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="/employee/users/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item active">
+                                        <a class="page-link" href="/employee/users/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                </li>
+                                {% if page_has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="/employee/users/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                    </li>
+                                {% endif %}
+                                {% if page_has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" aria-label="Next" href="/employee/users/{{ setof }}/{{ num_page_next }}">
+                                            <span aria-hidden="true">»</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'employee/js/users.html.js' %}"></script>
+{% endblock %}
