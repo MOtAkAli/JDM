@@ -1,8 +1,6 @@
 from django.contrib import admin
-from .models import Employee, EmployeeLog, CarBrand, CarType, CarModel, Agency, Car, Reservation, City
+from .models import EmployeeLog, CarBrand, CarType, CarModel, Agency, Car, Reservation
 
-admin.site.register(City)
-admin.site.register(Employee)
 admin.site.register(EmployeeLog)
 admin.site.register(CarBrand)
 admin.site.register(CarModel)
