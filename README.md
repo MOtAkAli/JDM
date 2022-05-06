@@ -1,16 +1,16 @@
-# JDM (Japanese Domestic Market)
+# `JDM` (Japanese Domestic Market)
 ## Car Rental Web App
 
 <hr>
 
-## Clone repository
+## `Clone repository`
 ```bash
 git clone https://github.com/MOtAkAli/JDM.git
 ```
 
 <hr>
 
-## Set up environment
+## `Set up environment`
 ### Install `virtualenv`
 ```bash
 pip install virtualenv
@@ -64,7 +64,13 @@ python manage.py runserver
 
 <hr>
 
-# DB
+# `Database`
 - `LDM` (Logical Data Model)
 
 `soon to be added`
+
+# `Needs to be done`
+### Always check `requirements.txt` if there is some `new packages` to be `installed`
+### When there is big `changes` in `models` and after your merge from `origin/main` to your `working branch` you need to 
+- delete `db.sqlite3` from your local files
+- make and apply `migrations` see above in `migrations section`
