@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'employee.apps.EmployeeConfig',
     'user.apps.UserConfig',
+    'cities_light',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,7 +119,20 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+MEDIA_ROOT = BASE_DIR / 'static/base/images'
+
+MEDIA_URL = '/images/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Auth User Model
+
+AUTH_USER_MODEL = 'user.CustomUser'
+
+# CITIES_LIGHT
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en', 'fr']
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['MA']

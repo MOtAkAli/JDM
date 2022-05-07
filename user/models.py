@@ -1,18 +1,59 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from cities_light.models import City
 
 
-class User(models.Model):
-    idn = models.CharField(max_length=8)
-    firstname = models.CharField(max_length=64)
-    lastname = models.CharField(max_length=64)
-    birthday = models.DateField()
-    phone = models.CharField(max_length=15)
-    email = models.EmailField()
-    password = models.CharField(max_length=255)
-    picture = models.CharField(max_length=260)
-    active = models.BooleanField(default=True)
-    address = models.CharField(max_length=200)
-    city = models.ForeignKey('employee.City', on_delete=models.PROTECT)
+class Role(models.Model):
+    ROLES = (
+        ('C', 'Client'),
+        ('CM', 'ClientManager'),
+        ('RM', 'ReservationManager'),
+        ('VM', 'VehicleManager'),
+    )
+    name = models.CharField(max_length=2, choices=ROLES, unique=True)
 
     def __str__(self):
-        return self.idn + " " + self.firstname + " " + self.lastname
+        return self.name
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, email, password, **other_fields):
+        if not email:
+            raise ValueError('You must provide valid email address')
+
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **other_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, username, email, password, **other_fields):
+        other_fields.setdefault('is_active', True)
+        other_fields.setdefault('is_staff', True)
+        other_fields.setdefault('is_superuser', True)
+
+        if other_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if other_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        return self.create_user(username, email, password, **other_fields)
+
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    is_active = models.BooleanField(default=False)
+    idn = models.CharField(max_length=8)
+    birthday = models.DateField(null=True)
+    phone = models.CharField(max_length=15)
+    picture = models.ImageField(upload_to='avatars/', default='avatars/default.png')
+    address = models.CharField(max_length=200)
+    roles = models.ManyToManyField(Role, default='C')
+    city = models.ForeignKey(City, null=True, on_delete=models.PROTECT)
+    agency = models.ForeignKey('employee.Agency', null=True, blank=True, on_delete=models.PROTECT)
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.username
