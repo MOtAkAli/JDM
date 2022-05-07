@@ -1,16 +1,16 @@
-# JDM (Japanese Domestic Market)
+# `JDM` (Japanese Domestic Market)
 ## Car Rental Web App
 
 <hr>
 
-## Clone repository
+## `Clone repository`
 ```bash
 git clone https://github.com/MOtAkAli/JDM.git
 ```
 
 <hr>
 
-## Set up environment
+## `Set up environment`
 ### Install `virtualenv`
 ```bash
 pip install virtualenv
@@ -19,7 +19,7 @@ pip install virtualenv
 ```bash
 cd JDM
 ```
-### Create python virtual environment
+### Create python `virtual environment`
 ```bash
 python -m venv venv
 ```
@@ -30,7 +30,7 @@ venv\Scripts\activate.bat
 ```
 - `Linux`
 ```bash
-source /path/to/ENV/bin/activate
+source venv/Scripts/activate
 ```
 - `PowerShell`
 no scripts like the activate script are allowed to be executed so you need to run PowerShell as `admin` and change `ExecutionPolicy` to `AllSigned` then type `A` to `Always run` `the command is under` in the end use `the command above` to activate virtual environment
@@ -41,11 +41,20 @@ Set-ExecutionPolicy AllSigned
 ```bash
 pip install -r requirements.txt
 ```
+### You need to copy a migration from `JDM/needed` to `venv/Lib/site-packages/cities_light/migrations`
+### Make `migrations`
+```bash
+python manage.py makemigrations
+```
 ### Apply `migrations`
 ```bash
 python manage.py migrate
 ```
-### Create your `superuser` for `django admin panel`
+### Populate `DB` with `cities`
+```bash
+python manage.py cities_light
+```
+### Create your `superuser` for `django admin site`
 ```bash
 python manage.py createsuperuser
 ```
@@ -56,7 +65,13 @@ python manage.py runserver
 
 <hr>
 
-# DB
+# `Database`
 - `LDM` (Logical Data Model)
 
-![JDM-MLD](https://user-images.githubusercontent.com/79842485/166304950-ea016a99-ecd0-4664-a05d-025f62b81285.png)
+`soon to be added`
+
+# `Needs to be done`
+### Always check `requirements.txt` if there is some `new packages` to be `installed`
+### When there is big `changes` in `models` and after your merge from `origin/main` to your `working branch` you need to 
+- delete `db.sqlite3` from your local files
+- make and apply `migrations` see above in `migrations section`
