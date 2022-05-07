@@ -118,3 +118,7 @@ class Reservation(models.Model):
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     employee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True)
+
+    def __str__(self):
+        return str(self.user.firstname)
+
