@@ -41,6 +41,7 @@ Set-ExecutionPolicy AllSigned
 ```bash
 pip install -r requirements.txt
 ```
+### You need to copy a migration from `JDM/needed` to `venv/Lib/site-packages/cities_light/migrations`
 ### Make `migrations`
 ```bash
 python manage.py makemigrations
