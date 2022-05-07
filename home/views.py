@@ -28,9 +28,9 @@ def register(request):
         print(form.errors)
         if form.is_valid():
             if password1 == password2:
-                    form.save()
-                    print("saved..")
-                    return redirect('/')
+                form.save()
+                print("saved..")
+                return redirect('/')
             else:
                 print("password not matching..")
         else:
