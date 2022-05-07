@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, auth
 from .forms import ClientForm
 from employee.models import City
-from user.models import User as Client
+from user.models import CustomUser as Client
 
 
 def index(request):
