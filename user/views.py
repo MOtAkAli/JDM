@@ -5,11 +5,13 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login as auth_login
+from cities_light.models import City
 
 User = get_user_model()
 
 
 def register(request):
+    results = City.objects.all
     if request.user.is_authenticated:
         messages.warning(request, f'Your are already logged in')
         return render(request, '/')
@@ -25,7 +27,7 @@ def register(request):
         else:
             form = UserRegisterForm()
         messages.error(request, form.errors)
-        return render(request, 'user/register.html', {'form': form})
+        return render(request, 'user/register.html', {'form': form, "City": results})
 
 
 class LoginView(LoginView):

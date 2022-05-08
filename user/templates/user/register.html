@@ -36,7 +36,7 @@
                                                          placeholder="Address" required></div>
                                 <div class="mb-3"><select class="form-control" name="city">
                                     <option value="none" selected disabled hidden>select a city</option>
-                                    {% for results in Citys %}
+                                    {% for results in City %}
                                         <option value=" {{ results.id }}">{{ results.name }}</option>
                                     {% endfor %}
                                 </select></div>
