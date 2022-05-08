@@ -1,14 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from cities_light.models import City
+from enum import Enum
+
+
+class RoleEnum(Enum):
+    CLIENT = 'C'
+    CLIENT_MANAGER = 'CM'
+    RESERVATION_MANAGER = 'RM'
+    VEHICLE_MANAGER = 'VM'
 
 
 class Role(models.Model):
     ROLES = (
-        ('C', 'Client'),
-        ('CM', 'ClientManager'),
-        ('RM', 'ReservationManager'),
-        ('VM', 'VehicleManager'),
+        (RoleEnum.CLIENT, 'Client'),
+        (RoleEnum.CLIENT_MANAGER, 'ClientManager'),
+        (RoleEnum.RESERVATION_MANAGER, 'ReservationManager'),
+        (RoleEnum.VEHICLE_MANAGER, 'VehicleManager'),
     )
     name = models.CharField(max_length=2, choices=ROLES, unique=True)
 
@@ -41,9 +49,10 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
     is_active = models.BooleanField(default=False)
+    inactive_reason = models.CharField(max_length=200, default='Email need to be verified')
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
     phone = models.CharField(max_length=15)

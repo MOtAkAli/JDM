@@ -14,12 +14,6 @@ class Agency(models.Model):
         return str(self.id) + " " + self.city.name
 
 
-class EmployeeLog(models.Model):
-    description = models.CharField(max_length=500)
-    date_time = models.DateTimeField(default=timezone.now)
-    employee = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
-
-
 class CarBrand(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -69,6 +63,9 @@ class Car(models.Model):
         ('BD', 'Bio Diesel'),
         ('E', 'Ethanol'),
     )
+    is_active = models.BooleanField(default=True)
+    inactive_reason = models.CharField(max_length=200, default='')
+    in_use = models.BooleanField(default=False)
     doors = models.PositiveSmallIntegerField()
     seats = models.PositiveSmallIntegerField()
     ac = models.BooleanField()
@@ -84,10 +81,19 @@ class Car(models.Model):
         return self.carType.name + " " + str(self.carModel)
 
 
+class EmployeeLog(models.Model):
+    description = models.CharField(max_length=500)
+    date_time = models.DateTimeField(default=timezone.now)
+    employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
+    client = models.ForeignKey(CustomUser, null=True, related_name='client_who_got', on_delete=models.PROTECT)
+    car = models.ForeignKey(Car, null=True, on_delete=models.PROTECT)
+
+
 class Reservation(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     price = models.FloatField()
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
+    in_use = models.BooleanField(default=False)
     client = models.ForeignKey(CustomUser, related_name='client', on_delete=models.PROTECT)
     employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True)
