@@ -13,10 +13,109 @@
     <link rel="stylesheet" href="{% static 'base/css/Contact-Details.css' %}">
     <link rel="stylesheet" href="{% static 'base/css/Hero-Carousel.css' %}">
     <link rel="stylesheet" href="{% static 'base/css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        #toast {
+            visibility: hidden;
+            max-width: 50px;
+            height: 30px;
+            /*margin-left: -125px;*/
+            margin: auto;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+
+            position: fixed;
+            z-index: 1;
+            left: 0;right:0;
+            bottom: 30px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        #toast #img{
+            width: 40px;
+            height: 40px;
+
+            float: left;
+
+            padding-top: 16px;
+            padding-bottom: 16px;
+
+            box-sizing: border-box;
+
+
+            background-color: #111;
+            color: #fff;
+        }
+        #toast #desc{
+
+
+            color: #fff;
+
+            padding: 26px;
+
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 20px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes expand {
+            from {min-width: 50px}
+            to {min-width: 350px}
+        }
+
+        @keyframes expand {
+            from {min-width: 50px}
+            to {min-width: 450px}
+        }
+        @-webkit-keyframes stay {
+            from {min-width: 350px}
+            to {min-width: 350px}
+        }
+
+        @keyframes stay {
+            from {min-width: 350px}
+            to {min-width: 350px}
+        }
+        @-webkit-keyframes shrink {
+            from {min-width: 350px;}
+            to {min-width: 50px;}
+        }
+
+        @keyframes shrink {
+            from {min-width: 350px;}
+            to {min-width: 50px;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 60px; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 60px; opacity: 0;}
+        }
+    </style>
     {% block css %}
     {% endblock %}
-    {% block js %}
-    {% endblock %}
+
 </head>
 <body>
 <nav class="navbar navbar-light navbar-expand-md">
@@ -31,17 +130,25 @@
                 <li class="nav-item"><a class="nav-link" href="#">Information</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Contact us</a></li>
             </ul>
+            {% if user.is_authenticated %}
+            <a class="btn btn-danger border rounded-pill border-2 border-dark ms-auto"
+               style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;margin: 0px;"
+               href="{% url 'user:logout' %}">Logout
+            </a>
+            {% else %}
             <a class="btn btn-primary border rounded-pill border-2 border-dark ms-auto"
                style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;margin: 0px;"
-               href="/register/">Register
+               href="{% url 'user:register' %}">Register
             </a>
             <a class="btn btn-primary fw-normal text-center border rounded-pill border-2 border-light"
                style="color: rgba(255,255,255,0.9);background: rgba(0,0,0,0.9);width: 85px;"
                href="/login/">Login
             </a>
+            {% endif %}
         </div>
     </div>
 </nav>
+<div id="toast"><div id="img"><img src="{% static 'base/images/icons/validate-icon-3.jpg' %}" style="max-width: 100%;"></div><div id="desc">A notification message..</div></div>
 {% block content %}
 {% endblock %}
 <footer class="text-center bg-dark">
@@ -70,5 +177,20 @@
     </div>
 </footer>
 <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
+
+{% if messages %}
+{% for message in messages %}
+<script>
+    var x = document.getElementById("toast")
+    var message = document.getElementById("desc")
+    x.className = "show";
+    message.textContent = "{{ message }}";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+</script>
+{% endfor %}
+{% endif %}
+
+{% block js %}
+{% endblock %}
 </body>
 </html>

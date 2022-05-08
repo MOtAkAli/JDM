@@ -16,7 +16,7 @@ class Role(models.Model):
         return self.name
 
 
-class CustomUserManager(BaseUserManager):
+"""class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password, **other_fields):
         if not email:
             raise ValueError('You must provide valid email address')
@@ -36,24 +36,18 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_staff=True.')
         if other_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
-        return self.create_user(username, email, password, **other_fields)
+        return self.create_user(username, email, password, **other_fields)"""
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
-    is_active = models.BooleanField(default=False)
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
     phone = models.CharField(max_length=15)
     picture = models.ImageField(upload_to='avatars/', default='avatars/default.png')
     address = models.CharField(max_length=200)
     roles = models.ManyToManyField(Role, default='C')
-    city = models.ForeignKey(City, null=True, on_delete=models.PROTECT)
+    city = models.ForeignKey(City, blank=True, null=True, on_delete=models.PROTECT)
     agency = models.ForeignKey('employee.Agency', null=True, blank=True, on_delete=models.PROTECT)
-
-    objects = CustomUserManager()
 
     def __str__(self):
         return self.username

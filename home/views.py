@@ -13,28 +13,3 @@ def index(request):
 
 def rent(request):
     return render(request, 'home/rent.html')
-
-
-def login(request):
-    return render(request, 'home/login.html')
-
-
-def register(request):
-    if request.method == 'POST':
-        password1 = request.POST['password']
-        password2 = request.POST['passwordc']
-        idn = request.POST['idn']
-        form = ClientForm(request.POST)
-        print(form.errors)
-        if form.is_valid():
-            if password1 == password2:
-                form.save()
-                print("saved..")
-                return redirect('/')
-            else:
-                print("password not matching..")
-        else:
-            print(form.errors)
-    else:
-        results = City.objects.all
-        return render(request, 'home/register.html', {"Citys": results})
