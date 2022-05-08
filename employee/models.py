@@ -91,3 +91,4 @@ class Reservation(models.Model):
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
     client = models.ForeignKey(CustomUser, related_name='client', on_delete=models.PROTECT)
     employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True)
+

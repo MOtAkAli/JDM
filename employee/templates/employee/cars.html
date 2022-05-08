@@ -1,15 +1,15 @@
 
 {% extends 'employee/base.html' %}
-
+{% load static %} 
 
 
 {% block content %}
-{% load static %} 
+
 <div class="container-fluid">
-    <h3 class="text-dark mb-4">Team</h3>
+    <h3 class="text-dark mb-4">table_cars</h3>
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Employee Info</p>
+            <p class="text-primary m-0 fw-bold">CARS INFO</p>
         </div>
         <div class="card-body">
             <div class="row">
@@ -31,54 +31,79 @@
                         <tr>
                             <th>   CAR   </th>
                             <th>MATRICULE</th>
-                            <th>option_1 <img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
-                            <th>option_2 <img src="{%static 'employee/img/avatars/bagage_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
-                            <th>option_3 <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
-                            <th>option_4 <img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></th>
-                            <th>ACTIVE/DESACTIVE</th>
+                            <th><img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
+                            <th> <img src="{%static 'employee/img/avatars/bagage_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
+                            <th> <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
+                            <th><img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></th>
+                            <th>DETAILS</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                            
                             <td> <img src="{% static 'employee/img/avatars/JDM-CAR.JPG' %}" style="width: 200px; height: 200px;" ></td>
-                            <td>GT-R 47</td>
-                            <td>2 passagers</td>
-                            <td>1 bagage</td>
-                            <td>2 portes</td>
-                            <td>climatisation</td>
-                            <td><input type="checkbox"  value="check_1"  /></td>
+                            
+                            {% for car in cars_data_base %}
+                            {% if car.id == 1%}
+                                <td> {{ car.carModel.carBrand.name }} </td>
+                                <td> {{ car.seats }}</td>
+                                <td></td>
+                                <td> {{car.doors}} </td>
+                                <td> {{car.ac}} </td>    
+                                <td> <a href="details.html"> details_car </a></td>                             
+                            {% endif %}
+                        {% endfor %}
+                        
+                            
+                            
+                            
+                            
+                          
+                            
                         </tr>
                         <tr>
                            
                             <td> <img src="{% static 'employee/img/avatars/JDM-CAR.JPG' %}" style="width: 200px; height: 200px;" ></td>
-                            <td>GT-R 48</td>
-                            <td>2 passagers</td>
-                            <td>1 bagage</td>
-                            <td>2 portes</td>
-                            <td>climatisation</td>
-                            <td><input type="checkbox"  value="check_1"  /></td>
+                            
+                            {% for car in cars_data_base %}
+                            {% if car.id == 2%}
+                                <td> {{ car.carModel.carBrand.name }} </td>
+                                <td> {{ car.seats }}</td>
+                                <td></td>
+                                <td> {{car.doors}} </td>
+                                <td> {{car.ac}} </td>    
+                                <td> <a href="details.html"> details_car </a></td>                             
+                            {% endif %}
+                        {% endfor %}
+                        
                         </tr>
                         <tr>
                            
                             <td> <img src="{% static 'employee/img/avatars/JDM-CAR.JPG' %}" style="width: 200px; height: 200px;" ></td>
-                            <td>GT-R 49</td>
-                            <td>2 passagers</td>
-                            <td>1 bagage</td>
-                            <td>2 portes</td>
-                            <td>climatisation</td>
-                            <td><input type="checkbox"  value="check_1"  /></td>
+                            
+                            {% for car in cars_data_base %}
+                            {% if car.id == 3%}
+                                <td> {{ car.carModel.carBrand.name }} </td>
+                                <td> {{ car.seats }}</td>
+                                <td></td>
+                                <td> {{car.doors}} </td>
+                                <td> {{car.ac}} </td>    
+                                <td> <a href="details.html"> details_car </a></td>                             
+                            {% endif %}
+                        {% endfor %}
+                        
                         </tr>
                         
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td><strong>Name</strong></td>
-                            <td><strong>Position</strong></td>
-                            <td><strong>Office</strong></td>
-                            <td><strong>Age</strong></td>
-                            <td><strong>Start date</strong></td>
-                            <td><strong>Salary</strong></td>
+                            <td>   CAR   </td>
+                            <td>MATRICULE</td>
+                            <td><img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
+                            <td> <img src="{%static 'employee/img/avatars/bagage_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
+                            <td> <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
+                            <td><img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></td>
+                            <td>DETAILS</td>
                         </tr>
                     </tfoot>
                 </table>
