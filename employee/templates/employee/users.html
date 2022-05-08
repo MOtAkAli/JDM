@@ -26,9 +26,20 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input
-                            type="search" class="form-control form-control-sm" aria-controls="dataTable"
-                            placeholder="Search"></label></div>
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
+                            <option value="">Select filter</option>
+                            <option value="id" {% if search_filter == 'id' %} selected {% endif %}>ID</option>
+                            <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>First name</option>
+                            <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>Last name</option>
+                            <option value="email" {% if search_filter == 'email' %} selected {% endif %}>Email</option>
+                            <option value="phone" {% if search_filter == 'phone' %} selected {% endif %}>Phone</option>
+                        </select>
+                        <label class="form-label">
+                            <input type="text" id="search_text" value="{{ search_value }}" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search">
+                        </label>
+                        <button class="btn btn-primary btn-sm" id="search">Search</button>
+                    </div>
                 </div>
             </div>
             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
@@ -45,23 +56,25 @@
                     </tr>
                     </thead>
                     <tbody>
-                        {% for user in users_page %}
-                            <tr>
-                                <td>{{ user.idn }}</td>
-                                <td>
-                                    <img class="rounded-circle me-2" width="30" height="30"
-                                         src="{% static 'user/avatars/'|add:user.picture %}" alt="user avatar">
-                                    {{ user.firstname }} {{ user.lastname }}
-                                </td>
-                                <td>{{ user.birthday }}</td>
-                                <td>{{ user.phone }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.address }} {{ user.city }}</td>
-                                <td class="text-center">
-                                    <input type="checkbox" name="active" {% if user.active %} checked {% endif %}>
-                                </td>
-                            </tr>
-                        {% endfor %}
+                    {% csrf_token %}
+                    {% for user in users_page %}
+                        <tr>
+                            <td>{{ user.idn }}</td>
+                            <td>
+                                <img class="rounded-circle me-2" width="30" height="30"
+                                     src="{{ user.picture.url }}" alt="user avatar">
+                                {{ user.first_name }} {{ user.last_name }}
+                            </td>
+                            <td>{{ user.birthday }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.address }} {{ user.city }}</td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" name="active" onchange="updateStatus(this, {{ user.id }})"
+                                        {% if user.is_active %} checked {% endif %}>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                     <tfoot>
                     <tr>
@@ -86,27 +99,27 @@
                             <ul class="pagination">
                                 {% if page_has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" aria-label="Previous"  href="/employee/users/{{ setof }}/{{ num_page_previous }}">
+                                        <a class="page-link" aria-label="Previous" href="/employee/users/search/{{ search_filter }}={{ search_value }}/{{ setof }}/{{ num_page_previous }}">
                                             <span aria-hidden="true">«</span>
                                         </a>
                                     </li>
                                 {% endif %}
                                 {% if page_has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="/employee/users/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                        <a class="page-link" href="/employee/users/search/{{ search_filter }}={{ search_value }}/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
                                     </li>
                                 {% endif %}
                                 <li class="page-item active">
-                                        <a class="page-link" href="/employee/users/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                    <a class="page-link" href="/employee/users/search/{{ search_filter }}={{ search_value }}/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
                                 </li>
                                 {% if page_has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="/employee/users/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                        <a class="page-link" href="/employee/users/search/{{ search_filter }}={{ search_value }}/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
                                     </li>
                                 {% endif %}
                                 {% if page_has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" aria-label="Next" href="/employee/users/{{ setof }}/{{ num_page_next }}">
+                                        <a class="page-link" aria-label="Next" href="/employee/users/search/{{ search_filter }}={{ search_value }}/{{ setof }}/{{ num_page_next }}">
                                             <span aria-hidden="true">»</span>
                                         </a>
                                     </li>
@@ -118,5 +131,6 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'employee/js/users.html.js' %}"></script>
 {% endblock %}
