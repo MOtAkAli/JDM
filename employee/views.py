@@ -14,6 +14,7 @@ def users(request, search, setof, num_page):
         try:
             user = CustomUser.objects.get(id=int(request.POST['id']))
             user.is_active = bool(int(request.POST['is_active']))
+            user.inactive_reason = request.POST['reason'] if not user.is_active else ''
             user.save()
             return JsonResponse({
                 'is_active': user.is_active,
