@@ -56,12 +56,12 @@
                                 </div>
                             </form>
                             {% if messages %}
-                                <ul class="messages">
+                                <label class="messages alert alert-danger">
                                     {% for message in messages %}
-                                        <li  {% if message.tags %}
-                                            class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+                                        <label  {% if message.tags %}
+                                            class=" {{ message.tags }} " {% endif %}> {{ message }} </label>
                                     {% endfor %}
-                                </ul>
+                                </label>
                             {% endif %}
                         </div>
                     </div>

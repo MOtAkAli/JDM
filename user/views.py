@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .forms import UserRegisterForm
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -25,6 +24,7 @@ def register(request):
                 return redirect('/')
         else:
             form = UserRegisterForm()
+        messages.error(request, form.errors)
         return render(request, 'user/register.html', {'form': form})
 
 
