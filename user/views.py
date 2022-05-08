@@ -21,7 +21,7 @@ def register(request):
                 user = form.save(commit=False)
                 username = form.cleaned_data.get('username')
                 user.save()
-                messages.success(request, f'Your account has been successfully created. You are now able to log in.')
+                messages.success(request, f'Your account has been successfully created.')
                 return redirect('/')
         else:
             form = UserRegisterForm()
