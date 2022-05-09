@@ -133,3 +133,9 @@ dmypy.json
 
 # VS Code
 .vscode/
+
+# static media
+static/base/images/avatars/*
+!static/base/images/avatars/default.png
+static/base/images/cars/*
+!static/base/images/cars/default.png
