@@ -32,67 +32,30 @@
                             <th>   CAR   </th>
                             <th>MATRICULE</th>
                             <th><img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
-                            <th> <img src="{%static 'employee/img/avatars/bagage_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
                             <th> <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
                             <th><img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></th>
                             <th>DETAILS</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for car in cars_data_base %}
                         <tr>
-                           
-                            <td> <img src="{% static 'employee/img/avatars/JDM-CAR.JPG' %}" style="width: 200px; height: 200px;" ></td>
-                            
-                            {% for car in cars_data_base %}
-                            {% if car.id == 1%}
-                                <td> {{ car.carModel.carBrand.name }} </td>
-                                <td> {{ car.seats }}</td>
-                                <td></td>
-                                <td> {{car.doors}} </td>
-                                <td> {{car.ac}} </td>    
-                                <td> <a href="details.html"> details_car </a></td>                             
-                            {% endif %}
-                        {% endfor %}
-                        
+                          <td> <img src="{{ car.picture.url }}"style="width: 100px; height: 100px;"></td>
+                          <td> {{ car.carModel.carBrand.name }} </td>
+                          <td> {{ car.seats }}</td>
+                          <td> {{car.doors}} </td>
+                          <td> {{car.ac}} </td>    
+                          <td> <a href="details.html/{{ car.id }}"> details_car </a></td>
+                        </tr>
+                      {% endfor %}
                             
                             
                             
                             
                           
                             
-                        </tr>
-                        <tr>
-                           
-                            <td> <img src="{% static 'employee/img/avatars/JDM-CAR.JPG' %}" style="width: 200px; height: 200px;" ></td>
-                            
-                            {% for car in cars_data_base %}
-                            {% if car.id == 2%}
-                                <td> {{ car.carModel.carBrand.name }} </td>
-                                <td> {{ car.seats }}</td>
-                                <td></td>
-                                <td> {{car.doors}} </td>
-                                <td> {{car.ac}} </td>    
-                                <td> <a href="details.html"> details_car </a></td>                             
-                            {% endif %}
-                        {% endfor %}
+                       
                         
-                        </tr>
-                        <tr>
-                           
-                            <td> <img src="{% static 'employee/img/avatars/JDM-CAR.JPG' %}" style="width: 200px; height: 200px;" ></td>
-                            
-                            {% for car in cars_data_base %}
-                            {% if car.id == 3%}
-                                <td> {{ car.carModel.carBrand.name }} </td>
-                                <td> {{ car.seats }}</td>
-                                <td></td>
-                                <td> {{car.doors}} </td>
-                                <td> {{car.ac}} </td>    
-                                <td> <a href="details.html"> details_car </a></td>                             
-                            {% endif %}
-                        {% endfor %}
-                        
-                        </tr>
                         
                     </tbody>
                     <tfoot>
@@ -100,7 +63,6 @@
                             <td>   CAR   </td>
                             <td>MATRICULE</td>
                             <td><img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
-                            <td> <img src="{%static 'employee/img/avatars/bagage_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
                             <td> <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
                             <td><img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></td>
                             <td>DETAILS</td>
