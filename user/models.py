@@ -13,10 +13,10 @@ class RoleEnum(Enum):
 
 class Role(models.Model):
     ROLES = (
-        (RoleEnum.CLIENT, 'Client'),
-        (RoleEnum.CLIENT_MANAGER, 'ClientManager'),
-        (RoleEnum.RESERVATION_MANAGER, 'ReservationManager'),
-        (RoleEnum.VEHICLE_MANAGER, 'VehicleManager'),
+        (RoleEnum.CLIENT.value, 'Client'),
+        (RoleEnum.CLIENT_MANAGER.value, 'ClientManager'),
+        (RoleEnum.RESERVATION_MANAGER.value, 'ReservationManager'),
+        (RoleEnum.VEHICLE_MANAGER.value, 'VehicleManager'),
     )
     name = models.CharField(max_length=2, choices=ROLES, unique=True)
 
@@ -52,7 +52,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     is_active = models.BooleanField(default=False)
-    inactive_reason = models.CharField(max_length=200, default='Email need to be verified')
+    status_reason = models.CharField(max_length=200, default='Email need to be verified')
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
     phone = models.CharField(max_length=15)
