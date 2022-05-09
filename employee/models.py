@@ -64,7 +64,7 @@ class Car(models.Model):
         ('E', 'Ethanol'),
     )
     is_active = models.BooleanField(default=True)
-    inactive_reason = models.CharField(max_length=200, default='')
+    status_reason = models.CharField(max_length=200, default='')
     in_use = models.BooleanField(default=False)
     doors = models.PositiveSmallIntegerField()
     seats = models.PositiveSmallIntegerField()
@@ -86,7 +86,7 @@ class EmployeeLog(models.Model):
     date_time = models.DateTimeField(default=timezone.now)
     employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
     client = models.ForeignKey(CustomUser, null=True, related_name='client_who_got', on_delete=models.PROTECT)
-    car = models.ForeignKey(Car, null=True, on_delete=models.PROTECT)
+    car = models.ForeignKey(Car, null=True, related_name='car_who_got', on_delete=models.PROTECT)
 
 
 class Reservation(models.Model):
