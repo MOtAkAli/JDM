@@ -1,72 +1,214 @@
-{% extends 'base/base.html' %}
-{% load static %}
-{% block title %}
-    Register
-{% endblock %}
-{% block css %}
-    <link rel="stylesheet" href="{% static 'user/register-assets/css/styles.css' %}">
+{% extends 'base/base.html' %} {% load static %} {% block title %} Register {%
+endblock %} {% block css %}
+<link
+  rel="stylesheet"
+  href="{% static 'user/register-assets/css/styles.css' %}"
+/>
 
-{% endblock %}
-{% block content %}
-    <section class="position-relative py-4 py-xl-5">
-        <h2 class="text-center mb-4"><strong>REGISTER</strong></h2>
-        <div class="container position-relative justify-content-center">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
-                    <div class="card mb-5">
-                        <div class="card-body p-sm-5">
-                            <form method="POST" action="{% url 'user:register' %}" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="mb-3"><input class="form-control" type="text" name="username"
-                                                         placeholder="Username. eg AkaMoughit" required></div>
-                                <div class="mb-3"><input class="form-control" type="text" name="first_name"
-                                                         placeholder="First Name" required></div>
-                                <div class="mb-3"><input class="form-control" type="text" name="last_name"
-                                                         placeholder="Last Name" required></div>
-                                <div class="mb-3"><input class="form-control" type="email" name="email"
-                                                         placeholder="Email"
-                                                         required></div>
-                                <div class="mb-3"><input class="form-control" type="tel" name="phone"
-                                                         placeholder="Phone"
-                                                         required></div>
-                                <div class="mb-3"><input class="form-control" type="text" name="idn"
-                                                         placeholder="ID Number"
-                                                         maxlength="8" required></div>
-                                <div class="mb-3"><input class="form-control" type="text" name="address"
-                                                         placeholder="Address" required></div>
-                                <div class="mb-3"><select class="form-control" name="city">
-                                    <option value="none" selected disabled hidden>select a city</option>
-                                    {% for results in City %}
-                                        <option value=" {{ results.id }}">{{ results.name }}</option>
-                                    {% endfor %}
-                                </select></div>
-                                <div class="mb-3"><input class="form-control" type="date" name="birthday" required>
-                                </div>
-                                <div class="mb-3"><input class="form-control" type="password" name="password1"
-                                                         placeholder="Password" required></div>
-                                <div class="mb-3"><input class="form-control" type="password" name="password2"
-                                                         placeholder="Confirm Password" required></div>
-                                <div class="mb-3"><input class="form-control" type="file" name="picture" required></div>
-                                <div class="mb-3"></div>
-                                <div id="divlog" class="mb-3">
-                                    <button class="btn btn-primary d-block w-100" type="submit"
-                                            style="background: var(--bs-gray-700);border-style: none;">Register
-                                    </button>
-                                    <a href="../login" style="color: var(--bs-gray-700); margin-left: 43%">Login</a>
-                                </div>
-                            </form>
-                            {% if messages %}
-                                <label class="messages alert alert-danger">
-                                    {% for message in messages %}
-                                        <label  {% if message.tags %}
-                                            class=" {{ message.tags }} " {% endif %}> {{ message }} </label>
-                                    {% endfor %}
-                                </label>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+{% endblock %} {% block content %}
+<section class="position-relative py-4 py-xl-5">
+  <h2 class="text-center mb-4"><strong>REGISTER</strong></h2>
+  <div class="container position-relative justify-content-center">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+        <div class="card mb-5">
+          <div class="card-body p-sm-5">
+            <form
+              method="POST"
+              action="{% url 'user:register' %}"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.username.errors %} is-invalid {% endif %}"
+                  type="text"
+                  name="username"
+                  placeholder="Username. eg AkaMoughit"
+                  required
+                />
+              </div>
+              {% if form.username.errors %} {% for error in form.username.errors
+              %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.username.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.first_name.errors %} is-invalid {% endif %}"
+                  type="text"
+                  name="first_name"
+                  placeholder="First Name"
+                  required
+                />
+              </div>
+              {% if form.first_name.errors %} {% for error in
+              form.first_name.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.first_name.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.last_name.errors %} is-invalid {% endif %}"
+                  type="text"
+                  name="last_name"
+                  placeholder="Last Name"
+                  required
+                />
+              </div>
+              {% if form.last_name.errors %} {% for error in
+              form.last_name.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.last_name.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.email.errors %} is-invalid {% endif %}"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              {% if form.email.errors %} {% for error in form.email.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.email.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.phone.errors %} is-invalid {% endif %}"
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone"
+                  required
+                />
+              </div>
+              {% if form.phone.errors %} {% for error in form.phone.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.phone.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.idn.errors %} is-invalid {% endif %}"
+                  type="text"
+                  name="idn"
+                  placeholder="ID Number"
+                  maxlength="8"
+                  required
+                />
+              </div>
+              {% if form.idn.errors %} {% for error in form.idn.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.idn.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.address.errors %} is-invalid {% endif %}"
+                  type="text"
+                  name="address"
+                  placeholder="Address"
+                  required
+                />
+              </div>
+              {% if form.address.errors %} {% for error in form.address.errors
+              %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.address.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <select
+                  class="form-control {% if form.city.errors %} is-invalid {% endif %}"
+                  name="city"
+                >
+                  <option value="none" selected disabled hidden>
+                    select a city
+                  </option>
+                  {% for results in City %}
+                  <option value=" {{ results.id }}">{{ results.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <input class="form-control type="date" {% if
+                form.birthday.errors %} is-invalid {% endif %}" name="birthday"
+                required>
+              </div>
+              {% if form.birthday.errors %} {% for error in form.birthday.errors
+              %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.birthday.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.password1.errors %} is-invalid {% endif %}"
+                  type="password"
+                  name="password1"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              {% if form.password1.errors %} {% for error in
+              form.password1.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.password1.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.password2.errors %} is-invalid {% endif %}"
+                  type="password"
+                  name="password2"
+                  placeholder="Confirm Password"
+                  required
+                />
+              </div>
+              {% if form.password2.errors %} {% for error in
+              form.password2.errors %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.password2.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div class="mb-3">
+                <input
+                  class="form-control {% if form.picture.errors %} is-invalid {% endif %}"
+                  type="file"
+                  name="picture"
+                />
+              </div>
+              <div class="mb-3"></div>
+              {% if form.picture.errors %} {% for error in form.picture.errors
+              %}
+              <div class="invalid-feedback" style="display: block">
+                {{ form.picture.errors }}
+              </div>
+              {% endfor %} {% endif %}
+              <div id="divlog" class="mb-3">
+                <button
+                  class="btn btn-primary d-block w-100"
+                  type="submit"
+                  style="background: var(--bs-gray-700); border-style: none"
+                >
+                  Register
+                </button>
+                <a
+                  href="../login"
+                  style="color: var(--bs-gray-700); margin-left: 43%"
+                  >Login</a
+                >
+              </div>
+            </form>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

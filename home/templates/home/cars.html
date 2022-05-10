@@ -1,0 +1,306 @@
+{% extends 'base/base.html' %} {% load static %} {% block title %} Rent
+{%endblock %} {% block css %}
+<link rel="stylesheet" href="{% static 'home/rent-assets/css/style.css' %}" />
+<link rel="stylesheet" href="{% static 'home/uikit/all.min.css' %}" />
+<link rel="stylesheet" href="{% static 'home/uikit/uikit.min.css' %}" />
+<style>
+  .container {
+    min-height: 100vh;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card .backgroundEffect {
+    bottom: 0;
+    height: 0px;
+    width: 100%;
+  }
+
+  .card:hover {
+    color: #fff;
+    transform: scale(1.025);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 5px 10px;
+  }
+
+  .card:hover .backgroundEffect {
+    bottom: 0;
+    height: 320px;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    background: #030303;
+    animation: popBackground 0.3s ease-in;
+  }
+
+  @keyframes popBackground {
+    0% {
+      height: 20px;
+      border-top-left-radius: 50%;
+      border-top-right-radius: 50%;
+    }
+
+    50% {
+      height: 80px;
+      border-top-left-radius: 75%;
+      border-top-right-radius: 75%;
+    }
+
+    75% {
+      height: 160px;
+      border-top-left-radius: 85%;
+      border-top-right-radius: 85%;
+    }
+
+    100% {
+      height: 320px;
+      border-top-left-radius: 100%;
+      border-top-right-radius: 100%;
+    }
+  }
+
+  .card .pic {
+    position: relative;
+  }
+
+  .card .pic img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+  }
+
+  .card .date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 70px;
+    background-color: #030303;
+    color: white;
+    position: absolute;
+    bottom: 0px;
+    transition: all ease;
+  }
+
+  .card .date .day {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .card .date .month,
+  .card .date .year {
+    font-size: 10px;
+  }
+
+  .card .text-muted {
+    font-size: 12px;
+  }
+
+  .card:hover .text-muted {
+    color: #fff !important;
+  }
+
+  .card .content {
+    padding: 0 20px;
+  }
+
+  .card .content .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    background-color: #030303;
+    border-radius: 25px;
+    font-size: 12px;
+    border: none;
+  }
+
+  .card:hover .content .btn {
+    background: #fff;
+    color: #030303;
+    box-shadow: #0000001a 0px 3px 5px;
+  }
+
+  .card .content .btn .fas {
+    font-size: 10px;
+    padding-left: 5px;
+  }
+
+  .card .content .foot .admin {
+    color: #030303;
+    font-size: 12px;
+  }
+
+  .card:hover .content .foot .admin {
+    color: #fff;
+  }
+
+  .card .content .foot .icon {
+    font-size: 12px;
+  }
+</style>
+{% endblock %} {% block js %}
+<script src=" {% static 'home/uikit/all.min.js' %}"></script>
+<script src=" {% static 'home/uikit/uikit.min.js' %}"></script>
+{% endblock %} {% block content %}
+<div class="section-head" style="margin-bottom: 6rem">
+  <!--  upper part  -->
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-3 text-left">
+        <div class="card-body">
+          <h3 class="card-title">Rent a Car</h3>
+          <h6 class="card-subtitle mb-2 text-muted">
+            Specify the dates and place of rental
+          </h6>
+          <p class="card-text">
+            You can choose the dates of rental and place where you can return
+            the car.
+          </p>
+          <form class="row g-2">
+            <div class="col-12 mb-3">
+              <label for="inputAddress2" class="form-label"
+                >Pick Up Location</label
+              >
+              <div id="location" class="form-group has-search">
+                <span class="fa-solid fa-street-view form-control-feedback">
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="City, Airport, or Country"
+                />
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="date" class="form-control" id="DateField" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <input type="date" class="form-control" id="DateField2" />
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary w-100">
+                SEARCH
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="d-lg-flex">
+    <div class="card border-0 me-lg-4 mb-lg-0 mb-4">
+      <div class="backgroundEffect"></div>
+      <div class="pic">
+        <img
+          class=""
+          src="https://images.pexels.com/photos/374016/pexels-photo-374016.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+          alt=""
+        />
+        <div class="date">
+          <span class="day">26</span> <span class="month">June</span>
+          <span class="year">2019</span>
+        </div>
+      </div>
+      <div class="content">
+        <p class="h-1 mt-4">
+          Finance And Legal Working Streams Occur Throughout
+        </p>
+        <p class="text-muted mt-3">
+          Far far away, behind the word mountains, far from the countries
+          Vokalia and Consonantia, there live the blind texts.
+        </p>
+        <div
+          class="d-flex align-items-center justify-content-between mt-3 pb-3"
+        >
+          <div class="btn btn-primary">
+            Read More<span class="fas fa-arrow-right"></span>
+          </div>
+          <div class="d-flex align-items-center justify-content-center foot">
+            <p class="admin">Admin</p>
+            <p class="ps-3 icon text-muted">
+              <span class="fas fa-comment-alt pe-1"></span>3
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card border-0 me-lg-4 mb-lg-0 mb-4">
+      <div class="backgroundEffect"></div>
+      <div class="pic">
+        <img
+          class=""
+          src="https://images.pexels.com/photos/1560932/pexels-photo-1560932.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+          alt=""
+        />
+        <div class="date">
+          <span class="day">26</span> <span class="month">June</span>
+          <span class="year">2019</span>
+        </div>
+      </div>
+      <div class="content">
+        <p class="h-1 mt-4">
+          Finance And Legal Working Streams Occur Throughout
+        </p>
+        <p class="text-muted mt-3">
+          Far far away, behind the word mountains, far from the countries
+          Vokalia and Consonantia, there live the blind texts.
+        </p>
+        <div
+          class="d-flex align-items-center justify-content-between mt-3 pb-3"
+        >
+          <div class="btn btn-primary">
+            Read More<span class="fas fa-arrow-right"></span>
+          </div>
+          <div class="d-flex align-items-center justify-content-center foot">
+            <p class="admin">Admin</p>
+            <p class="ps-3 icon text-muted">
+              <span class="fas fa-comment-alt pe-1"></span>3
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card border-0 mb-lg-0 mb-4">
+      <div class="backgroundEffect"></div>
+      <div class="pic">
+        <img
+          class=""
+          src="https://images.pexels.com/photos/4491881/pexels-photo-4491881.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+          alt=""
+        />
+        <div class="date">
+          <span class="day">26</span> <span class="month">June</span>
+          <span class="year">2019</span>
+        </div>
+      </div>
+      <div class="content">
+        <p class="h-1 mt-4">
+          Finance And Legal Working Streams Occur Throughout
+        </p>
+        <p class="text-muted mt-3">
+          Far far away, behind the word mountains, far from the countries
+          Vokalia and Consonantia, there live the blind texts.
+        </p>
+        <div
+          class="d-flex align-items-center justify-content-between mt-3 pb-3"
+        >
+          <div class="btn btn-primary">
+            Read More<span class="fas fa-arrow-right"></span>
+          </div>
+          <div class="d-flex align-items-center justify-content-center foot">
+            <p class="admin">Admin</p>
+            <p class="ps-3 icon text-muted">
+              <span class="fas fa-comment-alt pe-1"></span>3
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

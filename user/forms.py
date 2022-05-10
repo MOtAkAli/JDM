@@ -12,7 +12,7 @@ class UserRegisterForm(UserCreationForm):  # fields that inherit from the user c
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'birthday', 'phone',
-                  'picture', 'city']
+                  'picture', 'city','idn','address']
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
@@ -32,3 +32,11 @@ class UserRegisterForm(UserCreationForm):  # fields that inherit from the user c
         except User.DoesNotExist:
             return username
         raise forms.ValidationError(f'Username {username} is already taken')
+
+    def clean_idn(self):
+        idn = self.cleaned_data.get('idn')
+        try:
+            user = User.objects.get(idn=idn)
+        except User.DoesNotExist:
+            return idn
+        raise forms.ValidationError(f"The idn you've given is already taken")
