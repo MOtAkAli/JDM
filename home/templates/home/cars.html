@@ -6,24 +6,23 @@
 <style>
   .container {
     min-height: 100vh;
-    padding: 20px 0;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .card .backgroundEffect {
+  .card-car .backgroundEffect {
     bottom: 0;
     height: 0px;
     width: 100%;
   }
 
-  .card:hover {
-    color: #fff;
+  .card-car:hover {
+    color: #000;
     transform: scale(1.025);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 5px 10px;
   }
 
-  .card:hover .backgroundEffect {
+  .card-car:hover .backgroundEffect {
     bottom: 0;
     height: 320px;
     width: 100%;
@@ -59,17 +58,17 @@
     }
   }
 
-  .card .pic {
+  .card-car .pic {
     position: relative;
   }
 
-  .card .pic img {
+  .card-car .pic img {
     width: 100%;
     height: 280px;
     object-fit: cover;
   }
 
-  .card .date {
+  .card-car .date {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,29 +82,29 @@
     transition: all ease;
   }
 
-  .card .date .day {
+  .card-car .date .day {
     font-size: 14px;
     font-weight: 600;
   }
 
-  .card .date .month,
-  .card .date .year {
+  .card-car .date .month,
+  .card-car .date .year {
     font-size: 10px;
   }
 
-  .card .text-muted {
+  .card-car .text-muted {
     font-size: 12px;
   }
 
-  .card:hover .text-muted {
+  .card-car:hover .text-muted {
     color: #fff !important;
   }
 
-  .card .content {
+  .card-car .content {
     padding: 0 20px;
   }
 
-  .card .content .btn {
+  .card-car .content .btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -116,27 +115,27 @@
     border: none;
   }
 
-  .card:hover .content .btn {
+  .card-car:hover .content .btn {
     background: #fff;
     color: #030303;
     box-shadow: #0000001a 0px 3px 5px;
   }
 
-  .card .content .btn .fas {
+  .card-car .content .btn .fas {
     font-size: 10px;
     padding-left: 5px;
   }
 
-  .card .content .foot .admin {
+  .card-car .content .foot .admin {
     color: #030303;
     font-size: 12px;
   }
 
-  .card:hover .content .foot .admin {
+  .card-car:hover .content .foot .admin {
     color: #fff;
   }
 
-  .card .content .foot .icon {
+  .card-car .content .foot .icon {
     font-size: 12px;
   }
 </style>
@@ -154,30 +153,57 @@
           <h6 class="card-subtitle mb-2 text-muted">
             Specify the dates and place of rental
           </h6>
-          <p class="card-text">
-            You can choose the dates of rental and place where you can return
-            the car.
-          </p>
-          <form class="row g-2">
+          <form method="GET" class="row g-2" action="{% url 'home:rent'%}">
             <div class="col-12 mb-3">
-              <label for="inputAddress2" class="form-label"
-                >Pick Up Location</label
-              >
-              <div id="location" class="form-group has-search">
-                <span class="fa-solid fa-street-view form-control-feedback">
-                </span>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="City, Airport, or Country"
-                />
+              <label for="inputAddress2" class="form-label">Search a Car</label>
+              <div  class="form-group has-search row">
+                <select
+                  class="form-control  col  {% if form.city.errors %} is-invalid {% endif %}"
+                  name="Agency"
+                >
+                  <option value="none" selected disabled hidden>
+                    select a City
+                  </option>
+                  {% for agence in agencies %}
+                  <option value=" {{ agence.pk }}">
+                    {{ agence.city.name }}
+                  </option>
+                  {% endfor %}
+                </select>
+                <select
+                  class="form-control col {% if form.city.errors %} is-invalid {% endif %}"
+                  name="CarBrand"
+                >
+                  <option value="none" selected disabled hidden>
+                    select a Brand
+                  </option>
+                  {% for brand in brands %}
+                  <option value=" {{ brand.pk }}">{{ brand.name }}</option>
+                  {% endfor %}
+                </select>
+                <select 
+                  class="form-control col {% if form.city.errors %} is-invalid {% endif %}"
+                  name="CarType"
+                >
+                  <option value="none" selected disabled hidden>
+                    select a car type
+                  </option>
+                  {% for type in types %}
+                  <option value=" {{ type.pk }}">{{ type.name }}</option>
+                  {% endfor %}
+                </select> 
+                <select
+                  class="form-control col {% if form.city.errors %} is-invalid {% endif %}"
+                  name="CarModel"
+                >
+                  <option value="none" selected disabled hidden>
+                    select a car Model 
+                  </option>
+                  {% for model in models %}
+                  <option value=" {{ model.pk }}">{{ model.name }}</option>
+                  {% endfor %}
+                </select> 
               </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <input type="date" class="form-control" id="DateField" />
-            </div>
-            <div class="col-md-6 mb-3">
-              <input type="date" class="form-control" id="DateField2" />
             </div>
             <div>
               <button type="submit" class="btn btn-primary w-100">
@@ -192,115 +218,38 @@
 </div>
 
 <div class="container">
-  <div class="d-lg-flex">
-    <div class="card border-0 me-lg-4 mb-lg-0 mb-4">
+  <div class="row">
+    {% for car in cars %}
+    <div class="card-car col-md-4 border-0 mb-4">
       <div class="backgroundEffect"></div>
       <div class="pic">
-        <img
-          class=""
-          src="https://images.pexels.com/photos/374016/pexels-photo-374016.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-          alt=""
-        />
-        <div class="date">
-          <span class="day">26</span> <span class="month">June</span>
-          <span class="year">2019</span>
-        </div>
+        <img class="" src="{{car.picture.url}}" alt="" />
       </div>
       <div class="content">
-        <p class="h-1 mt-4">
-          Finance And Legal Working Streams Occur Throughout
+        <p class="h-1 mt-4 fw-bolder" style="text-transform: uppercase">
+          {{car.carModel.name}}
         </p>
-        <p class="text-muted mt-3">
-          Far far away, behind the word mountains, far from the countries
-          Vokalia and Consonantia, there live the blind texts.
-        </p>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Doors : {{car.doors}}</li>
+          <li class="list-group-item">Seats : {{car.seats}}</li>
+          <li class="list-group-item">A/C : {{car.ac}}</li>
+          <li class="list-group-item">Gearbox : {{car.gearbox}}</li>
+          <li class="list-group-item">Fuel : {{car.fuel}}</li>
+          <li class="list-group-item">year : {{car.year}}</li>
+        </ul>
         <div
           class="d-flex align-items-center justify-content-between mt-3 pb-3"
         >
-          <div class="btn btn-primary">
-            Read More<span class="fas fa-arrow-right"></span>
-          </div>
-          <div class="d-flex align-items-center justify-content-center foot">
-            <p class="admin">Admin</p>
-            <p class="ps-3 icon text-muted">
-              <span class="fas fa-comment-alt pe-1"></span>3
-            </p>
-          </div>
+          <button
+            class="btn btn-block btn-primary"
+            style="width: 10rem; height: 3rem"
+          >
+            Rent <span class="fas fa-arrow-right"></span>
+          </button>
         </div>
       </div>
     </div>
-    <div class="card border-0 me-lg-4 mb-lg-0 mb-4">
-      <div class="backgroundEffect"></div>
-      <div class="pic">
-        <img
-          class=""
-          src="https://images.pexels.com/photos/1560932/pexels-photo-1560932.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-          alt=""
-        />
-        <div class="date">
-          <span class="day">26</span> <span class="month">June</span>
-          <span class="year">2019</span>
-        </div>
-      </div>
-      <div class="content">
-        <p class="h-1 mt-4">
-          Finance And Legal Working Streams Occur Throughout
-        </p>
-        <p class="text-muted mt-3">
-          Far far away, behind the word mountains, far from the countries
-          Vokalia and Consonantia, there live the blind texts.
-        </p>
-        <div
-          class="d-flex align-items-center justify-content-between mt-3 pb-3"
-        >
-          <div class="btn btn-primary">
-            Read More<span class="fas fa-arrow-right"></span>
-          </div>
-          <div class="d-flex align-items-center justify-content-center foot">
-            <p class="admin">Admin</p>
-            <p class="ps-3 icon text-muted">
-              <span class="fas fa-comment-alt pe-1"></span>3
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card border-0 mb-lg-0 mb-4">
-      <div class="backgroundEffect"></div>
-      <div class="pic">
-        <img
-          class=""
-          src="https://images.pexels.com/photos/4491881/pexels-photo-4491881.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-          alt=""
-        />
-        <div class="date">
-          <span class="day">26</span> <span class="month">June</span>
-          <span class="year">2019</span>
-        </div>
-      </div>
-      <div class="content">
-        <p class="h-1 mt-4">
-          Finance And Legal Working Streams Occur Throughout
-        </p>
-        <p class="text-muted mt-3">
-          Far far away, behind the word mountains, far from the countries
-          Vokalia and Consonantia, there live the blind texts.
-        </p>
-        <div
-          class="d-flex align-items-center justify-content-between mt-3 pb-3"
-        >
-          <div class="btn btn-primary">
-            Read More<span class="fas fa-arrow-right"></span>
-          </div>
-          <div class="d-flex align-items-center justify-content-center foot">
-            <p class="admin">Admin</p>
-            <p class="ps-3 icon text-muted">
-              <span class="fas fa-comment-alt pe-1"></span>3
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

@@ -1,5 +1,4 @@
-{% extends 'base/base.html' %} {% load static %} {% block title %} Register {%
-endblock %} {% block css %}
+{% extends 'base/base.html' %} {% load static %} {% block title %} Register {%endblock %} {% block css %}
 <link
   rel="stylesheet"
   href="{% static 'user/register-assets/css/styles.css' %}"
@@ -28,12 +27,13 @@ endblock %} {% block css %}
                   required
                 />
               </div>
-              {% if form.username.errors %} {% for error in form.username.errors
-              %}
+              {% if form.username.errors %} 
+              {% for error in form.username.errors%}
               <div class="invalid-feedback" style="display: block">
                 {{ form.username.errors }}
               </div>
-              {% endfor %} {% endif %}
+              {% endfor %} 
+              {% endif %}
               <div class="mb-3">
                 <input
                   class="form-control {% if form.first_name.errors %} is-invalid {% endif %}"
@@ -43,8 +43,8 @@ endblock %} {% block css %}
                   required
                 />
               </div>
-              {% if form.first_name.errors %} {% for error in
-              form.first_name.errors %}
+              {% if form.first_name.errors %} 
+              {% for error in form.first_name.errors %}
               <div class="invalid-feedback" style="display: block">
                 {{ form.first_name.errors }}
               </div>
@@ -58,8 +58,7 @@ endblock %} {% block css %}
                   required
                 />
               </div>
-              {% if form.last_name.errors %} {% for error in
-              form.last_name.errors %}
+              {% if form.last_name.errors %} {% for error in form.last_name.errors %}
               <div class="invalid-feedback" style="display: block">
                 {{ form.last_name.errors }}
               </div>
@@ -116,8 +115,7 @@ endblock %} {% block css %}
                   required
                 />
               </div>
-              {% if form.address.errors %} {% for error in form.address.errors
-              %}
+              {% if form.address.errors %} {% for error in form.address.errors %}
               <div class="invalid-feedback" style="display: block">
                 {{ form.address.errors }}
               </div>
@@ -136,12 +134,9 @@ endblock %} {% block css %}
                 </select>
               </div>
               <div class="mb-3">
-                <input class="form-control type="date" {% if
-                form.birthday.errors %} is-invalid {% endif %}" name="birthday"
-                required>
+                <input class="form-control {% if form.birthday.errors %} is-invalid {% endif %}" type="date" name="birthday" required>
               </div>
-              {% if form.birthday.errors %} {% for error in form.birthday.errors
-              %}
+              {% if form.birthday.errors %} {% for error in form.birthday.errors %}
               <div class="invalid-feedback" style="display: block">
                 {{ form.birthday.errors }}
               </div>
@@ -155,8 +150,7 @@ endblock %} {% block css %}
                   required
                 />
               </div>
-              {% if form.password1.errors %} {% for error in
-              form.password1.errors %}
+              {% if form.password1.errors %} {% for error in form.password1.errors %}
               <div class="invalid-feedback" style="display: block">
                 {{ form.password1.errors }}
               </div>
@@ -170,8 +164,7 @@ endblock %} {% block css %}
                   required
                 />
               </div>
-              {% if form.password2.errors %} {% for error in
-              form.password2.errors %}
+              {% if form.password2.errors %} {% for error in form.password2.errors %}
               <div class="invalid-feedback" style="display: block">
                 {{ form.password2.errors }}
               </div>
@@ -184,8 +177,7 @@ endblock %} {% block css %}
                 />
               </div>
               <div class="mb-3"></div>
-              {% if form.picture.errors %} {% for error in form.picture.errors
-              %}
+              {% if form.picture.errors %} {% for error in form.picture.errors%}
               <div class="invalid-feedback" style="display: block">
                 {{ form.picture.errors }}
               </div>
