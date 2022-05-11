@@ -1,1 +1,172 @@
 {% extends 'employee/base.html' %}
+{% load static %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block content %}
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Reservations</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 col-xl-3 mb-4">
+                    <div class="card shadow border-start-primary py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Earnings (monthly)</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ reservations_monthly_earning }} DH</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-4">
+                    <div class="card shadow border-start-success py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Earnings (annual)</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ reservations_annually_earning }} DH</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-4">
+                    <div class="card shadow border-start-success py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Count</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ reservations_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-4">
+                    <div class="card shadow border-start-warning py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-warning fw-bold text-xs mb-1">
+                                        <span>Verified</span></div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ verified_reservations_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-7 col-xl-8">
+                    <div class="card shadow mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="text-primary fw-bold m-0">Earnings (monthly) Overview</h6>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="monthlyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="text-primary fw-bold m-0">Earnings (annually) Overview</h6>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="annuallyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'employee/js/chart.min.js' %}"></script>
+    <script>
+        const monthly_labels = [
+            {% for month in months %}
+                '{{ month }}',
+            {% endfor %}
+        ];
+
+        const monthly_data = {
+            labels: monthly_labels,
+            datasets: [{
+                label: 'Earnings',
+                backgroundColor: 'rgb(78, 115, 223)',
+                borderColor: 'rgb(78, 115, 223)',
+                data: [
+                    {% for earning in monthly_earnings %}
+                        {{ earning }},
+                    {% endfor %}
+                ],
+            }]
+        };
+
+        const monthlyConfig = {
+            type: 'line',
+            data: monthly_data,
+            options: {}
+        };
+
+        const monthlyChart = new Chart(
+            document.getElementById('monthlyChart'),
+            monthlyConfig
+        );
+
+        //annuall
+        const annuallyData = {
+            labels: [
+                {% for year in years %}
+                    '{{ year }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [
+                    {% for earning in annually_earnings %}
+                        {{ earning }},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        const annuallyConfig = {
+            type: 'pie',
+            data: annuallyData,
+        };
+
+        const annuallyChart = new Chart(
+            document.getElementById('annuallyChart'),
+            annuallyConfig
+        );
+    </script>
+{% endblock %}

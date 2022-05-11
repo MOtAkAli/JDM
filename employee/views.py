@@ -2,10 +2,55 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from user.models import CustomUser, Role
 from django.core.paginator import Paginator
+from .models import Reservation
+from django.db.models import Avg
+from django.db.models.functions import TruncMonth, TruncYear
+import calendar
+
+
+def monthly_earnings_list(monthly_earnings):
+    earnings = {}
+    for monthly_earning in monthly_earnings:
+        earnings[calendar.month_name[monthly_earning['month'].month]] = monthly_earning['count']
+    return earnings
+
+
+def annually_earnings_list(annually_earnings):
+    earnings = {}
+    for annually_earning in annually_earnings:
+        earnings[annually_earning['year'].year] = annually_earning['count']
+    return earnings
+
+
+def avg_earnings(earnings_list):
+    sum_earnings = 0
+    for earning in earnings_list.values():
+        sum_earnings += earning
+    return sum_earnings / len(earnings_list)
 
 
 def index(request):
-    return render(request, 'employee/index.html', {})
+    reservations = Reservation.objects.all()
+    monthly_earnings = monthly_earnings_list(
+        reservations.filter(employee__isnull=False).annotate(month=TruncMonth('startDate')).values('month').annotate(
+            count=Avg('price')))
+    annually_earnings = annually_earnings_list(
+        reservations.filter(employee__isnull=False).annotate(year=TruncYear('startDate')).values('year').annotate(
+            count=Avg('price')))
+    return render(
+        request,
+        'employee/index.html',
+        {
+            'months': monthly_earnings.keys(),
+            'monthly_earnings': monthly_earnings.values(),
+            'reservations_monthly_earning': avg_earnings(monthly_earnings),
+            'years': annually_earnings.keys(),
+            'annually_earnings': annually_earnings.values(),
+            'reservations_annually_earning': avg_earnings(annually_earnings),
+            'reservations_count': reservations.count(),
+            'verified_reservations_count': reservations.filter(employee__isnull=False).count(),
+        }
+    )
 
 
 def users(request, search, setof, num_page):

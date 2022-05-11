@@ -96,4 +96,4 @@ class Reservation(models.Model):
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
     in_use = models.BooleanField(default=False)
     client = models.ForeignKey(CustomUser, related_name='client', on_delete=models.PROTECT)
-    employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True)
+    employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True, blank=True)
