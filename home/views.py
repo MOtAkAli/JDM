@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from employee.models import Car, Agency,CarModel,CarBrand,CarType
+from employee.models import Car, Agency, CarModel, CarBrand, CarType
 from employee.filters import CarFilter
 
-class CarListView(ListView):
 
+class CarListView(ListView):
     model = Car
     template_name = 'home/cars.html'
     paginate_by = 9  # if pagination is desired
@@ -21,13 +21,17 @@ class CarListView(ListView):
         )
         context['title'] = ' Rent a car '
         print(context['filtered_cars'].qs)
-        return context    
-
+        return context
 
     def get_queryset(self):
-        qs = self.model.objects.all().filter(is_active=True,in_use=False)
+        qs = self.model.objects.all().filter(is_active=True, in_use=False)
         filtered_cars = CarFilter(self.request.GET, queryset=qs)
         return filtered_cars.qs
 
+
 def index(request):
     return render(request, 'home/index.html')
+
+
+def car(request):
+    return render(request, 'home/validationcar.html')
