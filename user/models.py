@@ -48,7 +48,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    status_reason = models.CharField(max_length=200, default='Email need to be verified')
+    inactive_reason = models.CharField(max_length=200, default='Email need to be verified')
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
     phone = models.CharField(max_length=15)
