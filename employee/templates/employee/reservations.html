@@ -45,14 +45,16 @@
                             <tbody>
                             <tr>
                                 <td><img class="rounded-circle me-2" width="30" height="30"
-                                         src="{% static "employee/img/avatars/avatar1.jpeg" %}"><br>{{ v.client.first_name}} {{ v.client.last_name }}
+                                         src="{{ v.client.picture.url }}"><br>{{ v.client.first_name}} {{ v.client.last_name }}
                                 </td>
                                 <td>{{ v.client.phone }}</td>
                                 <td>{{ v.client.email }}</td>
                                 <td>{{ v.client.address }} {{ v.client.city }}</td>
-                                <td>{{ v.car.carType }} {{ v.car.carModel }}</td>
+                                <td>{{ v.car.carModel }}</td>
                                 <td>{{ v.startDate }} to {{ v.endDate }}</td>
-                                <td><a href="/employee/reservation/{{ v.id }}">More Details</a></td>
+                                <td><a href="/employee/reservation/{{ v.id }}" >
+                                    <button class="btn btn-primary btn-sm">More Details</button>
+                                </a></td>
 
                             </tr>
 
@@ -96,3 +98,5 @@
 
 
 {% endblock %}
+
+

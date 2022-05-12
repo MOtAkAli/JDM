@@ -1,85 +1,84 @@
 {% extends 'employee/base.html' %}
 {% block content %}
     {% load static %}
-    <div class="container-fluid">
+    <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
         <h3 class="text-dark mb-4">Profile</h3>
         <div class="row mb-3">
-            <div class="col-lg-8">
-
+            <div class="">
                 <div class="row">
                     <div class="col">
-                        <div class="card shadow mb-3">
+                        <div class="card shadow mb-3 w-100">
                             <div class="card-header py-3">
-                                <p class="text-primary m-0 fw-bold">User Settings</p>
+                                <p class="text-primary m-0 fw-bold">Client</p>
                             </div>
                             <div class="card-body">
                                 <form>
-                                    <img src="{% static "employee/img/avatars/avatar1.jpeg" %}">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label"
-                                                                     for="username"><strong>User Name</strong></label>
-                                                <h2 id="username"
-                                                    name="username"> {{ reservation.client.first_name }}  {{ reservation.client.last_name}}
-                                                </h2>
-                                            </div>
+                                            <img style="height: 90%; width: 90%; "
+                                                 src="{{ reservation.client.picture.url }}">
                                         </div>
-                                        <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="email"><strong>Email Address</strong></label>
 
-                                                <h2 id="email"
-                                                    name="email">{{ reservation.client.email }}
-                                                </h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="phone"><strong>Phone Number</strong></label>
-                                                <h2 id="phone"
-                                                    name="phone">{{ reservation.client.phone }}
-                                                </h2>
-                                            </div>
+
+                                            <label> <strong style="font-size: 200%; text-decoration: underline;">User
+                                                Name</strong></label>
+                                            <h2 id="username"
+                                                name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}
+                                            </h2><br><br>
+                                            <label> <strong style="text-decoration: underline; font-size: 200%;">Email
+                                                Address</strong></label>
+                                            <h2 id="email"
+                                                name="email">{{ reservation.client.email }}
+                                            </h2><br><br>
+
+                                            <label><strong style="text-decoration: underline; font-size: 200%;">Phone
+                                                Number</strong></label>
+                                            <h2 id="phone"
+                                                name="phone">{{ reservation.client.phone }}
+                                            </h2><br><br>
+                                            <label><strong style="text-decoration: underline; font-size: 200%;">Address</strong></label>
+                                            <h2 id="address"
+                                                name="adresse">{{ reservation.client.address }}
+                                            </h2><br>
                                         </div>
-                                        <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="address"><strong>Address</strong></label>
-                                                    <h2 id="address"
-                                                        name="adresse">{{ reservation.client.address }}
-                                                    </h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button class="btn btn-primary btn-sm" type="submit">Save Settings</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                         <div class="card shadow">
                             <div class="card-header py-3">
-                                <p class="text-primary m-0 fw-bold">Contact Settings</p>
+                                <p class="text-primary m-0 fw-bold"> Car Details</p>
                             </div>
+
                             <div class="card-body">
                                 <form>
-                                    <div class="mb-3"><label class="form-label"
-                                                             for="address"><strong>Address</strong></label><input
-                                            class="form-control" type="text" id="address" placeholder="Sunset Blvd, 38"
-                                            name="address"></div>
                                     <div class="row">
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="city"><strong>City</strong></label><input
-                                                    class="form-control" type="text" id="city" placeholder="Los Angeles"
-                                                    name="city"></div>
+                                            <img style="height: 99%; width: 100%;"
+                                                 src="{{ reservation.car.picture.url }}" alt="">
                                         </div>
+
+
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label"
-                                                                     for="country"><strong>Country</strong></label><input
-                                                    class="form-control" type="text" id="country" placeholder="USA"
-                                                    name="country"></div>
+                                            <label class="form-label"><strong style="text-decoration: underline; font-size: 200%;">Start
+                                                Date</strong></label>
+                                            <h2>
+                                                {{ reservation.startDate }}
+                                            </h2><br><br>
+
+                                            <label class="form-label"><strong style="text-decoration: underline; font-size: 200%;">End
+                                                Date</strong></label>
+                                            <h2>
+                                                {{ reservation.endDate }}
+                                            </h2><br><br>
+
+                                            <label> <strong style="text-decoration: underline; font-size: 200%;">Car
+                                                Model</strong></label>
+                                            <h2>
+                                                {{ reservation.car.carModel }}
+                                            </h2>
                                         </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button>
                                     </div>
                                 </form>
                             </div>
@@ -90,23 +89,18 @@
         </div>
         <div class="card shadow mb-5">
             <div class="card-header py-3">
-                <p class="text-primary m-0 fw-bold">Forum Settings</p>
+                <p class="text-primary m-0 fw-bold">Employee</p>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <form>
                             <div class="mb-3"><label class="form-label"
-                                                     for="signature"><strong>Signature</strong><br></label><textarea
+                                                     for="signature"><strong>Notes</strong><br></label><textarea
                                     class="form-control" id="signature" rows="4" name="signature"></textarea></div>
+
                             <div class="mb-3">
-                                <div class="form-check form-switch"><input class="form-check-input" type="checkbox"
-                                                                           id="formCheck-1"><label
-                                        class="form-check-label" for="formCheck-1"><strong>Notify me about new
-                                    replies</strong></label></div>
-                            </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary btn-sm" type="submit">Save Settings</button>
+                                <button class="btn btn-primary btn-sm" type="submit">VALIDATE</button>
                             </div>
                         </form>
                     </div>
