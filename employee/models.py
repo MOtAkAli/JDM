@@ -5,13 +5,14 @@ from cities_light.models import City
 
 
 class Agency(models.Model):
+    name = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, unique=True)
     address = models.CharField(max_length=200)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
 
     def __str__(self):
-        return str(self.id) + " " + self.city.name
+        return self.name + ' ' + self.city.name
 
 
 class CarBrand(models.Model):
@@ -42,11 +43,11 @@ class CarType(models.Model):
 
 class CarModel(models.Model):
     name = models.CharField(max_length=150, unique=True)
-    carModelPrice = models.FloatField()
-    carBrand = models.ForeignKey(CarBrand, on_delete=models.PROTECT)
+    car_model_price = models.FloatField()
+    car_brand = models.ForeignKey(CarBrand, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.carBrand.name + " " + self.name
+        return self.car_brand.name + " " + self.name
 
 
 class Car(models.Model):
@@ -64,8 +65,8 @@ class Car(models.Model):
         ('E', 'Ethanol'),
     )
     is_active = models.BooleanField(default=True)
-    status_reason = models.CharField(max_length=200, default='')
-    in_use = models.BooleanField(default=False)
+    status_reason = models.CharField(max_length=200, null=True, blank=True, default='')
+    description = models.CharField(max_length=2000)
     doors = models.PositiveSmallIntegerField()
     seats = models.PositiveSmallIntegerField()
     ac = models.BooleanField()
@@ -83,17 +84,30 @@ class Car(models.Model):
 
 class EmployeeLog(models.Model):
     description = models.CharField(max_length=500)
+    status_reason = models.CharField(max_length=200, null=True, blank=True, default='')
     date_time = models.DateTimeField(default=timezone.now)
     employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
-    client = models.ForeignKey(CustomUser, null=True, related_name='client_who_got', on_delete=models.PROTECT)
-    car = models.ForeignKey(Car, null=True, related_name='car_who_got', on_delete=models.PROTECT)
+    client = models.ForeignKey(CustomUser, null=True, blank=True, related_name='client_who_got', on_delete=models.PROTECT)
+    car = models.ForeignKey(Car, null=True, blank=True, related_name='car_who_got', on_delete=models.PROTECT)
 
 
 class Reservation(models.Model):
-    startDate = models.DateField()
-    endDate = models.DateField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     price = models.FloatField()
+    paid = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False)
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
-    in_use = models.BooleanField(default=False)
     client = models.ForeignKey(CustomUser, related_name='client', on_delete=models.PROTECT)
-    employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True)
+    employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.car) + ' ' + str(self.start_date) + ' ' + str(self.end_date)
+
+
+class PaymentLog(models.Model):
+    date_time = models.DateTimeField(default=timezone.now)
+    reservation = models.OneToOneField(Reservation, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.date_time) + ' ' + str(self.reservation)
