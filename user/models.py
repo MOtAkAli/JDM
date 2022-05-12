@@ -48,10 +48,10 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    User._meta.get_field('email')._unique = True
-    User._meta.get_field('first_name').blank = False
-    User._meta.get_field('last_name').blank = False
-    User._meta.get_field('is_active').default = False
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=False)
     status_reason = models.CharField(max_length=200, null=True, blank=True, default='Email need to be verified')
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
