@@ -4,7 +4,7 @@ django-autoslug==1.9.8
 django-cities-light==3.9.0
 Pillow==9.1.0
 progressbar2==4.0.0
-python-utils==3.1.0
+python-utils==3.2.2
 pytz==2022.1
 sqlparse==0.4.2
 tzdata==2022.1
