@@ -15,7 +15,7 @@ def cars(request):
 
 
 def details(request):
-        id = request.GET.get('id' , '')
+        
         cars_data_base= Car.objects.all()
         return render(request, 'employee/details.html', {'cars_data_base':cars_data_base })
 

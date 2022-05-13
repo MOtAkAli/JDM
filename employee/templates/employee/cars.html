@@ -4,6 +4,20 @@
 
 
 {% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    {% block title %} <title>TABLE - CARS - JDM</title> {% endblock %}
+   
+    <link rel="stylesheet" href="{% static 'employee/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'employee/fonts/fontawesome-all.min.css' %}">
+    
+
+</head>
 
 <div class="container-fluid">
     <h3 class="text-dark mb-4">table_cars</h3>
@@ -31,21 +45,26 @@
                         <tr>
                             <th>   CAR   </th>
                             <th>MATRICULE</th>
-                            <th><img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
-                            <th> <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></th>
-                            <th><img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></th>
+                            <th><img src="{%static 'employee/img/avatars/icons8-person-66.png'  %}"style="width: 40px; height: 40px;"></th>
+                            <th> <img src="{%static 'employee/img/avatars/icons8-car-door-24.png'  %}"style="width: 40px; height: 40px;"></th>
+                            <th><img src="{%static 'employee/img/avatars/icons8-winter-50.png'  %}"style="width: 40px; height: 40px;"></th>
                             <th>DETAILS</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for car in cars_data_base %}
                         <tr>
-                          <td> <img src="{{ car.picture.url }}"style="width: 100px; height: 100px;"></td>
+                          <td> <img class="rounded-circle" src="{{ car.picture.url }}"style="width: 100px; height: 100px;"></td>
                           <td> {{ car.carModel.carBrand.name }} </td>
                           <td> {{ car.seats }}</td>
                           <td> {{car.doors}} </td>
                           <td> {{car.ac}} </td>    
-                          <td> <a href="details.html/{{ car.id }}"> details_car </a></td>
+                           <td>  <a href="details.html/{{ car.id }}" class="link-info" > details_car </a> </td> 
+                           <td> <div class="form-check">
+                            <input type="checkbox"  disabled name="checkk">
+                      
+                          </div>    </td>
+                            
                         </tr>
                       {% endfor %}
                             
@@ -62,8 +81,8 @@
                         <tr>
                             <td>   CAR   </td>
                             <td>MATRICULE</td>
-                            <td><img src="{%static 'employee/img/avatars/passager_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
-                            <td> <img src="{%static 'employee/img/avatars/porte_option.jpeg'  %}"style="width: 40px; height: 40px;"></td>
+                            <td><img src="{%static 'employee/img/avatars/icons8-person-66.png'  %}"style="width: 40px; height: 40px;"></td>
+                            <td> <img src="{%static 'employee/img/avatars/icons8-car-door-24.png'  %}"style="width: 40px; height: 40px;"></td>
                             <td><img src="{%static 'employee/img/avatars/climatisation_option(2).jpeg'  %}"style="width: 80px; height: 40px;"></td>
                             <td>DETAILS</td>
                         </tr>
