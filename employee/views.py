@@ -10,18 +10,15 @@ def index(request):
 
 
 def reservations(request, setof, num_page):
-    obj = Reservation.objects.all()
-    paginator = Paginator(obj, setof)
-
-    if int(num_page) < paginator.num_pages:
-        num_page = paginator.num_pages
-    reservation_page = paginator.get_page(num_page)
+    reservations = Reservation.objects.all()
+    paginator = Paginator(reservations, setof)
+    reservations_page = paginator.get_page(num_page)
     return render(request, 'employee/reservations.html',
-                  {"obj": obj,
-                   "reservations_page": reservation_page,
+                  {
+                   "reservations_page": reservations_page,
                    "count": paginator.count,
-                   "page_has_previous": reservation_page.has_previous,
-                   "page_has_next": reservation_page.has_next,
+                   "page_has_previous": reservations_page.has_previous,
+                   "page_has_next": reservations_page.has_next,
                    "setof": int(setof),
                    "num_page_previous": int(num_page) - 1,
                    "num_page": int(num_page),

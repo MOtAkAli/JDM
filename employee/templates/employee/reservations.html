@@ -41,31 +41,29 @@
 
                         </tr>
                         </thead>
-                        {% for v in obj %}
+                        {% for reservation in reservations_page %}
                             <tbody>
                             <tr>
                                 <td><img class="rounded-circle me-2" width="30" height="30"
-                                         src="{{ v.client.picture.url }}"><br>{{ v.client.first_name }} {{ v.client.last_name }}
+                                         src="{{ reservation.client.picture.url }}"><br>{{ reservation.client.first_name }} {{ reservation.client.last_name }}
                                 </td>
-                                <td>{{ v.client.phone }}</td>
-                                <td>{{ v.client.email }}</td>
-                                <td>{{ v.client.address }} {{ v.client.city }}</td>
-                                <td>{{ v.car.carModel }}</td>
-                                <td>{{ v.startDate }} to {{ v.endDate }}</td>
+                                <td>{{ reservation.client.phone }}</td>
+                                <td>{{ reservation.client.email }}</td>
+                                <td>{{ reservation.client.address }} {{ v.client.city }}</td>
+                                <td>{{ reservation.car.carModel }}</td>
+                                <td>{{ reservation.startDate }} to {{ reservation.endDate }}</td>
                                 <td>
                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">paid</label>
                                 </td>
                                 <td>
-                                    <input  class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">confirmed</label>
                                 </td>
 
-                                <td><a href="/employee/reservation/{{ v.id }}">
+                                <td><a href="/employee/reservation/{{ reservation.id }}">
                                     <button class="btn btn-primary btn-sm">More Details</button>
                                 </a></td>
-
-
                             </tr>
 
                             </tbody>
