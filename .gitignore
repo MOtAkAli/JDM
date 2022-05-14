@@ -139,3 +139,9 @@ static/base/images/avatars/*
 !static/base/images/avatars/default.png
 static/base/images/cars/*
 !static/base/images/cars/default.png
+
+# Migrations
+employee/migrations/*
+!employee/migrations/__init__.py
+user/migrations/*
+!user/migrations/__init__.py
