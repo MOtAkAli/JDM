@@ -33,6 +33,11 @@
             animation: popBackground 0.3s ease-in;
         }
 
+        .col-md-4 {
+            flex: 0 0 auto;
+            width: auto;
+        }
+        
         @keyframes popBackground {
             0% {
                 height: 20px;
@@ -172,10 +177,10 @@
         <div class="row">
             {% if cars %}
                 {% for car in cars %}
-                    <div class="card-car col-md-4 border-0 mb-4">
+                    <div onclick="location.href='{% url 'home:car-detail' car.pk %}';" class="card-car col-md-4 border-0 mb-4">
                         <div class="backgroundEffect"></div>
                         <div class="pic">
-                            <img class="" src="{{ car.picture.url }}" alt=""/>
+                            <img class="" src="{{ car.picture.url }}"/>
                         </div>
                         <div class="content">
                             <p class="h-1 mt-4 fw-bolder" style="text-transform: uppercase">
@@ -203,9 +208,9 @@
                     </div>
                 {% endfor %}
             {% else %}
-            <div class="col-12 badge bg-primary text-wrap" style="position: absolute;">
-                <h1 style="color: #ffffff;">No cars mathing your query were found. Please try again. </h1>
-              </div>   
+            <div class="col-12 badge bg-dark text-wrap">
+                <h1 style="color: #ffffff;">No cars matching your search is available now. Please try later. </h1>
+            </div>   
             <div class="col-12">            
                 <img src="{% static 'base/images/icons/90421-car-in-movement.gif' %}">
             </div> 

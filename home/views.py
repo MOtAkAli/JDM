@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-
-from employee.models import Car, Agency, CarModel, CarBrand, CarType
+import datetime
+from employee.models import Car, Agency, CarModel, CarBrand, CarType, Reservation
 from employee.filters import CarFilter
-
+from user.models  import CustomUser
+from django.http.response import HttpResponse
 
 class CarListView(ListView):
     model = Car
@@ -40,6 +41,21 @@ class CarDetailView(DetailView):
         pk = self.kwargs.get("pk")
         car = Car.objects.get(pk=pk)
         return car
+
+    def post(self, request, *args, **kwargs):
+        car = request.POST.get('car')
+        startDate = request.POST.get('startDate')
+        endDate = request.POST.get('endDate')
+        price = request.POST.get('price')
+        client = request.POST.get('client')
+        client = CustomUser.objects.get(pk=client)
+        car = Car.objects.get(pk=car)
+        startDate1 = datetime.datetime(startDate)
+        endDate1 = datetime.datetime.strptime(endDate)
+        dDate = abs((endDate1 - startDate1).days)
+        print(dDate)
+        Reservation.objects.create(startDate=startDate,endDate=endDate,price=price,car=car,client=client)
+        return HttpResponse(status=200)
 
 def index(request):
     return render(request, 'home/index.html')

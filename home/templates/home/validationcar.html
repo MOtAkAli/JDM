@@ -1,4 +1,6 @@
-{% extends 'base/base.html' %} {% load static %} {% block content %}
+{% extends 'base/base.html' %} {% load static %}
+{% block css %}
+
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
   p {
@@ -75,7 +77,12 @@
     font-weight: 200;
   }
 </style>
+
+
+{% endblock css %}
+{% block content %}
 <div class="container">
+  {% csrf_token %}
   <div class="row">
     <div class="col rounded float-start image">
       <img
@@ -124,15 +131,66 @@
       </ul>
       <br />
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button
+        <a
+          id="rentBtn"
           class="btn btn-primary me-md-2"
           type="button"
-          style="background-color: black"
-        >
+          style="background-color: black">
           RENT
-        </button>
+        </a>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<script>
+$( "#rentBtn" ).click(function() {
+  bootbox.dialog({
+    message: `
+
+      Start date : <input type="date" id="startDate"></input><br/>
+      End date   : <input type="date" id="endDate"></input>
+    `,
+    title: 'Pick a reservation date',
+    buttons: {
+        main: {
+            label: 'Rent',
+            className: 'btn-dark',
+            callback() {
+              var csrftoken = "{{ csrf_token }}";
+              var startDate = $( "#startDate" ).val();
+              var endDate =  $( "#endDate" ).val();
+              var  price = "{{object.carModel.carModelPrice}}";
+              var car = "{{ object.pk }}";
+              var client = "{{ user.pk }}"
+              data = {
+                csrfmiddlewaretoken: csrftoken,
+                startDate: startDate,
+                endDate :  endDate,
+                price : price,
+                car : car,
+                client : client
+              }
+              $.ajax({
+                method: "POST",
+                data: data,
+                url: "{% url 'home:car-detail' object.pk  %}",
+                success: function (response){
+                  console.log("WORKED");
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+
+                }
+              });
+                
+            }
+        }
+    }
+});
+});
+</script>
 {% endblock %}
