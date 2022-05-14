@@ -4,14 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    {% block title %}
     <title>
-        {% if title  %}
-            {% else %}
-                JDM
-            {% endif %}
+        {% block title %}
+            JDM
+        {% endblock %}
     </title>
-    {% endblock %}
     <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'base/css/Contact-Details.css' %}">
     <link rel="stylesheet" href="{% static 'base/css/Hero-Carousel.css' %}">

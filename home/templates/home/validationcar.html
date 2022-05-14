@@ -1,25 +1,21 @@
-{% extends 'base/base.html' %}
-{% load static %}
-
-
-{% block content %}
-    <style>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-p{
+{% extends 'base/base.html' %} {% load static %} {% block content %}
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+  p {
     margin: 0;
-}
+  }
 
-.container{
+  .container {
     margin: 25px auto;
-}
+  }
 
-.image{
+  .image {
     position: relative;
     width: 100%;
     overflow: hidden;
-}
+  }
 
-.image .overlay {
+  .image .overlay {
     position: absolute;
     bottom: 0;
     padding-left: 25px;
@@ -28,84 +24,115 @@ p{
     color: white;
     font-size: 20px;
     z-index: 5;
-}
+  }
 
-.image .overlay::before{
+  .image .overlay::before {
     content: "";
     background: #ffff;
     height: 100%;
     width: 100%;
     z-index: 1;
     position: absolute;
-    left:0;
+    left: 0;
     bottom: -150px;
     z-index: -2;
     opacity: 0.5;
     transition: all 0.3s ease-out;
-}
-.image:hover .overlay{
+  }
+  .image:hover .overlay {
     color: black;
-}
-.container .image:hover .overlay .amount,
-.container .image:hover .overlay .h4,
-.container .image:hover .overlay .textmuted,
-.container .image:hover .overlay .fa-star,
-.container .image:hover .overlay .fa-star-half-alt,
-.container .image:hover .overlay .review{
+  }
+  .container .image:hover .overlay .amount,
+  .container .image:hover .overlay .h4,
+  .container .image:hover .overlay .textmuted,
+  .container .image:hover .overlay .fa-star,
+  .container .image:hover .overlay .fa-star-half-alt,
+  .container .image:hover .overlay .review {
     color: black;
-}
+  }
 
-.image:hover .overlay::before{
+  .image:hover .overlay::before {
     bottom: 0px;
-}
+  }
 
-.amount{
+  .amount {
     font-size: 15px;
-
-}
-.textmuted{
+  }
+  .textmuted {
     color: #f8f8f8;
     font-weight: 200;
     font-size: 15px;
     text-transform: capitalize;
-}
-.fa-star,.fa-star-half-alt{
+  }
+  .fa-star,
+  .fa-star-half-alt {
     color: white;
     font-size: 10px;
     margin: 0 1px;
-}
-.review{
+  }
+  .review {
     font-size: 12px;
     font-weight: 200;
-}
+  }
 </style>
-    <div class="container">
-      <div class="row">
-        <div class="col rounded float-start image">
-          <img class="rounded" src="{{ object.picture.url }}" width="500" height="500" >
-          <div class="overlay">
-            <p class="amount">{{object.carModel.carModelPrice}}</p>
-            <p class="h4">{{ object.carModel.name }}</p>
-            <ul class="list-unstyled d-flex ">
-                <li><span class="fas fa-star"></span></li>
-                <li><span class="fas fa-star"></span></li>
-                <li><span class="fas fa-star"></span></li>
-                <li><span class="fas fa-star"></span></li>
-            </ul>
-        </div>
-        </div>
-        <div class="col">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Doors : {{ car.doors }}</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-            <li class="list-group-item">A fourth item</li>
-            <li class="list-group-item">And a fifth one</li>
-          </ul><br>
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-2" type="button" style="background-color: black ;">RENT</button>
-          </div>
-        </div>
+<div class="container">
+  <div class="row">
+    <div class="col rounded float-start image">
+      <img
+        class="rounded"
+        src="{{ object.picture.url }}"
+        width="700"
+        height="500"
+      />
+      <div class="overlay">
+        <b><p class="amount">{{object.carModel.carModelPrice}} MAD</p></b>
+        <p class="h4" style="text-transform: uppercase">
+          {{ object.carModel.name }}
+        </p>
+        <ul class="list-unstyled d-flex">
+          <li><span class="fas fa-star"></span></li>
+          <li><span class="fas fa-star"></span></li>
+          <li><span class="fas fa-star"></span></li>
+          <li><span class="fas fa-star"></span></li>
+        </ul>
       </div>
     </div>
+    <div class="col">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Doors : {{ object.doors }}</li>
+        <li class="list-group-item">Seats : {{ object.seats }}</li>
+        {% if object.ac == True %}
+        <li class="list-group-item">
+          A/C :
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            checked
+            disabled
+          />
+        </li>
+        {% endif %}
+        <li class="list-group-item">Gearbox : {{ object.gearbox }}</li>
+        <li class="list-group-item">Fuel : {{ object.fuel }}</li>
+        <li class="list-group-item">year : {{ object.year }}</li>
+        <li class="list-group-item">Car Type : {{ object.carType.name }}</li>
+        <li class="list-group-item">
+          Car Model : {{ object.carModel.carBrand }}
+        </li>
+        <li class="list-group-item">Agency : {{ object.agency.city }}</li>
+      </ul>
+      <br />
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button
+          class="btn btn-primary me-md-2"
+          type="button"
+          style="background-color: black"
+        >
+          RENT
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
