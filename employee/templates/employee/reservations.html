@@ -41,11 +41,10 @@
                             <th>Car</th>
                             <th>Date</th>
                             <th></th>
-
                         </tr>
                         </thead>
+                        <tbody>
                         {% for reservation in reservations_page %}
-                            <tbody>
                             <tr>
                                 <td><img class="rounded-circle me-2" width="30" height="30"
                                          src="{{ reservation.client.picture.url }}"><br>{{ reservation.client.first_name }} {{ reservation.client.last_name }}
@@ -68,9 +67,8 @@
                                     <button class="btn btn-primary btn-sm">More Details</button>
                                 </a></td>
                             </tr>
-
-                            </tbody>
                         {% endfor %}
+                        </tbody>
                         <tfoot>
                         <tr>
                             <td><strong>Client</strong></td>
@@ -101,23 +99,29 @@
                                                 <span aria-hidden="true">«</span></a></li>
                                     {% endif %}
                                     {% if page_has_previous %}
-                                        <li class="page-item"><a class="page-link"
-                                                                 href="/employee/reservations/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}1</a>
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/reservations/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
                                         </li>
                                     {% endif %}
-                                    <li class="page-item active"><a class="page-link"
-                                                                    href="/employee/reservations/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                    <li class="page-item active">
+                                        <a class="page-link"
+                                           href="/employee/reservations/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
                                     </li>
                                     {% if page_has_next %}
-                                        <li class="page-item"><a class="page-link"
-                                                                 href="/employee/reservations/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/reservations/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
                                         </li>
                                     {% endif %}
                                     {% if page_has_next %}
 
-                                        <li class="page-item"><a class="page-link" aria-label="Next"
-                                                                 href="/employee/reservations/{{ setof }}/{{ num_page_next }}"><span
-                                                aria-hidden="true">»</span></a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Next"
+                                               href="/employee/reservations/{{ setof }}/{{ num_page_next }}">
+                                                <span aria-hidden="true">»</span>
+                                            </a>
+                                        </li>
                                     {% endif %}
                                 </ul>
                             </nav>
