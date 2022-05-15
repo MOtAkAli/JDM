@@ -11,21 +11,17 @@ def index(request):
     return render(request, 'employee/index.html', {})
 
 def cars(request):
-    cars_data_base= Car.objects.all()
+    cars= Car.objects.all()
   
 
-    return render(request, 'employee/cars.html', {'cars_data_base':cars_data_base })
+    return render(request, 'employee/cars.html', {'cars':cars })
 
 
-def details(request):
+
+def car(request,id):
         
-        cars_data_base= Car.objects.all()
-        return render(request, 'employee/details.html', {'cars_data_base':cars_data_base })
-
-def details_with_id(request,id):
-        
-        id_cars=Car.objects.get(id=id)
-        return render(request, 'employee/details.html', {'cars_id': id_cars})
+        car=Car.objects.get(id=id)
+        return render(request, 'employee/car.html', {'car': car})
         
 
 def users(request, search, setof, num_page):

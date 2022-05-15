@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    {% block title %} <title>DETAILS - CARS - JDM</title>{% endblock %}
+    {% block title %} DETAILS - CARS - JDM {% endblock %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 
@@ -17,7 +17,7 @@
                 <div class="container-fluid">
                     
                     <h3 class="text-dark mb-4"> 
-                         {{ cars_id.carModel.carBrand.name  }} 
+                         {{ car.carModel.name  }} 
                     </h3> 
                 </div>
 
@@ -32,19 +32,19 @@
                 <div class="card-body">
                     <div class="row">
                                     <div class="col">
-                                            <img  src="{{ cars_id.picture.url }}"   style="width: 300px; height:300px; "class="rounded-circle" >
+                                            <img  src="{{ car.picture.url }}"   style="width: 300px; height:300px; "class="rounded-circle" >
                                     </div>
                                 <div class="col">
-                                    <p><strong>NAME : </strong>{{ cars_id.carModel.carBrand.name}} </p>
-                                    <p><strong>DOORS : </strong>{{ cars_id.doors}} </p>
-                                    <p><strong>SEATS : </strong>{{ cars_id.seats}} </p>
-                                    <p><strong>GEARBOX : </strong>{{ cars_id.gearbox}} </p>
+                                    <p><strong>NAME : </strong>{{ car.carModel.name }} </p>
+                                    <p><strong>DOORS : </strong>{{ car.doors}} </p>
+                                    <p><strong>SEATS : </strong>{{ car.seats}} </p>
+                                    <p><strong>GEARBOX : </strong>{{ car.gearbox}} </p>
                                 </div>
                                 <div class="col"> 
-                                    <p><strong>FUEL : </strong>{{ cars_id.fuel}} </p>
-                                        <p><strong>YEAR : </strong>{{ cars_id.year}} </p>
-                                        <p><strong>CAR_TYPE : </strong>{{ cars_id.carType}} </p>
-                                        <p><strong>CAR_MODEL : </strong>{{ cars_id.carModel}} </p>
+                                    <p><strong>FUEL : </strong>{{ car.fuel}} </p>
+                                        <p><strong>YEAR : </strong>{{ car.year}} </p>
+                                        <p><strong>CAR_TYPE : </strong>{{ car.carType}} </p>
+                                        <p><strong>CAR_MODEL : </strong>{{ car.carModel}} </p>
                                         
                                 </div>
                     </div>
@@ -57,12 +57,8 @@
                         
                     <div class="card shadow mb-5">
                         <div class="card-header py-3">
-                            
-                                    <div class="form-check">
-                                    <input type="checkbox" name="check" >
-                        
-                          
-                              </div> 
+                            <input type="button" class="btn btn-primary"  {% if car.is_active %} value="ACTIVE" {% else %} value="DESACTIVE" {% endif %}    >
+
                             <p class="text-primary m-0 fw-bold">Forum Settings</p>
                         </div>
                         <div class="card-body">
