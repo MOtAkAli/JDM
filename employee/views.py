@@ -13,6 +13,8 @@ def reservations(request, setof, num_page):
     reservations = Reservation.objects.all()
     paginator = Paginator(reservations, setof)
     reservations_page = paginator.get_page(num_page)
+    if int(num_page) > paginator.num_pages:
+        num_page = paginator.num_pages
     return render(request, 'employee/reservations.html',
                   {
                    "reservations_page": reservations_page,
