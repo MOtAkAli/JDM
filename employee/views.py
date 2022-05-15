@@ -24,38 +24,69 @@ def annually_earnings_list(annually_earnings):
 
 def avg_earnings(earnings_list):
     sum_earnings = 0
-    for earning in earnings_list.values():
+    for earning in earnings_list:
         sum_earnings += earning
-    return sum_earnings / len(earnings_list)
+    return 0 if len(earnings_list) == 0 else int(sum_earnings / len(earnings_list))
 
 
 def index(request):
     reservations = Reservation.objects.all()
-    monthly_earnings = monthly_earnings_list(
-        reservations.filter(employee__isnull=False).annotate(month=TruncMonth('startDate')).values('month').annotate(
-            count=Avg('price')))
+    if request.method == 'POST':
+        if request.POST['which_one'] == 'reservations':
+            monthly_earnings = monthly_earnings_list(
+                reservations.
+                    filter(paid=True).
+                    filter(start_date__year=request.POST['year']).
+                    annotate(month=TruncMonth('start_date')).
+                    values('month').annotate(count=Avg('price'))
+            )
+            return JsonResponse(
+                {
+                    'months': list(monthly_earnings.keys()),
+                    'monthly_earnings': list(monthly_earnings.values()),
+                    'monthly_earning': avg_earnings(monthly_earnings.values()),
+                }
+            )
+    #
     annually_earnings = annually_earnings_list(
-        reservations.filter(employee__isnull=False).annotate(year=TruncYear('startDate')).values('year').annotate(
-            count=Avg('price')))
+        reservations.
+            filter(paid=True).
+            annotate(year=TruncYear('start_date')).
+            values('year').
+            annotate(count=Avg('price'))
+    )
+    years = [year for year in reversed(annually_earnings.keys())]
+    annually_earnings = [annually_earnings for annually_earnings in reversed(annually_earnings.values())]
+    #
+    monthly_earnings = monthly_earnings_list(
+        reservations.
+            filter(paid=True).
+            filter(start_date__year=years[0]).
+            annotate(month=TruncMonth('start_date')).
+            values('month').
+            annotate(count=Avg('price'))
+    )
+    months = monthly_earnings.keys()
+    monthly_earnings = monthly_earnings.values()
+    #
     return render(
         request,
         'employee/index.html',
         {
-            'months': monthly_earnings.keys(),
-            'monthly_earnings': monthly_earnings.values(),
+            'months': months,
+            'monthly_earnings': monthly_earnings,
             'reservations_monthly_earning': avg_earnings(monthly_earnings),
-            'years': annually_earnings.keys(),
-            'annually_earnings': annually_earnings.values(),
+            'years': years,
+            'annually_earnings': annually_earnings,
             'reservations_annually_earning': avg_earnings(annually_earnings),
             'reservations_count': reservations.count(),
-            'verified_reservations_count': reservations.filter(employee__isnull=False).count(),
+            'verified_reservations_count': reservations.filter(confirmed=True).count(),
         }
     )
 
 
 def users(request, search, setof, num_page):
     if request.method == 'POST':
-        print(request.POST)
         try:
             user = CustomUser.objects.get(id=int(request.POST['id']))
             user.is_active = bool(int(request.POST['is_active']))
