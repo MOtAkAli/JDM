@@ -8,4 +8,4 @@ class CarFilter(django_filters.FilterSet):  # Do not confuse with the actual car
 
     class Meta:
         model = Car
-        fields = ['carModel__carBrand','agency__city']
+        fields = ['carModel__car_brand','agency__city']
