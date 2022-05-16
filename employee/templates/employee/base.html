@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>
         {% block title %}
-            Blank Page - Brand
+            Blank Page
         {% endblock %}
     </title>
     <link rel="stylesheet" href="{% static 'employee/bootstrap/css/bootstrap.min.css' %}">
@@ -102,14 +102,12 @@
         </div>
         <footer class="bg-white sticky-footer">
             <div class="container my-auto">
-                <div class="text-center my-auto copyright"><span>Copyright © JDM 2022</span></div>
+                <div class="text-center my-auto copyright"><span>Copyright © JDM {% now "Y" %}</span></div>
             </div>
         </footer>
     </div>
     <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
 <script src="{% static 'employee/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'employee/js/chart.min.js' %}"></script>
-<script src="{% static 'employee/js/script.min.js' %}"></script>
 </body>
 </html>

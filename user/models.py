@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, User
 from cities_light.models import City
 from enum import Enum
 
@@ -48,7 +48,11 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    inactive_reason = models.CharField(max_length=200, default='Email need to be verified')
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=False)
+    status_reason = models.CharField(max_length=200, null=True, blank=True, default='Email need to be verified')
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
     phone = models.CharField(max_length=15)
