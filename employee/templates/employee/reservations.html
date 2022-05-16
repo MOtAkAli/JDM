@@ -1,5 +1,5 @@
 {% extends 'employee/base.html' %}
-
+{% load static %}
 {% block content %}
 
     {% load static %}
@@ -131,17 +131,12 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
     <script>
         let select = $('#show');
         select.change('change', function () {
-            let search = $('#search_text').val();
-            if (search === '') {
-                window.location.href = '/employee/users/search//' + select.val() + '/1';
-            } else {
-                let filter = $('#filter').val();
-                let splitInSearch = window.location.href.split(`${filter}=${search}`);
-                window.location.href = `${splitInSearch[0]}${filter}=${search}/${select.val()}/1`;
-            }
+            let first = window.location.href.split('reservations/')[0];
+            window.location.href = `${first}reservations/${select.val()}/1`
         });
     </script>
 {% endblock %}
