@@ -15,32 +15,32 @@
                                 <form>
                                     <div class="row">
                                         <div class="col">
-                                            <img style="height: 90%; width: 90%; "
+                                            <img style="height: 300px; width: 300px; "
                                                  src="{{ reservation.client.picture.url }}">
                                         </div>
 
                                         <div class="col">
 
-                                            <label> <strong style="font-size: 200%; text-decoration: underline;">User
+                                            <label> <strong style=" text-decoration: underline;">User
                                                 Name</strong></label>
-                                            <h2 id="username"
+                                            <p id="username"
                                                 name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}
-                                            </h2><br><br>
-                                            <label> <strong style="text-decoration: underline; font-size: 200%;">Email
+                                            </p><br><br>
+                                            <label> <strong style="text-decoration: underline; ">Email
                                                 Address</strong></label>
-                                            <h2 id="email"
+                                            <p id="email"
                                                 name="email">{{ reservation.client.email }}
-                                            </h2><br><br>
+                                            </p><br><br>
 
-                                            <label><strong style="text-decoration: underline; font-size: 200%;">Phone
+                                            <label><strong style="text-decoration: underline;">Phone
                                                 Number</strong></label>
-                                            <h2 id="phone"
+                                            <p id="phone"
                                                 name="phone">{{ reservation.client.phone }}
-                                            </h2><br><br>
-                                            <label><strong style="text-decoration: underline; font-size: 200%;">Address</strong></label>
-                                            <h2 id="address"
+                                            </p><br><br>
+                                            <label><strong style="text-decoration: underline; ">Address</strong></label>
+                                            <p id="address"
                                                 name="adresse">{{ reservation.client.address }}
-                                            </h2><br>
+                                            </p><br>
                                         </div>
                                     </div>
                                 </form>
@@ -61,23 +61,23 @@
 
 
                                         <div class="col">
-                                            <label class="form-label"><strong style="text-decoration: underline; font-size: 200%;">Start
+                                            <label class="form-label"><strong style="text-decoration: underline;">Start
                                                 Date</strong></label>
-                                            <h2>
+                                            <p>
                                                 {{ reservation.startDate }}
-                                            </h2><br><br>
+                                            </p><br><br>
 
-                                            <label class="form-label"><strong style="text-decoration: underline; font-size: 200%;">End
+                                            <label class="form-label"><strong style="text-decoration: underline;">End
                                                 Date</strong></label>
-                                            <h2>
+                                            <p>
                                                 {{ reservation.endDate }}
-                                            </h2><br><br>
+                                            </p><br><br>
 
-                                            <label> <strong style="text-decoration: underline; font-size: 200%;">Car
+                                            <label> <strong style="text-decoration: underline;">Car
                                                 Model</strong></label>
-                                            <h2>
+                                            <p>
                                                 {{ reservation.car.carModel }}
-                                            </h2>
+                                            </p>
                                         </div>
                                     </div>
                                 </form>
