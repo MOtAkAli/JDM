@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from user.models import CustomUser, Role
+from user.models import CustomUser, Role, RoleEnum
 from django.core.paginator import Paginator
 from .models import Reservation
 from django.db.models import Avg
@@ -105,7 +105,7 @@ def users(request, search, setof, num_page):
     users = CustomUser.objects. \
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
-        exclude(roles__in=Role.objects.filter(name__in=('CM', 'RM', 'VM'))). \
+        exclude(roles__in=Role.objects.filter(name__in=(RoleEnum.CLIENT_MANAGER.value, RoleEnum.RESERVATION_MANAGER.value, RoleEnum.VEHICLE_MANAGER.value))). \
         order_by('id')
 
     if search[0] == 'id':
