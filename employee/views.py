@@ -80,7 +80,7 @@ def index(request):
             'annually_earnings': annually_earnings,
             'reservations_annually_earning': avg_earnings(annually_earnings),
             'reservations_count': reservations.count(),
-            'verified_reservations_count': reservations.filter(confirmed=True).count(),
+            'paid_reservations_count': reservations.filter(paid=True).count(),
         }
     )
 
