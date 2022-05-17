@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-import datetime
+from datetime import datetime
 from employee.models import Car, Agency, CarModel, CarBrand, CarType, Reservation
 from employee.filters import CarFilter
 from user.models import CustomUser
@@ -51,11 +51,11 @@ class CarDetailView(DetailView):
         client = request.POST.get('client')
         client = CustomUser.objects.get(pk=client)
         car = Car.objects.get(pk=car)
-        # startDate1 = datetime.datetime(startDate)
-        # endDate1 = datetime.datetime.strptime(endDate)
-        # dDate = abs((endDate1 - startDate1).days)
-        # print(dDate)
-        Reservation.objects.create(startDate=startDate, endDate=endDate, price=price, car=car, client=client)
+        start = datetime.strptime(startDate,'%Y-%m-%d')
+        end = datetime.strptime(endDate,'%Y-%m-%d')
+        rentdays = end - start
+        newprice = float(price) * float(rentdays.days)
+        Reservation.objects.create(start_date=startDate, end_date=endDate, price=newprice, car=car, client=client)
         return HttpResponse(status=200)
 
 
