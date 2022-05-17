@@ -66,7 +66,7 @@ function reservations_annually_chart(years, values, canvas_id) {
     const annually_data = {
         labels: years,
         datasets: [{
-            label: 'My First Dataset',
+            label: 'Earnings',
             data: values,
             backgroundColor: rgb_colors_gen(years.length),
             hoverOffset: 4
