@@ -28,13 +28,13 @@
             <hr class="sidebar-divider my-0">
             <ul class="navbar-nav text-light" id="accordionSidebar">
                 <li class="nav-item">
-                    <a class="nav-link" href="/employee/">
+                    <a class="nav-link {% block dashboard_link_css_class %}{% endblock %}" href="/employee/">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/employee/users/search//10/1">
+                    <a class="nav-link {% block users_link_css_class %}{% endblock %}" href="/employee/users/search//10/1">
                         <i class="fas fa-table"></i>
                         <span>Users</span>
                     </a>
@@ -109,5 +109,6 @@
     <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
 <script src="{% static 'employee/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'employee/js/theme.js' %}"></script>
 </body>
 </html>
