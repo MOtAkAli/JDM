@@ -80,6 +80,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h6 class="text-primary fw-bold m-0">Earnings (monthly) Overview</h6>
+                            {% csrf_token %}
                             <select class="form-select form-select-sm w-auto" id="reservations_year_select">
                                 {% for year in years %}
                                     <option value="{{ year }}">{{ year }}</option>
