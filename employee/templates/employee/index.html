@@ -3,8 +3,11 @@
 {% block title %}
     Dashboard
 {% endblock %}
+{% block dashboard_link_css_class %}
+    active
+{% endblock %}
 {% block content %}
-    <div class="card shadow">
+    <div class="card shadow mb-4">
         <div class="card-header py-3">
             <p class="text-primary m-0 fw-bold">Reservations</p>
         </div>
@@ -21,7 +24,7 @@
                                         <span id="monthly_earning">{{ reservations_monthly_earning }} DH</span>
                                     </div>
                                 </div>
-                                <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300"></i></div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
                             </div>
                         </div>
                     </div>
@@ -53,7 +56,7 @@
                                         <span>{{ reservations_count }}</span>
                                     </div>
                                 </div>
-                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                                <div class="col-auto"><i class="fas fa-search-dollar fa-2x text-gray-300"></i></div>
                             </div>
                         </div>
                     </div>
@@ -64,12 +67,12 @@
                             <div class="row align-items-center no-gutters">
                                 <div class="col me-2">
                                     <div class="text-uppercase text-warning fw-bold text-xs mb-1">
-                                        <span>Verified</span></div>
+                                        <span>Paid</span></div>
                                     <div class="text-dark fw-bold h5 mb-0">
-                                        <span>{{ verified_reservations_count }}</span>
+                                        <span>{{ paid_reservations_count }}</span>
                                     </div>
                                 </div>
-                                <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i></div>
+                                <div class="col-auto"><i class="fas fa-comment-dollar fa-2x text-gray-300"></i></div>
                             </div>
                         </div>
                     </div>
@@ -80,6 +83,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h6 class="text-primary fw-bold m-0">Earnings (monthly) Overview</h6>
+                            {% csrf_token %}
                             <select class="form-select form-select-sm w-auto" id="reservations_year_select">
                                 {% for year in years %}
                                     <option value="{{ year }}">{{ year }}</option>
@@ -108,12 +112,165 @@
             </div>
         </div>
     </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Cars</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 col-xl-4 mb-4">
+                    <div class="card shadow border-start-primary py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Count</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ cars_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-car fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4">
+                    <div class="card shadow border-start-success py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Active</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ active_cars_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-car-side fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4">
+                    <div class="card shadow border-start-success py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Inactive</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ inactive_cars_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-car-crash fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-7 col-xl-8">
+                    <div class="card shadow mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="text-primary fw-bold m-0">Brands Overview</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="reservations_monthly_chart_div">
+                                <canvas id="car_brands_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="text-primary fw-bold m-0">Types Overview</h6>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="car_types_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Users</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 col-xl-4 mb-4">
+                    <div class="card shadow border-start-primary py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Count</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ users_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-user-alt fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4">
+                    <div class="card shadow border-start-success py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Active</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ active_users_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-user-check fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4">
+                    <div class="card shadow border-start-success py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Inactive</span>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0">
+                                        <span>{{ inactive_users_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-user-times fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-primary fw-bold m-0">Cities Overview</h6>
+                </div>
+                <div class="card-body">
+                    <div id="reservations_monthly_chart_div">
+                        <canvas id="users_cities_chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="{% static 'employee/js/chart.min.js' %}"></script>
     <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'employee/js/functions.js' %}"></script>
     <script src="{% static 'employee/js/index.html.js' %}"></script>
     <script>
-        reservations_monthly_chart(
+        {#reservations monthly chart#}
+        one_color_chart(
+            'line',
+            'Earnings',
             [
                 {% for month in months %}
                     '{{ month }}',
@@ -126,7 +283,10 @@
             ],
             'reservations_monthly_chart',
         );
-        reservations_annually_chart(
+        {#reservations annually chart#}
+        multi_colors_chart(
+            'pie',
+            'Earnings',
             [
                 {% for year in years %}
                     '{{ year }}',
@@ -138,6 +298,54 @@
                 {% endfor %}
             ],
             'reservations_annually_chart',
+        );
+        {#car brands counts#}
+        one_color_chart(
+            'bar',
+            'count',
+            [
+                {% for brand in car_brands %}
+                    '{{ brand }}',
+                {% endfor %}
+            ],
+            [
+                {% for count in car_brands_counts %}
+                    {{ count }},
+                {% endfor %}
+            ],
+            'car_brands_chart',
+        );
+        {#car types counts#}
+        multi_colors_chart(
+            'doughnut',
+            'count',
+            [
+                {% for type in car_types %}
+                    '{{ type }}',
+                {% endfor %}
+            ],
+            [
+                {% for count in car_types_counts %}
+                    {{ count }},
+                {% endfor %}
+            ],
+            'car_types_chart',
+        );
+        {#users cities chart#}
+        one_color_chart(
+            'bar',
+            'count',
+            [
+                {% for city in users_cities %}
+                    '{{ city }}',
+                {% endfor %}
+            ],
+            [
+                {% for count in cities_counts %}
+                    {{ count }},
+                {% endfor %}
+            ],
+            'users_cities_chart',
         );
     </script>
 {% endblock %}

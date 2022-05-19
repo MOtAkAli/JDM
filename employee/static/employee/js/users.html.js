@@ -50,7 +50,6 @@ $('#search').click(function () {
             alert('Choose a search filter');
             return;
         }
-        let afterSearchSplit = splitInSearch[1].split('/');
-        window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${afterSearchSplit[1]}/${afterSearchSplit[2]}`;
+        window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${splitInSearch[1].split('/')[1]}/1`;
     }
 });
