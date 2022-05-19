@@ -22,31 +22,33 @@ function get_stats(which_one, year, canvas_id) {
         dataType: 'json',
         success: function (response) {
             $('#monthly_earning').text(`${response.monthly_earning} DH`);
-            reservations_monthly_chart(response.months, response.monthly_earnings, canvas_id);
+            one_color_chart('line', 'Earnings', response.months, response.monthly_earnings, canvas_id);
         },
     });
 }
 
-function reservations_monthly_chart(months, values, canvas_id) {
-    const monthly_data = {
-        labels: months,
+function one_color_chart(chart_type, label, labels, values, canvas_id) {
+    const chart_data = {
+        labels: labels,
         datasets: [{
-            label: 'Earnings',
+            label: label,
             backgroundColor: 'rgb(78, 115, 223)',
             borderColor: 'rgb(78, 115, 223)',
             data: values,
         }]
     };
 
-    const monthlyConfig = {
-        type: 'line',
-        data: monthly_data,
-        options: {}
+    const chart_config = {
+        type: chart_type,
+        data: chart_data,
+        options: {
+            barPercentage: 0.25
+        }
     };
 
-    const monthly_chart = new Chart(
+    const chart = new Chart(
         document.getElementById(canvas_id),
-        monthlyConfig
+        chart_config
     );
 }
 
@@ -62,24 +64,24 @@ function rgb_colors_gen(count) {
     return rgbs;
 }
 
-function reservations_annually_chart(years, values, canvas_id) {
-    const annually_data = {
-        labels: years,
+function multi_colors_chart(chart_type, label, labels, values, canvas_id) {
+    const chart_data = {
+        labels: labels,
         datasets: [{
-            label: 'Earnings',
+            label: label,
             data: values,
-            backgroundColor: rgb_colors_gen(years.length),
+            backgroundColor: rgb_colors_gen(labels.length),
             hoverOffset: 4
         }]
     };
 
-    const annually_config = {
-        type: 'pie',
-        data: annually_data,
+    const chart_config = {
+        type: chart_type,
+        data: chart_data,
     };
 
-    const annually_chart = new Chart(
+    const chart = new Chart(
         document.getElementById(canvas_id),
-        annually_config
+        chart_config
     );
 }
