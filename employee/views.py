@@ -57,9 +57,27 @@ def cars_count_by_brand_dict(cars_count_by_brand):
     return brands_count
 
 
+def users_count_by_cities_dict(users_count_by_cities):
+    cities_counts = {}
+    for user_count_by_city in users_count_by_cities:
+        cities_counts[user_count_by_city['city__name']] = user_count_by_city['count']
+    return cities_counts
+
+
 def index(request):
     reservations = Reservation.objects.all()
     cars = Car.objects.all()
+    users = CustomUser.objects. \
+        exclude(is_superuser=True). \
+        exclude(is_staff=True). \
+        exclude(roles__in=Role.objects.filter(
+            name__in=(
+                    RoleEnum.CLIENT_MANAGER.value,
+                    RoleEnum.RESERVATION_MANAGER.value,
+                    RoleEnum.VEHICLE_MANAGER.value,
+                )
+            )
+        )
     if request.method == 'POST':
         # ajax reservations by year
         if request.POST['which_one'] == 'reservations':
@@ -108,6 +126,10 @@ def index(request):
     cars_count_by_type = cars_count_by_type_dict(
         cars.values('car_type__name').annotate(count=Count('car_type__name'))
     )
+    # user cities counts
+    users_count_by_cities = users_count_by_cities_dict(
+        users.values('city__name').annotate(count=Count('city__name'))
+    )
     return render(
         request,
         'employee/index.html',
@@ -129,6 +151,12 @@ def index(request):
             'car_brands_counts': cars_count_by_brand.values(),
             'car_types': cars_count_by_type.keys(),
             'car_types_counts': cars_count_by_type.values(),
+            # users
+            'users_count': users.count(),
+            'active_users_count': users.filter(is_active=True).count(),
+            'inactive_users_count': users.filter(is_active=False).count(),
+            'users_cities': users_count_by_cities.keys(),
+            'cities_counts': users_count_by_cities.values(),
         }
     )
 
@@ -154,14 +182,14 @@ def users(request, search, setof, num_page):
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
         exclude(
-            roles__in=Role.objects.filter(
-                name__in=(
-                    RoleEnum.CLIENT_MANAGER.value,
-                    RoleEnum.RESERVATION_MANAGER.value,
-                    RoleEnum.VEHICLE_MANAGER.value
-                )
+        roles__in=Role.objects.filter(
+            name__in=(
+                RoleEnum.CLIENT_MANAGER.value,
+                RoleEnum.RESERVATION_MANAGER.value,
+                RoleEnum.VEHICLE_MANAGER.value
             )
-        ). \
+        )
+    ). \
         order_by('id')
 
     if search[0] == 'id':
