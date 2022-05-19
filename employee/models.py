@@ -64,7 +64,7 @@ class Car(models.Model):
         ('BD', 'Bio Diesel'),
         ('E', 'Ethanol'),
     )
-    registration_number = models.CharField(max_length=20)
+    registration_number = models.CharField(max_length=20, unique=True)
     is_active = models.BooleanField(default=True)
     status_reason = models.CharField(max_length=200, null=True, blank=True, default='')
     description = models.CharField(max_length=2000)
