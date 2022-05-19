@@ -1,0 +1,112 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block reservations_link_css_class %}
+    active
+{% endblock %}
+{% block content %}
+    <h3 class="text-dark mb-4">Profile</h3>
+    <div class="row mb-3">
+        <div class="">
+            <div class="row">
+                <div class="col">
+                    <div class="card shadow mb-3 w-100">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Client</p>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col">
+                                        <img style="height: 300px; width: 300px; "
+                                             src="{{ reservation.client.picture.url }}">
+                                    </div>
+
+                                    <div class="col">
+
+                                        <label> <strong style=" text-decoration: underline;">User
+                                            Name</strong></label>
+                                        <p id="username"
+                                           name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}
+                                        </p><br><br>
+                                        <label> <strong style="text-decoration: underline; ">Email
+                                            Address</strong></label>
+                                        <p id="email"
+                                           name="email">{{ reservation.client.email }}
+                                        </p><br><br>
+
+                                        <label><strong style="text-decoration: underline;">Phone
+                                            Number</strong></label>
+                                        <p id="phone"
+                                           name="phone">{{ reservation.client.phone }}
+                                        </p><br><br>
+                                        <label><strong style="text-decoration: underline; ">Address</strong></label>
+                                        <p id="address"
+                                           name="adresse">{{ reservation.client.address }}
+                                        </p><br>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold"> Car Details</p>
+                        </div>
+
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col">
+                                        <img style="height: 99%; width: 100%;"
+                                             src="{{ reservation.car.picture.url }}" alt="">
+                                    </div>
+
+
+                                    <div class="col">
+                                        <label class="form-label"><strong style="text-decoration: underline;">Start
+                                            Date</strong></label>
+                                        <p>
+                                            {{ reservation.start_date }}
+                                        </p><br><br>
+
+                                        <label class="form-label"><strong style="text-decoration: underline;">End
+                                            Date</strong></label>
+                                        <p>
+                                            {{ reservation.end_date }}
+                                        </p><br><br>
+
+                                        <label> <strong style="text-decoration: underline;">Car
+                                            Model</strong></label>
+                                        <p>
+                                            {{ reservation.car.car_model }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-5">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Employee</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form>
+                        <div class="mb-3"><label class="form-label"
+                                                 for="signature"><strong>Notes</strong><br></label><textarea
+                                class="form-control" id="signature" rows="4" name="signature"></textarea></div>
+
+                        <div class="mb-3">
+                            <button class="btn btn-primary btn-sm" type="submit">VALIDATE</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

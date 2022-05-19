@@ -223,3 +223,46 @@ def users(request, search, setof, num_page):
             'num_page_next': int(num_page) + 1,
         }
     )
+
+def reservations(request, search, setof, num_page):
+    reservations = Reservation.objects.all()
+
+    search = search.split('=')
+
+    if search[0] == 'id':
+        reservations = reservations.filter(client__idn__contains=search[1])
+    elif search[0] == 'first_name':
+        reservations = reservations.filter(client__first_name__icontains=search[1])
+    elif search[0] == 'last_name':
+        reservations = reservations.filter(client__last_name__contains=search[1])
+    elif search[0] == 'email':
+        reservations = reservations.filter(client__email__contains=search[1])
+    elif search[0] == 'phone':
+        reservations = reservations.filter(client__phone__contains=search[1])
+
+    paginator = Paginator(reservations, 1)
+    reservations_page = paginator.get_page(num_page)
+    if int(num_page) > paginator.num_pages:
+        num_page = paginator.num_pages
+    return render(
+        request,
+        'employee/reservations.html',
+        {
+            'search_filter': search[0] if len(search) == 2 else '',
+            'search_value': search[1] if len(search) == 2 else '',
+            'search_is_active': True if len(search) == 2 else False,
+            "reservations_page": reservations_page,
+            "count": paginator.count,
+            "page_has_previous": reservations_page.has_previous,
+            "page_has_next": reservations_page.has_next,
+            "setof": int(setof),
+            "num_page_previous": int(num_page) - 1,
+            "num_page": int(num_page),
+            "num_page_next": int(num_page) + 1,
+        }
+    )
+
+
+def reservation(request, id):
+    reservation = Reservation.objects.get(id=id)
+    return render(request, 'employee/reservation.html', {"reservation": reservation,})
