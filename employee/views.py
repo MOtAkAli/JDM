@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 from .models import Reservation
 from django.db.models import Avg
 from django.db.models.functions import TruncMonth, TruncYear
 import calendar
+from user.models import CustomUser, Role
 
 
 def monthly_earnings_list(monthly_earnings):
@@ -140,14 +141,31 @@ def users(request, search, setof, num_page):
     )
 
 
-def reservations(request, setof, num_page):
+def reservations(request, search, setof, num_page):
     reservations = Reservation.objects.all()
+
+    search = search.split('=')
+
+    if search[0] == 'id':
+        reservations = reservations.filter(client__idn__contains=search[1])
+    elif search[0] == 'first_name':
+        reservations = reservations.filter(client__first_name__icontains=search[1])
+    elif search[0] == 'last_name':
+        reservations = reservations.filter(client__last_name__contains=search[1])
+    elif search[0] == 'email':
+        reservations = reservations.filter(client__email__contains=search[1])
+    elif search[0] == 'phone':
+        reservations = reservations.filter(client__phone__contains=search[1])
+
     paginator = Paginator(reservations, setof)
     reservations_page = paginator.get_page(num_page)
     if int(num_page) > paginator.num_pages:
         num_page = paginator.num_pages
     return render(request, 'employee/reservations.html',
                   {
+                   'search_filter': search[0] if len(search) == 2 else '',
+                   'search_value': search[1] if len(search) == 2 else '',
+                   'search_is_active': True if len(search)==2 else False,
                    "reservations_page": reservations_page,
                    "count": paginator.count,
                    "page_has_previous": reservations_page.has_previous,

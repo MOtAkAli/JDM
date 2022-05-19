@@ -25,16 +25,35 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label
-                                class="form-label"><input type="search" class="form-control form-control-sm"
-                                                          aria-controls="dataTable" placeholder="Search"></label></div>
+                        <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                            <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
+                                <option value="">Select filter</option>
+                                <option value="id" {% if search_filter == 'id' %} selected {% endif %}>ID</option>
+                                <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>
+                                    First name
+                                </option>
+                                <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>
+                                    Last name
+                                </option>
+                                <option value="email" {% if search_filter == 'email' %} selected {% endif %}>Email
+                                </option>
+                                <option value="phone" {% if search_filter == 'phone' %} selected {% endif %}>Phone
+                                </option>
+                            </select>
+                            <label class="form-label">
+                                <input type="text" id="search_text" value="{{ search_value }}"
+                                       class="form-control form-control-sm" aria-controls="dataTable"
+                                       placeholder="Search">
+                            </label>
+                            <button class="btn btn-primary btn-sm" id="search">Search</button>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                     <table class="table my-0" id="dataTable">
                         <thead>
                         <tr>
-                            <th>Clinet</th>
+                            <th>Client</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
@@ -55,7 +74,7 @@
                                 <td>{{ reservation.car.carModel }}</td>
                                 <td>{{ reservation.startDate }} to {{ reservation.endDate }}</td>
                                 <td>
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox"  id="flexCheckDefault">
                                     <label class="form-check-label" for="flexCheckDefault">paid</label>
                                 </td>
                                 <td>
@@ -85,8 +104,7 @@
                 <div class="row">
                     <div class="col-md-6 align-self-center">
                         <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1
-                            to {{ setof }} of {{ count }}
-                        </p>
+                            to {{ setof }} of {{ count }}</p>
                     </div>
                     {% if page_has_previous or page_has_next %}
                         <div class="col-md-6">
@@ -95,30 +113,31 @@
                                     {% if page_has_previous %}
                                         <li class="page-item">
                                             <a class="page-link" aria-label="Previous"
-                                               href="/employee/reservations/{{ setof }}/{{ num_page_previous }}">
-                                                <span aria-hidden="true">«</span></a></li>
+                                               href="/employee/reservations/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_previous }}">
+                                                <span aria-hidden="true">«</span>
+                                            </a>
+                                        </li>
                                     {% endif %}
                                     {% if page_has_previous %}
                                         <li class="page-item">
                                             <a class="page-link"
-                                               href="/employee/reservations/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                               href="/employee/reservations/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
                                         </li>
                                     {% endif %}
                                     <li class="page-item active">
                                         <a class="page-link"
-                                           href="/employee/reservations/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                           href="/employee/reservations/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
                                     </li>
                                     {% if page_has_next %}
                                         <li class="page-item">
                                             <a class="page-link"
-                                               href="/employee/reservations/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                               href="/employee/reservations/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
                                         </li>
                                     {% endif %}
                                     {% if page_has_next %}
-
                                         <li class="page-item">
                                             <a class="page-link" aria-label="Next"
-                                               href="/employee/reservations/{{ setof }}/{{ num_page_next }}">
+                                               href="/employee/reservations/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_next }}">
                                                 <span aria-hidden="true">»</span>
                                             </a>
                                         </li>
@@ -133,10 +152,33 @@
     </div>
     <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
     <script>
+        $('#search').click(function () {
+            let search = $('#search_text').val();
+            let splitInSearch = window.location.href.split('/search/');
+            if (search === '') {
+                window.location.href = `${splitInSearch[0]}/search//10/1`;
+            } else {
+                let filter = $('#filter').val();
+                if (filter === '') {
+                    alert('Choose a search filter');
+                    return;
+                }
+                let afterSearchSplit = splitInSearch[1].split('/');
+                window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${afterSearchSplit[1]}/${afterSearchSplit[2]}`;
+            }
+        });
+
+
         let select = $('#show');
         select.change('change', function () {
-            let first = window.location.href.split('reservations/')[0];
-            window.location.href = `${first}reservations/${select.val()}/1`
+            let search = $('#search_text').val();
+            if (search === '') {
+                window.location.href = '/employee/reservations/search//' + select.val() + '/1';
+            } else {
+                let filter = $('#filter').val();
+                let splitInSearch = window.location.href.split(`${filter}=${search}`);
+                window.location.href = `${splitInSearch[0]}${filter}=${search}/${select.val()}/1`;
+            }
         });
     </script>
 {% endblock %}
