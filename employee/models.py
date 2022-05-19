@@ -38,7 +38,7 @@ class CarType(models.Model):
     name = models.CharField(max_length=3, choices=CAR_TYPES, unique=True)
 
     def __str__(self):
-        return self.name
+        return dict(self.CAR_TYPES).get(self.name)
 
 
 class CarModel(models.Model):
@@ -64,6 +64,7 @@ class Car(models.Model):
         ('BD', 'Bio Diesel'),
         ('E', 'Ethanol'),
     )
+    registration_number = models.CharField(max_length=20)
     is_active = models.BooleanField(default=True)
     status_reason = models.CharField(max_length=200, null=True, blank=True, default='')
     description = models.CharField(max_length=2000)
@@ -74,12 +75,12 @@ class Car(models.Model):
     fuel = models.CharField(max_length=2, choices=FUELS)
     year = models.PositiveSmallIntegerField()
     picture = models.ImageField(upload_to='cars/', default='cars/default.png')
-    carType = models.ForeignKey(CarType, on_delete=models.PROTECT)
-    carModel = models.ForeignKey(CarModel, on_delete=models.PROTECT)
+    car_type = models.ForeignKey(CarType, on_delete=models.PROTECT)
+    car_model = models.ForeignKey(CarModel, on_delete=models.PROTECT)
     agency = models.ForeignKey(Agency, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.carType.name + " " + str(self.carModel)
+        return str(self.car_type) + " " + str(self.car_model)
 
 
 class EmployeeLog(models.Model):
@@ -89,6 +90,9 @@ class EmployeeLog(models.Model):
     employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
     client = models.ForeignKey(CustomUser, null=True, blank=True, related_name='client_who_got', on_delete=models.PROTECT)
     car = models.ForeignKey(Car, null=True, blank=True, related_name='car_who_got', on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.employee.username + self.description
 
 
 class Reservation(models.Model):
