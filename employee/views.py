@@ -46,14 +46,14 @@ def cars_count_by_type_dict(cars_count_by_type):
     types_count = {}
     car_types = dict(CarType.CAR_TYPES)
     for car_count_by_type in cars_count_by_type:
-        types_count[car_types.get(car_count_by_type['carType__name'])] = car_count_by_type['count']
+        types_count[car_types.get(car_count_by_type['car_type__name'])] = car_count_by_type['count']
     return types_count
 
 
 def cars_count_by_brand_dict(cars_count_by_brand):
     brands_count = {}
     for car_count_by_brand in cars_count_by_brand:
-        brands_count[car_count_by_brand['carModel__car_brand__name']] = car_count_by_brand['count']
+        brands_count[car_count_by_brand['car_model__car_brand__name']] = car_count_by_brand['count']
     return brands_count
 
 
@@ -86,6 +86,8 @@ def index(request):
             annotate(avg=Avg('price'))
     )
     years = [year for year in reversed(annually_earnings.keys())]
+    max_year = 0 if len(years) == 0 else max(years)
+    min_year = 0 if len(years) == 0 else min(years)
     annually_earnings = [annually_earnings for annually_earnings in reversed(annually_earnings.values())]
     # reservations / monthly_earnings
     monthly_earnings = monthly_earnings_dict(
@@ -100,11 +102,11 @@ def index(request):
     monthly_earnings = monthly_earnings.values()
     # car brands counts
     cars_count_by_brand = cars_count_by_brand_dict(
-        cars.values('carModel__car_brand__name').annotate(count=Count('carModel__car_brand__name'))
+        cars.values('car_model__car_brand__name').annotate(count=Count('car_model__car_brand__name'))
     )
     # car types counts
     cars_count_by_type = cars_count_by_type_dict(
-        cars.values('carType__name').annotate(count=Count('carType__name'))
+        cars.values('car_type__name').annotate(count=Count('car_type__name'))
     )
     return render(
         request,
@@ -116,7 +118,7 @@ def index(request):
             'reservations_monthly_earning': avg_earnings(monthly_earnings, len(monthly_earnings)),
             'years': years,
             'annually_earnings': annually_earnings,
-            'reservations_annually_earning': avg_earnings(annually_earnings, max(years) - min(years) + 1),
+            'reservations_annually_earning': avg_earnings(annually_earnings, max_year - min_year + 1),
             'reservations_count': reservations.count(),
             'paid_reservations_count': reservations.filter(paid=True).count(),
             # cars stats
