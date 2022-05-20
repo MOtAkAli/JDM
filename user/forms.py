@@ -12,7 +12,7 @@ class UserRegisterForm(UserCreationForm):  # fields that inherit from the user c
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'birthday', 'phone',
-                  'picture', 'city','idn','address']
+                  'picture', 'city', 'idn', 'address']
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)

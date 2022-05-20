@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login as auth_login
 from cities_light.models import City
+from django.core.mail import EmailMessage
 
 User = get_user_model()
 
@@ -22,7 +23,14 @@ def register(request):
                 user = form.save(commit=False)
                 username = form.cleaned_data.get('username')
                 user.save()
-                messages.success(request, f'Your account has been successfully created.')
+                email = EmailMessage(
+                    'JDM no reply',
+                    'Welcome to JDM !!!!!!!!!',
+                    'jdmrent2022@gmail.com',
+                    [user.email],
+                )
+                email.send(fail_silently=False)
+                messages.success(request, f'Your account has been successfully created.Check your mail')
                 return redirect('/')
         else:
             form = UserRegisterForm()
