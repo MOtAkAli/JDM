@@ -57,9 +57,27 @@ def cars_count_by_brand_dict(cars_count_by_brand):
     return brands_count
 
 
+def users_count_by_cities_dict(users_count_by_cities):
+    cities_counts = {}
+    for user_count_by_city in users_count_by_cities:
+        cities_counts[user_count_by_city['city__name']] = user_count_by_city['count']
+    return cities_counts
+
+
 def index(request):
     reservations = Reservation.objects.all()
     cars = Car.objects.all()
+    users = CustomUser.objects. \
+        exclude(is_superuser=True). \
+        exclude(is_staff=True). \
+        exclude(roles__in=Role.objects.filter(
+            name__in=(
+                    RoleEnum.CLIENT_MANAGER.value,
+                    RoleEnum.RESERVATION_MANAGER.value,
+                    RoleEnum.VEHICLE_MANAGER.value,
+                )
+            )
+        )
     if request.method == 'POST':
         # ajax reservations by year
         if request.POST['which_one'] == 'reservations':
@@ -108,6 +126,10 @@ def index(request):
     cars_count_by_type = cars_count_by_type_dict(
         cars.values('car_type__name').annotate(count=Count('car_type__name'))
     )
+    # user cities counts
+    users_count_by_cities = users_count_by_cities_dict(
+        users.values('city__name').annotate(count=Count('city__name'))
+    )
     return render(
         request,
         'employee/index.html',
@@ -129,6 +151,12 @@ def index(request):
             'car_brands_counts': cars_count_by_brand.values(),
             'car_types': cars_count_by_type.keys(),
             'car_types_counts': cars_count_by_type.values(),
+            # users
+            'users_count': users.count(),
+            'active_users_count': users.filter(is_active=True).count(),
+            'inactive_users_count': users.filter(is_active=False).count(),
+            'users_cities': users_count_by_cities.keys(),
+            'cities_counts': users_count_by_cities.values(),
         }
     )
 
@@ -154,14 +182,14 @@ def users(request, search, setof, num_page):
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
         exclude(
-            roles__in=Role.objects.filter(
-                name__in=(
-                    RoleEnum.CLIENT_MANAGER.value,
-                    RoleEnum.RESERVATION_MANAGER.value,
-                    RoleEnum.VEHICLE_MANAGER.value
-                )
+        roles__in=Role.objects.filter(
+            name__in=(
+                RoleEnum.CLIENT_MANAGER.value,
+                RoleEnum.RESERVATION_MANAGER.value,
+                RoleEnum.VEHICLE_MANAGER.value
             )
-        ). \
+        )
+    ). \
         order_by('id')
 
     if search[0] == 'id':
@@ -195,3 +223,46 @@ def users(request, search, setof, num_page):
             'num_page_next': int(num_page) + 1,
         }
     )
+
+def reservations(request, search, setof, num_page):
+    reservations = Reservation.objects.all()
+
+    search = search.split('=')
+
+    if search[0] == 'id':
+        reservations = reservations.filter(client__idn__contains=search[1])
+    elif search[0] == 'first_name':
+        reservations = reservations.filter(client__first_name__icontains=search[1])
+    elif search[0] == 'last_name':
+        reservations = reservations.filter(client__last_name__contains=search[1])
+    elif search[0] == 'email':
+        reservations = reservations.filter(client__email__contains=search[1])
+    elif search[0] == 'phone':
+        reservations = reservations.filter(client__phone__contains=search[1])
+
+    paginator = Paginator(reservations, 1)
+    reservations_page = paginator.get_page(num_page)
+    if int(num_page) > paginator.num_pages:
+        num_page = paginator.num_pages
+    return render(
+        request,
+        'employee/reservations.html',
+        {
+            'search_filter': search[0] if len(search) == 2 else '',
+            'search_value': search[1] if len(search) == 2 else '',
+            'search_is_active': True if len(search) == 2 else False,
+            "reservations_page": reservations_page,
+            "count": paginator.count,
+            "page_has_previous": reservations_page.has_previous,
+            "page_has_next": reservations_page.has_next,
+            "setof": int(setof),
+            "num_page_previous": int(num_page) - 1,
+            "num_page": int(num_page),
+            "num_page_next": int(num_page) + 1,
+        }
+    )
+
+
+def reservation(request, id):
+    reservation = Reservation.objects.get(id=id)
+    return render(request, 'employee/reservation.html', {"reservation": reservation,})
