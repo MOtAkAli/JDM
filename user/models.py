@@ -21,7 +21,7 @@ class Role(models.Model):
     name = models.CharField(max_length=2, choices=ROLES, unique=True)
 
     def __str__(self):
-        return self.name
+        return dict(self.ROLES).get(self.name)
 
 
 class CustomUserManager(BaseUserManager):

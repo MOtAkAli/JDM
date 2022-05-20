@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>
         {% block title %}
-            Blank Page - Brand
+            Blank Page
         {% endblock %}
     </title>
     <link rel="stylesheet" href="{% static 'employee/bootstrap/css/bootstrap.min.css' %}">
@@ -28,19 +28,19 @@
             <hr class="sidebar-divider my-0">
             <ul class="navbar-nav text-light" id="accordionSidebar">
                 <li class="nav-item">
-                    <a class="nav-link" href="/employee/">
+                    <a class="nav-link {% block dashboard_link_css_class %}{% endblock %}" href="/employee/">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/employee/users/search//10/1">
+                    <a class="nav-link {% block users_link_css_class %}{% endblock %}" href="/employee/users/search//10/1">
                         <i class="fas fa-table"></i>
                         <span>Users</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/employee/reservations/">
+                    <a class="nav-link {% block reservations_link_css_class %}{% endblock %}" href="/employee/reservations/search//10/1">
                         <i class="fas fa-table"></i>
                         <span>Reservations</span>
                     </a>
@@ -102,7 +102,7 @@
         </div>
         <footer class="bg-white sticky-footer">
             <div class="container my-auto">
-                <div class="text-center my-auto copyright"><span>Copyright © JDM 2022</span></div>
+                <div class="text-center my-auto copyright"><span>Copyright © JDM {% now "Y" %}</span></div>
             </div>
         </footer>
     </div>
@@ -110,7 +110,6 @@
 </div>
 
 <script src="{% static 'employee/bootstrap/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'employee/js/chart.min.js' %}"></script>
-<script src="{% static 'employee/js/script.min.js' %}"></script>
+<script src="{% static 'employee/js/theme.js' %}"></script>
 </body>
 </html>
