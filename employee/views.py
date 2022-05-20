@@ -10,18 +10,41 @@ from django.core.paginator import Paginator
 def index(request):
     return render(request, 'employee/index.html', {})
 
-def cars(request):
-    cars= Car.objects.all()
-  
 
-    return render(request, 'employee/cars.html', {'cars':cars })
+
+def cars(request,setof,num_page):
+    cars= Car.objects.all()
+    paginator=Paginator(cars, setof)
+    cars_page=paginator.get_page(num_page)
+    if int(num_page) > paginator.num_pages:
+        num_page=paginator.num_pages  
+
+    return render(request, 'employee/cars.html', 
+        {
+            'cars_page':cars_page,
+            'count':paginator.count,
+            'page_has_previous':cars_page.has_previous,
+            'page_has_next':cars_page.has_next,
+            'setof':int(setof),
+            'num_page_previous': int(num_page) -1,
+            'num_page':int(num_page),
+            'num_page_next' : int(num_page) + 1,
+        }
+    )
 
 
 
 def car(request,id):
-        
-        car=Car.objects.get(id=id)
-        return render(request, 'employee/car.html', {'car': car})
+    car=Car.objects.get(id=id)
+    if request.method == 'POST':
+        if request.POST['input']:
+            car.is_active = not car.is_active
+            car.status_reason = request.POST.get("reason")
+            car.save()
+           
+    return render(request, 'employee/car.html', {'car': car})
+
+  
         
 
 def users(request, search, setof, num_page):

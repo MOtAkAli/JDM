@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    {% block title %} TABLE - CARS - JDM {% endblock %}
+    <title>{% block title %} TABLE - CARS - JDM {% endblock %} </title>
    
     <link rel="stylesheet" href="{% static 'employee/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet"
@@ -28,13 +28,18 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 text-nowrap">
-                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                                <option value="10" selected="">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>&nbsp;</label></div>
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" id="show">
+                                <option value="10" {% if setof == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if setof == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if setof == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if setof == 100 %} selected {% endif %}>100</option>
+                            </select>&nbsp;
+                        </label>
+                    </div>
                 </div>
+
                 <div class="col-md-6">
                     <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
                 </div>
@@ -53,7 +58,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for car in cars %}
+                        {% for car in cars_page %}
                         <tr>
                           <td> <img class="rounded-circle" src="{{ car.picture.url }}"style="width: 100px; height: 100px;"></td>
                           <td> {{ car.carModel.carBrand.name }} </td>
@@ -71,15 +76,7 @@
                           
                             
                         </tr>
-                      {% endfor %}
-                            
-                            
-                            
-                            
-                          
-                            
-                       
-                        
+                      {% endfor %}  
                         
                     </tbody>
                     <tfoot>
@@ -93,25 +90,58 @@
                         </tr>
                     </tfoot>
                 </table>
-            </div>
-            <div class="row">
-                <div class="col-md-6 align-self-center">
-                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                </div>
-                <div class="col-md-6">
-                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
+             
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1
+                            to {{ setof }} of {{ count }}
+                        </p>
+                    </div>
+
+                    {% if page_has_previous or page_has_next %}
+                        <div class="col-md-6">
+                            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    {% if page_has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Previous"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_previous }}">
+                                                <span aria-hidden="true">« </span></a></li>
+                                    {% endif %}
+                                    {% if page_has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="page-item active">
+                                        <a class="page-link"
+                                           href="/employee/cars/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                    </li>
+                                    {% if page_has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if page_has_next %}
+
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Next"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_next }}">
+                                                <span aria-hidden="true"> » </span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+        </div> 
+
+                    
 {% endblock %}
