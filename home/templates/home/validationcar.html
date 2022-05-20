@@ -92,9 +92,9 @@
         height="500"
       />
       <div class="overlay">
-        <b><p class="amount">{{object.carModel.car_model_price}} MAD</p></b>
+        <b><p class="amount">{{object.car_model.car_model_price}} MAD</p></b>
         <p class="h4" style="text-transform: uppercase">
-          {{ object.carModel.name }}
+          {{ object.car_model.name }}
         </p>
         <ul class="list-unstyled d-flex">
           <li><span class="fas fa-star"></span></li>
@@ -163,7 +163,7 @@ $( "#rentBtn" ).click(function() {
               var csrftoken = "{{ csrf_token }}";
               var startDate = $( "#startDate" ).val();
               var endDate =  $( "#endDate" ).val();
-              var price = "{{object.carModel.car_model_price}}";
+              var price = "{{object.car_model.car_model_price}}";
               var car = "{{ object.pk }}";
               var client = "{{ user.pk }}"
               data = {

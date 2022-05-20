@@ -35,7 +35,7 @@ class CarDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CarDetailView, self).get_context_data(**kwargs)
-        context['title'] = ' Car ' + self.object.carModel.name
+        context['title'] = ' Car ' + self.object.car_model.name
         return context
 
     def get_object(self, queryset=None):
@@ -54,7 +54,8 @@ class CarDetailView(DetailView):
         start = datetime.strptime(startDate,'%Y-%m-%d')
         end = datetime.strptime(endDate,'%Y-%m-%d')
         rentdays = end - start
-        newprice = float(price) * float(rentdays.days)
+        newprice = float(price)*float(rentdays.days)
+        print(type(newprice))
         Reservation.objects.create(start_date=startDate, end_date=endDate, price=newprice, car=car, client=client)
         return HttpResponse(status=200)
 
