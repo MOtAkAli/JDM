@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from user.models import CustomUser, Role, RoleEnum
 from django.core.paginator import Paginator
-from .models import Reservation, Car, CarType
+from .models import Reservation, Car, CarType, EmployeeLog
 from django.db.models import Avg, Count
 from django.db.models.functions import TruncMonth, TruncYear
 import calendar
@@ -200,12 +200,19 @@ def users(request, search, setof, num_page):
     # ajax update user is_active
     if request.method == 'POST':
         try:
-            user = CustomUser.objects.get(id=int(request.POST['id']))
-            user.is_active = bool(int(request.POST['is_active']))
-            user.inactive_reason = request.POST['reason'] if not user.is_active else ''
-            user.save()
+            client_id = int(request.POST['id'])
+            client = CustomUser.objects.get(id=client_id)
+            new_is_active = bool(int(request.POST['is_active']))
+            client.is_active = new_is_active
+            client.save()
+            EmployeeLog(
+                description='Client account ' + ('activated' if client.is_active else 'deactivated'),
+                status_reason=request.POST['reason'],
+                employee_id=request.user.id,
+                client_id=client_id,
+            ).save()
             return JsonResponse({
-                'is_active': user.is_active,
+                'is_active': client.is_active,
             })
         except CustomUser.DoesNotExist:
             return JsonResponse({
