@@ -256,6 +256,7 @@ def users(request, search, setof, num_page):
             # users
             'search_filter': search[0] if len(search) == 2 else '',
             'search_value': search[1] if len(search) == 2 else '',
+            'search_is_active': True if len(search) == 2 else False,
             'users_page': users_page,
             'count': paginator.count,
             'page_has_previous': users_page.has_previous,
