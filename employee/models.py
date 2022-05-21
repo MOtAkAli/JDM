@@ -84,15 +84,15 @@ class Car(models.Model):
 
 
 class EmployeeLog(models.Model):
-    description = models.CharField(max_length=500)
-    status_reason = models.CharField(max_length=200, null=True, blank=True, default='')
+    description = models.CharField(max_length=200)
+    status_reason = models.CharField(max_length=500, null=True, blank=True, default='')
     date_time = models.DateTimeField(default=timezone.now)
     employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
     client = models.ForeignKey(CustomUser, null=True, blank=True, related_name='client_who_got', on_delete=models.PROTECT)
     car = models.ForeignKey(Car, null=True, blank=True, related_name='car_who_got', on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.employee.username + self.description
+        return self.employee.username + ' ' + self.description
 
 
 class Reservation(models.Model):
