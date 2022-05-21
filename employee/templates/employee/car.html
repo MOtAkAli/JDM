@@ -32,11 +32,11 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <img src="{{ car.picture.url }}" style="width: 300px; height:300px; "
+                            <img src="{{ car.picture.url }}" class="rounded-circle" style="width: 300px; height:300px; "
                                 class="circle" >
                         </div>
                         <div class="col">
-                                <p><strong>NAME : </strong>{{ car.carModel.name }} </p>
+                                <p><strong>NAME : </strong>{{ car.car_model.name }} </p>
                                 <p><strong>DOORS : </strong>{{ car.doors}} </p>
                                 <p><strong>SEATS : </strong>{{ car.seats}} </p>
                                 <p><strong>GEARBOX : </strong>{{ car.gearbox}} </p>
@@ -44,8 +44,8 @@
                             <div class="col">
                                 <p><strong>FUEL : </strong>{{ car.fuel}} </p>
                                 <p><strong>YEAR : </strong>{{ car.year}} </p>
-                                <p><strong>CAR_TYPE : </strong>{{ car.carType}} </p>
-                                <p><strong>CAR_MODEL : </strong>{{ car.carModel}} </p>
+                                <p><strong>CAR TYPE : </strong>{{ car.car_type}} </p>
+                                <p><strong>CAR MODEL : </strong>{{ car.car_model }} </p>
                             </div>
                         </div>
                     </div>

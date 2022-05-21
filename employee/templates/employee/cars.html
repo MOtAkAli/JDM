@@ -25,6 +25,7 @@
         <div class="card-header py-3">
             <p class="text-primary m-0 fw-bold">CARS INFO</p>
         </div>
+           
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 text-nowrap">
@@ -41,9 +42,23 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
+                            <option value="">Select filter</option>
+                            <option value="registration_number" {% if search_filter == 'registration_number' %} selected {% endif %}>MATRICULE</option>
+                          
+                        </select>
+                        <label class="form-label">
+                            <input type="text" id="search_text" value="{{ search_value }}"
+                                   class="form-control form-control-sm" aria-controls="dataTable"
+                                   placeholder="Search">
+                        </label>
+                        <button class="btn btn-primary btn-sm" id="search">Search</button>
+                    </div>
                 </div>
             </div>
+                </div>
+                
             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                 <table class="table my-0" id="dataTable">
                     <thead>
@@ -60,8 +75,8 @@
                     <tbody>
                         {% for car in cars_page %}
                         <tr>
-                          <td> <img class="rounded-circle" src="{{ car.picture.url }}"style="width: 100px; height: 100px;"></td>
-                          <td> {{ car.carModel.carBrand.name }} </td>
+                          <td> <img class="rounded-circle" src="{{ car.picture.url }}"style="width: 150px; height: 150px;"></td>
+                          <td> {{ car.registration_number }} </td>
                           <td> {{ car.seats }}</td>
                           <td> {{car.doors}} </td>
                           <td> 
@@ -139,9 +154,41 @@
                         </div>
                     {% endif %}
                 </div>
-                </div>
             </div>
-        </div> 
+        </div>
+  
+    
 
+        <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
+        <script>
+            $('#search').click(function () {
+                let search = $('#search_text').val();
+                let splitInSearch = window.location.href.split('/search/');
+                if (search === '') {
+                    window.location.href = `${splitInSearch[0]}/search//10/1`;
+                } else {
+                    let filter = $('#filter').val();
+                    if (filter === '') {
+                        alert('Choose a search filter');
+                        return;
+                    }
+                    let afterSearchSplit = splitInSearch[1].split('/');
+                    window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${afterSearchSplit[1]}/${afterSearchSplit[2]}`;
+                }
+            });
+    
+    
+            let select = $('#show');
+            select.change('change', function () {
+                let search = $('#search_text').val();
+                if (search === '') {
+                    window.location.href = '/employee/cars/search//' + select.val() + '/1';
+                } else {
+                    let filter = $('#filter').val();
+                    let splitInSearch = window.location.href.split(`${filter}=${search}`);
+                    window.location.href = `${splitInSearch[0]}${filter}=${search}/${select.val()}/1`;
+                }
+            });
+        </script>
                     
 {% endblock %}

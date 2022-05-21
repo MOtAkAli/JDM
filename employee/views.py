@@ -163,27 +163,9 @@ def index(request):
         }
     )
 
+# def 168
 
 
-def cars(request,setof,num_page):
-    cars= Car.objects.all()
-    paginator=Paginator(cars, setof)
-    cars_page=paginator.get_page(num_page)
-    if int(num_page) > paginator.num_pages:
-        num_page=paginator.num_pages  
-
-    return render(request, 'employee/cars.html', 
-        {
-            'cars_page':cars_page,
-            'count':paginator.count,
-            'page_has_previous':cars_page.has_previous,
-            'page_has_next':cars_page.has_next,
-            'setof':int(setof),
-            'num_page_previous': int(num_page) -1,
-            'num_page':int(num_page),
-            'num_page_next' : int(num_page) + 1,
-        }
-    )
 
 
 
@@ -260,6 +242,35 @@ def users(request, search, setof, num_page):
             'num_page_previous': int(num_page) - 1,
             'num_page': int(num_page),
             'num_page_next': int(num_page) + 1,
+        }
+    )
+
+def cars(request,search,setof,num_page):
+    cars= Car.objects.all()
+
+    search = search.split('=')
+
+    if search[0] == 'registration_number':
+        cars = cars.filter(cars__registration_number__contains=search[1])
+
+    paginator=Paginator(cars, setof)
+    cars_page=paginator.get_page(num_page)
+    if int(num_page) > paginator.num_pages:
+        num_page=paginator.num_pages  
+
+    return render(request, 'employee/cars.html', 
+        {
+            'search_filter': search[0] if len(search) == 2 else '',
+            'search_value': search[1] if len(search) == 2 else '',
+            'search_is_active': True if len(search) == 2 else False,
+            'cars_page':cars_page,
+            'count':paginator.count,
+            'page_has_previous':cars_page.has_previous,
+            'page_has_next':cars_page.has_next,
+            'setof':int(setof),
+            'num_page_previous': int(num_page) -1,
+            'num_page':int(num_page),
+            'num_page_next' : int(num_page) + 1,
         }
     )
 
