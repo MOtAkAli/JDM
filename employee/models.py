@@ -66,7 +66,6 @@ class Car(models.Model):
     )
     registration_number = models.CharField(max_length=20, unique=True)
     is_active = models.BooleanField(default=True)
-    status_reason = models.CharField(max_length=200, null=True, blank=True, default='')
     description = models.CharField(max_length=2000)
     doors = models.PositiveSmallIntegerField()
     seats = models.PositiveSmallIntegerField()
@@ -83,18 +82,6 @@ class Car(models.Model):
         return str(self.car_type) + " " + str(self.car_model)
 
 
-class EmployeeLog(models.Model):
-    description = models.CharField(max_length=200)
-    status_reason = models.CharField(max_length=500, null=True, blank=True, default='')
-    date_time = models.DateTimeField(default=timezone.now)
-    employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
-    client = models.ForeignKey(CustomUser, null=True, blank=True, related_name='client_who_got', on_delete=models.PROTECT)
-    car = models.ForeignKey(Car, null=True, blank=True, related_name='car_who_got', on_delete=models.PROTECT)
-
-    def __str__(self):
-        return self.employee.username + ' ' + self.description
-
-
 class Reservation(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
@@ -109,9 +96,23 @@ class Reservation(models.Model):
         return str(self.car) + ' ' + str(self.start_date) + ' ' + str(self.end_date)
 
 
+class EmployeeLog(models.Model):
+    description = models.CharField(max_length=200)
+    status_reason = models.CharField(max_length=500)
+    date_time = models.DateTimeField(default=timezone.now)
+    employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
+    client = models.ForeignKey(CustomUser, null=True, blank=True, related_name='client_who_got', on_delete=models.PROTECT)
+    car = models.ForeignKey(Car, null=True, blank=True, related_name='car_who_got', on_delete=models.PROTECT)
+    reservation = models.ForeignKey(Reservation, null=True, blank=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.employee.username + ' ' + self.description
+
+
 class PaymentLog(models.Model):
     date_time = models.DateTimeField(default=timezone.now)
     reservation = models.OneToOneField(Reservation, on_delete=models.PROTECT)
+    employee = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.date_time) + ' ' + str(self.reservation)
