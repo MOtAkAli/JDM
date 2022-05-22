@@ -40,3 +40,11 @@ class UserRegisterForm(UserCreationForm):  # fields that inherit from the user c
         except User.DoesNotExist:
             return idn
         raise forms.ValidationError(f"The idn you've given is already taken")
+
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'phone', 'picture', 'city', 'address']

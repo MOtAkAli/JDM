@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from datetime import datetime
 from employee.models import Car, Agency, CarModel, CarBrand, CarType, Reservation
 from employee.filters import CarFilter
 from user.models import CustomUser
-from django.http.response import HttpResponse
+from django.core.mail import EmailMessage
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 class CarListView(ListView):
@@ -43,6 +45,7 @@ class CarDetailView(DetailView):
         car = Car.objects.get(pk=pk)
         return car
 
+    @login_required(login_url='/login/')
     def post(self, request, *args, **kwargs):
         car = request.POST.get('car')
         startDate = request.POST.get('startDate')
@@ -51,13 +54,20 @@ class CarDetailView(DetailView):
         client = request.POST.get('client')
         client = CustomUser.objects.get(pk=client)
         car = Car.objects.get(pk=car)
-        start = datetime.strptime(startDate,'%Y-%m-%d')
-        end = datetime.strptime(endDate,'%Y-%m-%d')
+        start = datetime.strptime(startDate, '%Y-%m-%d')
+        end = datetime.strptime(endDate, '%Y-%m-%d')
         rentdays = end - start
-        newprice = float(price)*float(rentdays.days)
-        print(type(newprice))
+        newprice = float(price) * float(rentdays.days)
         Reservation.objects.create(start_date=startDate, end_date=endDate, price=newprice, car=car, client=client)
-        return HttpResponse(status=200)
+        email = EmailMessage(
+            'JDM no reply',
+            'RENT DONE  !!!!!!!!!',
+            'jdmrent2022@gmail.com',
+            [client.email],
+        )
+        email.send(fail_silently=False)
+        messages.success(self.request, f'rent done')
+        return redirect('home:index')
 
 
 def index(request):
