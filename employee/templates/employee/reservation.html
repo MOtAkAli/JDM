@@ -17,32 +17,22 @@
                             <form>
                                 <div class="row">
                                     <div class="col">
-                                        <img style="height: 300px; width: 300px; "
+                                        <img style="height: 250px; width: 250px; "
                                              src="{{ reservation.client.picture.url }}">
                                     </div>
 
                                     <div class="col">
 
-                                        <label> <strong style=" text-decoration: underline;">User
-                                            Name</strong></label>
+                                        <label> <strong style=" text-decoration: underline;">Name</strong></label>
                                         <p id="username"
-                                           name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}
-                                        </p><br><br>
-                                        <label> <strong style="text-decoration: underline; ">Email
-                                            Address</strong></label>
+                                           name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}</p>
+                                        <label> <strong style="text-decoration: underline; ">Email Address</strong></label>
                                         <p id="email"
-                                           name="email">{{ reservation.client.email }}
-                                        </p><br><br>
+                                           name="email">{{ reservation.client.email }}</p>
 
-                                        <label><strong style="text-decoration: underline;">Phone
-                                            Number</strong></label>
-                                        <p id="phone"
-                                           name="phone">{{ reservation.client.phone }}
-                                        </p><br><br>
-                                        <label><strong style="text-decoration: underline; ">Address</strong></label>
-                                        <p id="address"
-                                           name="adresse">{{ reservation.client.address }}
-                                        </p><br>
+                                        <label><strong style="text-decoration: underline;">Phone Number</strong></label>
+                                        <p id="phone" name="phone">{{ reservation.client.phone }}</p>
+                                        <label><strong style="text-decoration: underline; ">Address</strong></label><p id="address">{{ reservation.client.address }} {{ reservation.client.city }}</p>
                                     </div>
                                 </div>
                             </form>
@@ -57,29 +47,14 @@
                             <form>
                                 <div class="row">
                                     <div class="col">
-                                        <img style="height: 99%; width: 100%;"
+                                        <img style="height: 250px; width: 250px;"
                                              src="{{ reservation.car.picture.url }}" alt="">
                                     </div>
-
-
                                     <div class="col">
-                                        <label class="form-label"><strong style="text-decoration: underline;">Start
-                                            Date</strong></label>
-                                        <p>
-                                            {{ reservation.start_date }}
-                                        </p><br><br>
-
-                                        <label class="form-label"><strong style="text-decoration: underline;">End
-                                            Date</strong></label>
-                                        <p>
-                                            {{ reservation.end_date }}
-                                        </p><br><br>
-
-                                        <label> <strong style="text-decoration: underline;">Car
-                                            Model</strong></label>
-                                        <p>
-                                            {{ reservation.car.car_model }}
-                                        </p>
+                                        <label class="form-label"><strong style="text-decoration: underline;">Start Date</strong></label><p>{{ reservation.start_date }}</p>
+                                        <label class="form-label"><strong style="text-decoration: underline;">End Date</strong></label><p>{{ reservation.end_date }}</p>
+                                        <label> <strong style="text-decoration: underline;">Car Model</strong></label><p>{{ reservation.car.car_model }}</p>
+                                        <label> <strong style="text-decoration: underline;">Car Type</strong></label><p>{{ reservation.car.car_type }}</p>
                                     </div>
                                 </div>
                             </form>
@@ -91,18 +66,22 @@
     </div>
     <div class="card shadow mb-5">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Employee</p>
+            <p class="text-primary m-0 fw-bold">Confirmation</p>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <form>
-                        <div class="mb-3"><label class="form-label"
-                                                 for="signature"><strong>Notes</strong><br></label><textarea
-                                class="form-control" id="signature" rows="4" name="signature"></textarea></div>
-
+                    <form method="post">
+                        {% csrf_token %}
                         <div class="mb-3">
-                            <button class="btn btn-primary btn-sm" type="submit">VALIDATE</button>
+                            <label class="form-label" for="signature">
+                                <strong>Discription</strong>
+                                <br>
+                            </label>
+                            <textarea class="form-control" id="signature" rows="4" name="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary btn-sm" type="submit">{% if reservation.confirmed %}Unconfirm{% else %}Confirm{% endif %}</button>
                         </div>
                     </form>
                 </div>
