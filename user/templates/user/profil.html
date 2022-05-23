@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %} {% load static %} {% block title %} Register {% endblock %} {% block css %}
+{% extends 'base/base.html' %} {% load static %} {% block title %} Profil {% endblock %} {% block css %}
     <link
             rel="stylesheet"
             href="{% static 'user/register-assets/css/styles.css' %}"
@@ -21,8 +21,20 @@
                                 <div class="bs-icon-xl bs-icon-circle bs-icon my-4">
                                     <img class="img-thumbnail" src="{{ user.picture.url }}"
                                          style="border: none;"/>
-
+                                    <input
+                                            class="{% if form.picture.errors %} is-invalid {% endif %}"
+                                            type="file"
+                                            name="picture"
+                                    />
                                 </div>
+                                <div class="mb-3"></div>
+                                {% if form.picture.errors %}
+                                    {% for error in form.picture.errors %}
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form.picture.errors }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                                 <div class="mb-3">
                                     <input
                                             class="form-control {% if form.username.errors %} is-invalid {% endif %}"
@@ -85,20 +97,19 @@
                                         {{ form.address.errors }}
                                     </div>
                                 {% endfor %} {% endif %}
-{#                                <div class="mb-3">#}
-{#                                    <select#}
-{#                                            class="form-control {% if form.city.errors %} is-invalid {% endif %}"#}
-{#                                            name="city"#}
-{#                                    >#}
-{#                                        <option value="none" selected disabled hidden>#}
-{#                                            select a city#}
-{#                                        </option>#}
-{#                                        {% for results in City %}#}
-{#                                            <option value=" {{ results.id }}"{% if city_id == results.id %}#}
-{#                                                    selected {% endif %}>{{ user.city }}</option>#}
-{#                                        {% endfor %}#}
-{#                                    </select>#}
-{#                                </div>#}
+                                <div class="mb-3">
+                                    <select
+                                            class="form-control {% if form.city.errors %} is-invalid {% endif %}"
+                                            name="city"
+                                    >
+                                        <option value="none" selected disabled hidden>
+                                            select a city
+                                        </option>
+                                        {% for results in City %}
+                                            <option value="{{ results.id }}"{% if city == results.id %} selected {% endif %}>{{ results.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                                 <br>
                                 <div id="divlog" class="mb-3">
                                     <button
