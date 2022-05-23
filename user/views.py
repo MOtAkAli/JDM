@@ -14,6 +14,8 @@ from django.utils.encoding import force_bytes,force_str, DjangoUnicodeDecodeErro
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import account_activation_token
+from user.models import CustomUser
+import uuid
 
 User = get_user_model()
 
@@ -30,10 +32,13 @@ def register(request):
                 user = form.save(commit=False)
                 username = form.cleaned_data.get('username')
                 user.save()
+                cust_user = CustomUser.objects.get(id=user.id)
+                cust_user.email_token = uuid.uuid4()
+                cust_user.save()
                 uid64 = urlsafe_base64_encode(force_bytes(user.pk))
                 domain = get_current_site(request).domain
-                link = reverse('activate',kwargs={'uid64': uid64, 'token': account_activation_token.make_token(user)})
-                activate_url = 'http://' + domain + link
+                link = str(cust_user.email_token)
+                activate_url = 'http://' + domain + '/user/email_verification/' + link
                 email_body = 'Welcome ' + user.username + ' Please verify your account\n ' + activate_url
                 email = EmailMessage(
                     'JDM',
@@ -127,3 +132,12 @@ class VerificationView(View):
             pass
 
         return redirect('user:login')
+
+def verify_email(request, token):
+    client = CustomUser.objects.get(email_token=token)
+    client.email_verified = True
+    client.is_active = True
+    client.save()
+    return redirect('user:login')
+
+
