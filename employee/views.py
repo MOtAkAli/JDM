@@ -251,7 +251,7 @@ def cars(request,search,setof,num_page):
     search = search.split('=')
 
     if search[0] == 'registration_number':
-        cars = cars.filter(cars__registration_number__contains=search[1])
+        cars = cars.filter(registration_number__contains=search[1])
 
     paginator=Paginator(cars, setof)
     cars_page=paginator.get_page(num_page)

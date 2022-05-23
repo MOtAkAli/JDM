@@ -10,8 +10,8 @@ urlpatterns = [
         r'^reservations/search/(?P<search>((id|first_name|last_name|email|phone)=(\w+[\-\.]*\w+@?\w+\-?\w+\.?\w+|\w+))?)/(?P<setof>(10|25|50|100))/(?P<num_page>[1-9]\d*)',
         views.reservations, name='reservations'),
        
-    re_path(
-        r'^cars/search/(?P<search>((registration_number)=[a-zA-Z0-9-]+)?)/(?P<setof>(10|25|50|100))/(?P<num_page>[1-9]\d*)',
+  re_path(
+        r'^cars/search/(?P<search>(registration_number=[a-zA-Z0-9-]+)?)/(?P<setof>(10|25|50|100))/(?P<num_page>[1-9]\d*)',
          views.cars, name='cars'),
         
     path("reservation/<int:id>", views.reservation, name="details"),
