@@ -69,5 +69,15 @@ class CarDetailView(DetailView):
         return redirect('home:index')
 
 
+class RentsView(ListView):
+    model = Reservation
+    paginate_by = 100  # if pagination is desired
+    template_name = 'home/my_rents.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
 def index(request):
     return render(request, 'home/index.html')

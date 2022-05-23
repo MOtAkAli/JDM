@@ -47,7 +47,7 @@ def register(request):
                     [user.email],
                 )
                 email.send(fail_silently=False)
-                messages.success(request, f'Your account has been successfully created.Check your mail')
+                messages.success(request, f'Your account has been successfully created.')
                 return redirect('/')
             else:
                 return render(
@@ -116,3 +116,25 @@ def verify_email(request, token):
     return redirect('user:login')
 
 
+def password_reset(request):
+    if request.method == 'POST':
+        try:
+            user = CustomUser.objects.get(email=request.POST['email'])
+            user.password_token = uuid4()
+            user.save()
+            domain = get_current_site(request).domain
+            activate_url = 'http://' + domain + '/user/reset-password/' + str(user.password_token)
+            email_body = 'Welcome ' + user.username + ' reset link\n ' + activate_url
+            email = EmailMessage(
+                'JDM',
+                email_body,
+                'jdmrent2022@gmail.com',
+                [user.email],
+            )
+            email.send(fail_silently=False)
+            messages.success(request, f'reset password link sent in email.')
+            return redirect('home:index')
+        except CustomUser.DoesNotExist:
+            return redirect('home:index')
+    else:
+        return render(request, 'user/emailforestpassword.html')

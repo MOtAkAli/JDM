@@ -11,5 +11,7 @@ urlpatterns = [
     path('profil/', views.update, name="profil"),
     path('logout/', auth_views.LogoutView.as_view(template_name='home/index.html'), name='logout'),
     path('login/', views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
-    path('email_verification/<uuid:token>', verify_email, name='verify_email'),
+    path('reset-password/<uuid:token>', reset_password, name='reset_password'),
+    path('password-reset', password_reset, name='password_reset'),
+    path('email-verification/<uuid:token>', verify_email, name='verify_email'),
 ]
