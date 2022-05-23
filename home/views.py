@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 class CarListView(ListView):
     model = Car
     template_name = 'home/cars.html'
-    paginate_by = 9  # if pagination is desired
+    paginate_by = 4  # if pagination is desired
     context_object_name = 'cars'
 
     def get_context_data(self, **kwargs):
@@ -71,13 +71,16 @@ class CarDetailView(DetailView):
 
 class RentsView(ListView):
     model = Reservation
-    paginate_by = 100  # if pagination is desired
+    paginate_by = 10  # if pagination is desired
     template_name = 'home/my_rents.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
+    def get_queryset(self):
+        queryset = Reservation.objects.filter(client=self.request.user)
+        return queryset
 
 def index(request):
     return render(request, 'home/index.html')

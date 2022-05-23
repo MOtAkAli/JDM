@@ -11,6 +11,10 @@ from cities_light.models import City
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from user.models import CustomUser
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+
 from uuid import uuid4
 
 User = get_user_model()
@@ -30,14 +34,15 @@ def register(request):
                 user.save()
                 domain = get_current_site(request).domain
                 activate_url = 'http://' + domain + '/user/email-verification/' + str(user.email_token)
-                email_body = 'Welcome ' + user.username + ' Please verify your account\n ' + activate_url
-                email = EmailMessage(
-                    'JDM',
-                    email_body,
-                    'jdmrent2022@gmail.com',
-                    [user.email],
+                email_body = render_to_string('user/email.html', {'activate_url': activate_url})
+                message = EmailMultiAlternatives(
+                    subject='Account Activation',
+                    body="mail testing",
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=(user.email,)
                 )
-                email.send(fail_silently=False)
+                message.attach_alternative(email_body, "text/html")
+                message.send(fail_silently=False)
                 messages.success(request, f'Your account has been successfully created.')
                 return redirect('/')
             else:

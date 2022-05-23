@@ -102,7 +102,7 @@
                                                 select a city
                                             </option>
                                             {% for results in City %}
-                                                <option value="{{ results.id }}"{% if city == results.id %}
+                                                <option value="{{ results.id }}"{% if user.city.id == results.id %}
                                                         selected {% endif %}>{{ results.name }}</option>
                                             {% endfor %}
                                         </select>
