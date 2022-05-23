@@ -13,7 +13,7 @@ from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes,force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
-from .utils import token_generator
+from .utils import account_activation_token
 
 User = get_user_model()
 
@@ -29,9 +29,10 @@ def register(request):
             if form.is_valid():
                 user = form.save(commit=False)
                 username = form.cleaned_data.get('username')
+                user.save()
                 uid64 = urlsafe_base64_encode(force_bytes(user.pk))
                 domain = get_current_site(request).domain
-                link = reverse('user:activate', kwargs={'uid64': uid64, 'token': token_generator.make_token(user)})
+                link = reverse('activate',kwargs={'uid64': uid64, 'token': account_activation_token.make_token(user)})
                 activate_url = 'http://' + domain + link
                 email_body = 'Welcome ' + user.username + ' Please verify your account\n ' + activate_url
                 email = EmailMessage(
@@ -41,7 +42,6 @@ def register(request):
                     [user.email],
                 )
                 email.send(fail_silently=False)
-                user.save()
                 messages.success(request, f'Your account has been successfully created.Check your mail')
                 return redirect('/')
             else:
@@ -87,14 +87,17 @@ class LoginView(LoginView):
 @login_required
 def update(request):
         if request.method == 'POST':
+            print("dkhl if post")
             u_form = UserUpdateForm(request.POST, instance=request.user)
             if u_form.is_valid() :
+                print("dkhl if form is valid")
                 u_form.save()
                 messages.success(request, f'Your account has been updated!')
                 return redirect('home:index')
-
+            print("form not valid")
         else:
             u_form = UserUpdateForm(instance=request.user)
+
 
         context = {
             'u_form': u_form,
@@ -104,12 +107,12 @@ def update(request):
 
 
 class VerificationView(View):
-    def get(self, request, **kwargs):
+    def get(self, request, uidb64, token):
         try:
-            id = force_str(urlsafe_base64_decode(kwargs['uid64']))
+            id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=id)
-            print("test",id,user)
-            if not token_generator.check_token(user, kwargs['token']):
+
+            if not account_activation_token.check_token(user, token):
                 return redirect('login'+'?message='+'User already activated')
 
             if user.is_active:
@@ -118,7 +121,7 @@ class VerificationView(View):
             user.save()
 
             messages.success(request, 'Account activated successfully')
-            return redirect('user:login')
+            return redirect('login')
 
         except Exception as ex:
             pass

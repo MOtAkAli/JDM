@@ -45,7 +45,6 @@ class CarDetailView(DetailView):
         car = Car.objects.get(pk=pk)
         return car
 
-    @login_required(login_url='/login/')
     def post(self, request, *args, **kwargs):
         car = request.POST.get('car')
         startDate = request.POST.get('startDate')
