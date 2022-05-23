@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from . import views
-from .views import verify_email
+from .views import verify_email, reset_password, password_reset
 
 app_name = 'user'
 

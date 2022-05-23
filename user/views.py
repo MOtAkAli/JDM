@@ -1,21 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.views import View
 from .forms import UserRegisterForm, UserUpdateForm
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login as auth_login
 from cities_light.models import City
 from django.core.mail import EmailMessage
-from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
-from .utils import account_activation_token
 from user.models import CustomUser
-import uuid
+from uuid import uuid4
 
 User = get_user_model()
 
@@ -30,15 +26,10 @@ def register(request):
             form = UserRegisterForm(request.POST, request.FILES, )
             if form.is_valid():
                 user = form.save(commit=False)
-                username = form.cleaned_data.get('username')
+                user.email_token = uuid4()
                 user.save()
-                cust_user = CustomUser.objects.get(id=user.id)
-                cust_user.email_token = uuid.uuid4()
-                cust_user.save()
-                uid64 = urlsafe_base64_encode(force_bytes(user.pk))
                 domain = get_current_site(request).domain
-                link = str(cust_user.email_token)
-                activate_url = 'http://' + domain + '/user/email_verification/' + link
+                activate_url = 'http://' + domain + '/user/email-verification/' + str(user.email_token)
                 email_body = 'Welcome ' + user.username + ' Please verify your account\n ' + activate_url
                 email = EmailMessage(
                     'JDM',
@@ -109,11 +100,32 @@ def update(request):
 
 
 def verify_email(request, token):
-    client = CustomUser.objects.get(email_token=token)
-    client.email_verified = True
-    client.is_active = True
-    client.save()
-    return redirect('user:login')
+    if request.method == 'GET':
+        try:
+            user = CustomUser.objects.get(email_token=token)
+            user.password_token = None
+            user.email_verified = True
+            user.is_active = True
+            user.save()
+            messages.success(request, f'Account activated!')
+            return redirect('user:login')
+        except CustomUser.DoesNotExist:
+            return redirect('home:index')
+
+
+def reset_password(request, token):
+    if request.method == 'POST':
+        try:
+            user = CustomUser.objects.get(password_token=token)
+            user.password_token = None
+            user.set_password(request.POST['password2'])
+            user.save()
+            messages.success(request, f'Password reset success!')
+            return redirect('user:login')
+        except CustomUser.DoesNotExist:
+            return redirect('home:index')
+    else:
+        return render(request, 'user/resetpassword.html', {'token': token})
 
 
 def password_reset(request):

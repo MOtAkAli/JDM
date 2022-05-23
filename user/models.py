@@ -54,6 +54,7 @@ class CustomUser(AbstractUser):
     is_active = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     email_token = models.UUIDField(null=True)
+    password_token = models.UUIDField(null=True)
     status_reason = models.CharField(max_length=200, null=True, blank=True, default='Email need to be verified')
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
