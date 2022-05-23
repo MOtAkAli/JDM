@@ -74,11 +74,11 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label" for="signature">
-                                <strong>Discription</strong>
+                            <label class="form-label" for="Reason">
+                                <strong>Reason</strong>
                                 <br>
                             </label>
-                            <textarea class="form-control" id="signature" rows="4" name="description"></textarea>
+                            <textarea class="form-control" id="Reason" rows="4" name="Reason"></textarea>
                         </div>
                         <div class="mb-3">
                             <button class="btn btn-primary btn-sm" type="submit">{% if reservation.confirmed %}Unconfirm{% else %}Confirm{% endif %}</button>

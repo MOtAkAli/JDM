@@ -285,7 +285,7 @@ def reservation(request, id):
         reservation.save()
         EmployeeLog(
             description='Reservation have been ' + ('confirmed' if reservation.confirmed else 'unconfirmed'),
-            status_reason=request.POST['description'],
+            status_reason=request.POST['Reason'],
             client_id=reservation.client_id,
             employee_id=1
         ).save()

@@ -77,7 +77,7 @@
                                 <td>
                                     <input class="form-check-input" type="checkbox" id="flexCheckDefault"
                                            onchange="setPaid(this, {{ reservation.id }})" {% if reservation.paid %}
-                                           checked disabled {% endif %}>
+                                           checked disabled {% endif %} {% if not reservation.confirmed %} disabled {% endif %}>
                                     <label class="form-check-label" for="flexCheckDefault">paid</label>
                                 </td>
                                 <td>
