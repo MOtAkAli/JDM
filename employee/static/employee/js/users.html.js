@@ -11,32 +11,63 @@ select.change('change', function () {
 });
 
 function updateStatus(checkbox, id) {
-    let action = confirm('Are you sure you want to ' + ((checkbox.checked) ? 'activate' : 'deactivate') + ' this user account ?');
-    if (action) {
-        let reason = prompt('The reason ?');
-        if (reason) {
-            $.ajax({
-                url: window.location.href,
-                type: 'POST',
-                data: {
-                    'csrfmiddlewaretoken': getCookie('csrftoken'),
-                    'id': id,
-                    'is_active': (checkbox.checked) ? 1 : 0,
-                    'reason': reason
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (!response.error_msg) {
-                        alert('User account has been ' + ((response.is_active) ? 'activated' : 'deactivated') + ' successfully.');
+    checkbox_checked = checkbox.checked;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to ' + ((checkbox_checked) ? 'activate' : 'deactivate') + ' this user account ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4e73df',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        allowOutsideClick: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            bootbox.prompt({
+                title: "The reason ?",
+                inputType: 'textarea',
+                maxlength: 500,
+                centerVertical: true,
+                callback: function (reason) {
+                    if (reason) {
+                        $.ajax({
+                            url: window.location.href,
+                            type: 'POST',
+                            data: {
+                                'csrfmiddlewaretoken': getCookie('csrftoken'),
+                                'id': id,
+                                'is_active': (checkbox_checked) ? 1 : 0,
+                                'reason': reason
+                            },
+                            dataType: 'json',
+                            success: function (response) {
+                                if (!response.error_msg) {
+                                    Swal.fire({
+                                        title: 'User account ' + ((response.is_active) ? 'activated' : 'deactivated'),
+                                        icon: 'success',
+                                        confirmButtonColor: '#4e73df',
+                                    })
+                                }
+                            }
+                        });
+                        console.log('after');
+                        return;
+                    } else if (reason === '') {
+                        Swal.fire({
+                            title: 'The reason is required',
+                            icon: 'error',
+                            confirmButtonColor: '#4e73df',
+                        })
+                        checkbox.checked = !checkbox_checked;
+                    } else {
+                        checkbox.checked = !checkbox_checked;
                     }
                 }
             });
-            return;
         } else {
-            alert('You need to specify the reason.');
+            checkbox.checked = !checkbox_checked;
         }
-    }
-    checkbox.checked = !checkbox.checked;
+    })
 }
 
 $('#search').click(function () {
@@ -46,7 +77,7 @@ $('#search').click(function () {
         window.location.href = `${splitInSearch[0]}/search//10/1`;
     } else {
         let filter = $('#filter').val();
-        if (filter === ''){
+        if (filter === '') {
             alert('Choose a search filter');
             return;
         }
