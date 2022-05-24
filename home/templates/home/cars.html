@@ -156,11 +156,9 @@
                 <div class="card p-3 text-left">
                     <div class="card-body">
                         <h3 class="card-title">Rent a Car</h3>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            Specify the dates and place of rental
-                        </h6>
                         <form method="GET" class="row g-2" action="{% url 'home:rent' %}">
                             {{ carsFilter.form }}
+                            <br>
                             <div>
                                 <button type="submit" class="btn btn-primary w-100">
                                     SEARCH
@@ -172,13 +170,13 @@
                 </div>
             </div>
         </div>
-
+        <br>
         <div class="container">
             <div class="row">
                 {% if cars %}
                     {% for car in cars %}
                         <div onclick="location.href='{% url 'home:car-detail' car.pk %}';"
-                             class="card-car col-md-4 border-0 mb-4">
+                             class="card-car col-md-4 border-0 mb-4" style="width: 30%">
                             <div class="backgroundEffect"></div>
                             <div class="pic">
                                 <img class="" src="{{ car.picture.url }}"/>
