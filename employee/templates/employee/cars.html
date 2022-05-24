@@ -46,7 +46,9 @@
                         <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
                             <option value="">Select filter</option>
                             <option value="registration_number" {% if search_filter == 'registration_number' %} selected {% endif %}>MATRICULE</option>
-                          
+                            {% for car in cars_page %}
+                            <option value="brand_name" {% if search_filter == 'name' %} selected {% endif %}> {{car.car_model.car_brand.name}} </option>
+                            {% endfor %}
                         </select>
                         <label class="form-label">
                             <input type="text" id="search_text" value="{{ search_value }}"

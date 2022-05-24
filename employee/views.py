@@ -328,12 +328,23 @@ def reservation(request, id):
 
 
 def cars(request, search, setof, num_page):
+    # check user
+    if not request.user.is_authenticated:
+        return redirect('user:login')
+    user_roles = get_custom_user_roles(request.user.id)
+    if not user_roles['is_vehicle_manager']:
+        return redirect('index')
+    #
     cars = Car.objects.all()
 
     search = search.split('=')
 
     if search[0] == 'registration_number':
         cars = cars.filter(registration_number__contains=search[1])
+    elif search[0] == 'brand_name':
+        cars = cars.filter(car_model__name__contains=search[1])
+
+
 
     paginator = Paginator(cars, setof)
     cars_page = paginator.get_page(num_page)
@@ -344,6 +355,13 @@ def cars(request, search, setof, num_page):
         request,
         'employee/cars.html',
         {
+            # employee
+            'employee_name': request.user.first_name + ' ' + request.user.last_name,
+            'employee_avatar_url': CustomUser.objects.get(id=request.user.id).picture.url,
+            'is_client_manager': user_roles['is_client_manager'],
+            'is_reservation_manager': user_roles['is_reservation_manager'],
+            'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            #
             'search_filter': search[0] if len(search) == 2 else '',
             'search_value': search[1] if len(search) == 2 else '',
             'search_is_active': True if len(search) == 2 else False,
@@ -360,10 +378,36 @@ def cars(request, search, setof, num_page):
 
 
 def car(request, id):
+    # check user
+    if not request.user.is_authenticated:
+        return redirect('user:login')
+    user_roles = get_custom_user_roles(request.user.id)
+    if not user_roles['is_vehicle_manager']:
+        return redirect('index')
+    #
     car = Car.objects.get(id=id)
+    
     if request.method == 'POST':
         if request.POST['input']:
             car.is_active = not car.is_active
-            car.status_reason = request.POST.get("reason")
             car.save()
-    return render(request, 'employee/car.html', {'car': car})
+            EmployeeLog(
+                description='Car have been ' + ('activated' if car.is_active else 'deactivated'),
+                status_reason=request.POST['reason'],
+                employee_id=request.user.id,
+                car_id=car.id,
+            ).save()
+    return render(
+        request, 
+        'employee/car.html', 
+        {
+            # employee
+            'employee_name': request.user.first_name + ' ' + request.user.last_name,
+            'employee_avatar_url': CustomUser.objects.get(id=request.user.id).picture.url,
+            'is_client_manager': user_roles['is_client_manager'],
+            'is_reservation_manager': user_roles['is_reservation_manager'],
+            'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            #
+            'car': car,
+        }
+    )
