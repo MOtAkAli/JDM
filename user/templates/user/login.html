@@ -45,7 +45,7 @@
                                             style="background: var(--bs-gray-700);border-style: none;">Login
                                     </button>
                                     <a href="../register" style="color: var(--bs-gray-700);">Register</a></div>
-                                <p class="text-muted">Forgot your password?</p>
+                                <a href="{% url 'user:password_reset' %}" style="color: var(--bs-gray-700);"><p class="text-muted">Forgot your password?</p></a>
                             </form>
                         </div>
                     </div>

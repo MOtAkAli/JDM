@@ -1,17 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from datetime import datetime
 from employee.models import Car, Agency, CarModel, CarBrand, CarType, Reservation
 from employee.filters import CarFilter
 from user.models import CustomUser
-from django.http.response import HttpResponse
+from django.core.mail import EmailMessage
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 class CarListView(ListView):
     model = Car
     template_name = 'home/cars.html'
-    paginate_by = 9  # if pagination is desired
+    paginate_by = 4  # if pagination is desired
     context_object_name = 'cars'
 
     def get_context_data(self, **kwargs):
@@ -51,14 +53,34 @@ class CarDetailView(DetailView):
         client = request.POST.get('client')
         client = CustomUser.objects.get(pk=client)
         car = Car.objects.get(pk=car)
-        start = datetime.strptime(startDate,'%Y-%m-%d')
-        end = datetime.strptime(endDate,'%Y-%m-%d')
+        start = datetime.strptime(startDate, '%Y-%m-%d')
+        end = datetime.strptime(endDate, '%Y-%m-%d')
         rentdays = end - start
-        newprice = float(price)*float(rentdays.days)
-        print(type(newprice))
+        newprice = float(price) * float(rentdays.days)
         Reservation.objects.create(start_date=startDate, end_date=endDate, price=newprice, car=car, client=client)
-        return HttpResponse(status=200)
+        email = EmailMessage(
+            'JDM no reply',
+            'RENT DONE  !! check My rents',
+            'jdmrent2022@gmail.com',
+            [client.email],
+        )
+        email.send(fail_silently=False)
+        messages.success(self.request, f'rent done')
+        return redirect('home:index')
 
+
+class RentsView(ListView):
+    model = Reservation
+    paginate_by = 10  # if pagination is desired
+    template_name = 'home/my_rents.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        queryset = Reservation.objects.filter(client=self.request.user)
+        return queryset
 
 def index(request):
     return render(request, 'home/index.html')

@@ -176,19 +176,24 @@
         <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
                 class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse border-2 border-light" id="navcol-1">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav flex-grow-1">
                 <li class="nav-item"><a class="nav-link active" href="/rent/" style="color: rgba(0, 0, 0, 0.9);">Rent a
                     Car</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Information</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Contact us</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link active" href="/myrents/" style="color: rgba(0, 0, 0, 0.9);">My Rents</a></li>
+                {% endif %}
             </ul>
             {% if user.is_authenticated %}
-                <a class="btn btn-danger border rounded-pill border-2 border-dark ms-auto"
+                <a class="btn btn-primary border rounded-pill border-2 border-dark me-1 "
                    style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;margin: 0px;"
+                   href="{% url 'user:profil' %}">Profil
+                </a>
+                <a class="btn btn-danger border rounded-pill border-2 border-dark ms-auto"
+                   style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;"
                    href="{% url 'user:logout' %}">Logout
                 </a>
             {% else %}
-                <a class="btn btn-primary border rounded-pill border-2 border-dark ms-auto"
+                <a class="btn btn-primary border rounded-pill border-2 border-dark me-1"
                    style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;margin: 0px;"
                    href="{% url 'user:register' %}">Register
                 </a>
@@ -206,11 +211,11 @@
 </div>
 {% block content %}
 {% endblock %}
-<footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50">
-    <div class="container text-center">
-      <small>Copyright &copy; Your Website</small>
-    </div>
-</footer>
+{#<footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50">#}
+{#    <div class="container text-center">#}
+{#        <small>Copyright &copy; JDM</small>#}
+{#    </div>#}
+{#</footer>#}
 <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
 
 {% if messages %}

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponse, JsonResponse
 from user.models import CustomUser, Role, RoleEnum
 from django.core.paginator import Paginator
-from .models import Reservation, Car, CarType, EmployeeLog, CarBrand, CarModel
+from .models import Reservation, Car, CarType, PaymentLog, EmployeeLog, CarBrand, CarModel
 from django.db.models import Avg, Count
 from django.db.models.functions import TruncMonth, TruncYear
 import calendar
@@ -284,6 +284,20 @@ def users(request, search, setof, num_page):
 def reservations(request, search, setof, num_page):
     reservations = Reservation.objects.all()
 
+    if request.method == 'POST':
+        try:
+            reservation = reservations.get(id=int(request.POST['id']))
+            reservation.paid = True
+            reservation.save()
+            PaymentLog(reservation_id=reservation.id).save()
+            return JsonResponse({
+                'reservation_is_paid': reservation.paid
+            })
+        except Reservation.DoesNotExist:
+            return JsonResponse({
+                'error': 'reservation not found',
+            })
+
     search = search.split('=')
 
     if search[0] == 'id':
@@ -299,7 +313,7 @@ def reservations(request, search, setof, num_page):
     elif search[0] == 'phone':
         reservations = reservations.filter(client__phone__contains=search[1])
 
-    paginator = Paginator(reservations, 1)
+    paginator = Paginator(reservations, setof)
     reservations_page = paginator.get_page(num_page)
     if int(num_page) > paginator.num_pages:
         num_page = paginator.num_pages
@@ -324,6 +338,16 @@ def reservations(request, search, setof, num_page):
 
 def reservation(request, id):
     reservation = Reservation.objects.get(id=id)
+    if request.method == 'POST':
+        reservation.confirmed = not reservation.confirmed
+        reservation.save()
+        EmployeeLog(
+            description='Reservation have been ' + ('confirmed' if reservation.confirmed else 'unconfirmed'),
+            status_reason=request.POST['Reason'],
+            client_id=reservation.client_id,
+            employee_id=1
+        ).save()
+
     return render(request, 'employee/reservation.html', {"reservation": reservation, })
 
 
