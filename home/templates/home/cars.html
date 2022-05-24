@@ -37,7 +37,7 @@
             flex: 0 0 auto;
             width: auto;
         }
-        
+
         @keyframes popBackground {
             0% {
                 height: 20px;
@@ -156,11 +156,9 @@
                 <div class="card p-3 text-left">
                     <div class="card-body">
                         <h3 class="card-title">Rent a Car</h3>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            Specify the dates and place of rental
-                        </h6>
                         <form method="GET" class="row g-2" action="{% url 'home:rent' %}">
-                            {{carsFilter.form}}
+                            {{ carsFilter.form }}
+                            <br>
                             <div>
                                 <button type="submit" class="btn btn-primary w-100">
                                     SEARCH
@@ -168,53 +166,59 @@
                             </div>
                         </form>
                     </div>
-                </a>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="row">
+                {% if cars %}
+                    {% for car in cars %}
+                        <div onclick="location.href='{% url 'home:car-detail' car.pk %}';"
+                             class="card-car col-md-4 border-0 mb-4" style="width: 30%">
+                            <div class="backgroundEffect"></div>
+                            <div class="pic">
+                                <img class="" src="{{ car.picture.url }}"/>
+                            </div>
+                            <div class="content">
+                                <p class="h-1 mt-4 fw-bolder" style="text-transform: uppercase">
+                                    {{ car.carModel.name }}
+                                </p>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Doors : {{ car.doors }}</li>
+                                    <li class="list-group-item">Seats : {{ car.seats }}</li>
+                                    {% if car.ac == True %}
+                                        <li class="list-group-item">A/C : <input class="form-check-input"
+                                                                                 type="checkbox" value="" checked
+                                                                                 disabled>
+                                        </li>
+                                    {% endif %}
+                                    <li class="list-group-item">Gearbox : {{ car.gearbox }}</li>
+                                    <li class="list-group-item">Fuel : {{ car.fuel }}</li>
+                                    <li class="list-group-item">year : {{ car.year }}</li>
+                                </ul>
+                                <div class="d-flex align-items-center justify-content-between mt-3 pb-3">
+                                    <a href="{% url 'home:car-detail' car.pk %}"
+                                       class="btn btn-block btn-primary"
+                                       style="width: 10rem; height: 3rem">
+                                        Rent <span class="fas fa-arrow-right"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 badge bg-dark text-wrap">
+                        <h1 style="color: #ffffff;">No cars matching your search is available now. Please try
+                            later. </h1>
+                    </div>
+                    <div class="col-12">
+                        <img src="{% static 'base/images/icons/90421-car-in-movement.gif' %}">
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            {% if cars %}
-                {% for car in cars %}
-                    <div onclick="location.href='{% url 'home:car-detail' car.pk %}';" class="card-car col-md-4 border-0 mb-4">
-                        <div class="backgroundEffect"></div>
-                        <div class="pic">
-                            <img class="" src="{{ car.picture.url }}"/>
-                        </div>
-                        <div class="content">
-                            <p class="h-1 mt-4 fw-bolder" style="text-transform: uppercase">
-                                {{ car.carModel.name }}
-                            </p>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Doors : {{ car.doors }}</li>
-                                <li class="list-group-item">Seats : {{ car.seats }}</li>
-                                {% if car.ac == True %}
-                                <li class="list-group-item">A/C   : <input class="form-check-input" type="checkbox" value="" checked disabled>
-                                </li>
-                                {% endif %}
-                                <li class="list-group-item">Gearbox : {{ car.gearbox }}</li>
-                                <li class="list-group-item">Fuel : {{ car.fuel }}</li>
-                                <li class="list-group-item">year : {{ car.year }}</li>
-                            </ul>
-                            <div class="d-flex align-items-center justify-content-between mt-3 pb-3">
-                                <a href="{% url 'home:car-detail' car.pk %}"
-                                        class="btn btn-block btn-primary"
-                                        style="width: 10rem; height: 3rem">
-                                    Rent <span class="fas fa-arrow-right"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-            <div class="col-12 badge bg-dark text-wrap">
-                <h1 style="color: #ffffff;">No cars matching your search is available now. Please try later. </h1>
-            </div>   
-            <div class="col-12">            
-                <img src="{% static 'base/images/icons/90421-car-in-movement.gif' %}">
-            </div> 
-            {% endif %}
-        </div>
-    </div>
 {% endblock %}
