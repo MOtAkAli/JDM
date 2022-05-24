@@ -1,166 +1,167 @@
-    {% extends 'base/base.html' %} {% load static %}
-    {% block css %}
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <style>
-            @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+{% extends 'base/base.html' %} {% load static %}
+{% block css %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
-            p {
-                margin: 0;
-            }
+        p {
+            margin: 0;
+        }
 
-            .container {
-                margin: 25px auto;
-            }
+        .container {
+            margin: 25px auto;
+        }
 
-            .image {
-                position: relative;
-                width: 100%;
-                overflow: hidden;
-            }
+        .image {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
 
-            .image .overlay {
-                position: absolute;
-                bottom: 0;
-                padding-left: 25px;
-                padding-top: 15px;
-                width: 100%;
-                color: white;
-                font-size: 20px;
-                z-index: 5;
-            }
+        .image .overlay {
+            position: absolute;
+            bottom: 0;
+            padding-left: 25px;
+            padding-top: 15px;
+            width: 100%;
+            color: white;
+            font-size: 20px;
+            z-index: 5;
+        }
 
-            .image .overlay::before {
-                content: "";
-                background: #ffff;
-                height: 100%;
-                width: 100%;
-                z-index: 1;
-                position: absolute;
-                left: 0;
-                bottom: -150px;
-                z-index: -2;
-                opacity: 0.5;
-                transition: all 0.3s ease-out;
-            }
+        .image .overlay::before {
+            content: "";
+            background: #ffff;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            bottom: -150px;
+            z-index: -2;
+            opacity: 0.5;
+            transition: all 0.3s ease-out;
+        }
 
-            .image:hover .overlay {
-                color: black;
-            }
+        .image:hover .overlay {
+            color: black;
+        }
 
-            .container .image:hover .overlay .amount,
-            .container .image:hover .overlay .h4,
-            .container .image:hover .overlay .textmuted,
-            .container .image:hover .overlay .fa-star,
-            .container .image:hover .overlay .fa-star-half-alt,
-            .container .image:hover .overlay .review {
-                color: black;
-            }
+        .container .image:hover .overlay .amount,
+        .container .image:hover .overlay .h4,
+        .container .image:hover .overlay .textmuted,
+        .container .image:hover .overlay .fa-star,
+        .container .image:hover .overlay .fa-star-half-alt,
+        .container .image:hover .overlay .review {
+            color: black;
+        }
 
-            .image:hover .overlay::before {
-                bottom: 0px;
-            }
+        .image:hover .overlay::before {
+            bottom: 0px;
+        }
 
-            .amount {
-                font-size: 15px;
-            }
+        .amount {
+            font-size: 15px;
+        }
 
-            .textmuted {
-                color: #f8f8f8;
-                font-weight: 200;
-                font-size: 15px;
-                text-transform: capitalize;
-            }
+        .textmuted {
+            color: #f8f8f8;
+            font-weight: 200;
+            font-size: 15px;
+            text-transform: capitalize;
+        }
 
-            .fa-star,
-            .fa-star-half-alt {
-                color: white;
-                font-size: 10px;
-                margin: 0 1px;
-            }
+        .fa-star,
+        .fa-star-half-alt {
+            color: white;
+            font-size: 10px;
+            margin: 0 1px;
+        }
 
-            .review {
-                font-size: 12px;
-                font-weight: 200;
-            }
-        </style>
+        .review {
+            font-size: 12px;
+            font-weight: 200;
+        }
+    </style>
 
 
-    {% endblock css %}
-    {% block content %}
-        <div class="container">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col rounded float-start image">
-                    <img
-                            class="rounded"
-                            src="{{ object.picture.url }}"
-                            width="700"
-                            height="500"
-                    />
-                    <div class="overlay">
-                        <b><p class="amount">{{ object.car_model.car_model_price }} MAD</p></b>
-                        <p class="h4" style="text-transform: uppercase">
-                            {{ object.car_model.name }}
-                        </p>
-                        <ul class="list-unstyled d-flex">
-                            <li><span class="fas fa-star"></span></li>
-                            <li><span class="fas fa-star"></span></li>
-                            <li><span class="fas fa-star"></span></li>
-                            <li><span class="fas fa-star"></span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Doors : {{ object.doors }}</li>
-                        <li class="list-group-item">Seats : {{ object.seats }}</li>
-                        {% if object.ac == True %}
-                            <li class="list-group-item">
-                                A/C :
-                                <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        checked
-                                        disabled
-                                />
-                            </li>
-                        {% endif %}
-                        <li class="list-group-item">Gearbox : {{ object.gearbox }}</li>
-                        <li class="list-group-item">Fuel : {{ object.fuel }}</li>
-                        <li class="list-group-item">year : {{ object.year }}</li>
-                        <li class="list-group-item">Car Type : {{ object.car_type.name }}</li>
-                        <li class="list-group-item">Car Model : {{ object.car_model.car_brand }}</li>
-                        <li class="list-group-item">Agency : {{ object.agency.city }}</li>
-                        <li class="list-group-item">description : {{ object.description }}</li>
+{% endblock css %}
+{% block content %}
+    <div class="container">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col rounded float-start image">
+                <img
+                        class="rounded"
+                        src="{{ object.picture.url }}"
+                        width="700"
+                        height="500"
+                />
+                <div class="overlay">
+                    <b><p class="amount">{{ object.car_model.car_model_price }} MAD</p></b>
+                    <p class="h4" style="text-transform: uppercase">
+                        {{ object.car_model.name }}
+                    </p>
+                    <ul class="list-unstyled d-flex">
+                        <li><span class="fas fa-star"></span></li>
+                        <li><span class="fas fa-star"></span></li>
+                        <li><span class="fas fa-star"></span></li>
+                        <li><span class="fas fa-star"></span></li>
                     </ul>
-                    <br/>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a
-                                id="rentBtn"
-                                class="btn btn-primary me-md-2"
-                                type="button"
-                                style="background-color: black">
-                            RENT
-                        </a>
-                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Doors : {{ object.doors }}</li>
+                    <li class="list-group-item">Seats : {{ object.seats }}</li>
+                    {% if object.ac == True %}
+                        <li class="list-group-item">
+                            A/C :
+                            <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value=""
+                                    checked
+                                    disabled
+                            />
+                        </li>
+                    {% endif %}
+                    <li class="list-group-item">Gearbox : {{ object.gearbox }}</li>
+                    <li class="list-group-item">Fuel : {{ object.fuel }}</li>
+                    <li class="list-group-item">year : {{ object.year }}</li>
+                    <li class="list-group-item">Car Type : {{ object.car_type.name }}</li>
+                    <li class="list-group-item">Car Model : {{ object.car_model.car_brand }}</li>
+                    <li class="list-group-item">Agency : {{ object.agency.city }}</li>
+                    <li class="list-group-item">description : {{ object.description }}</li>
+                </ul>
+                <br/>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a
+                            id="rentBtn"
+                            class="btn btn-primary me-md-2"
+                            type="button"
+                            style="background-color: black">
+                        RENT
+                    </a>
                 </div>
             </div>
         </div>
-    {% endblock %}
+    </div>
+{% endblock %}
 
-    {% block js %}
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
-        {% if user.is_authenticated %}
-        <script>
-            $("#rentBtn").click(function () {
+{% block js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+    <script>
+        $("#rentBtn").click(function () {
+            {% if user.is_authenticated %}
                 bootbox.dialog({
                     message: `
-          Start date : <input class="form-control" type="date" id="startDate"><br/>
-          End date   : <input class="form-control" type="date" id="endDate">
-        `,
+                        Start date : <input class="form-control" type="date" id="startDate"><br/>
+                        End date   : <input class="form-control" type="date" id="endDate">
+                    `,
                     title: 'Pick a reservation date',
                     buttons: {
                         main: {
@@ -196,19 +197,34 @@
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         Swal.fire({
                                             icon: 'error',
-                                            title: 'You rent is done \n an email is sent! \n',
+                                            title: errorThrown,
                                             showConfirmButton: false,
                                             timer: 2500
-                                        })                                    }
+                                        })
+                                    }
                                 });
 
                             }
                         }
                     }
                 });
-            });
-        </script>
-        {% else %}
+            {% else %}
+                Swal.fire({
+                    title: 'Login required to rent',
+                    text: "wanna login ?",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#000',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Login'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.replace("/user/login/")
+                    }
+                })
+            {% endif %}
+        });
+    </script>
 
-        {% endif %}
-    {% endblock %}
+
+{% endblock %}

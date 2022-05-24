@@ -60,7 +60,7 @@ class CarDetailView(DetailView):
         Reservation.objects.create(start_date=startDate, end_date=endDate, price=newprice, car=car, client=client)
         email = EmailMessage(
             'JDM no reply',
-            'RENT DONE  !!!!!!!!!',
+            'RENT DONE  !! check My rents',
             'jdmrent2022@gmail.com',
             [client.email],
         )
