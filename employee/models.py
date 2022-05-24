@@ -77,6 +77,7 @@ class Car(models.Model):
     car_type = models.ForeignKey(CarType, on_delete=models.PROTECT)
     car_model = models.ForeignKey(CarModel, on_delete=models.PROTECT)
     agency = models.ForeignKey(Agency, on_delete=models.PROTECT)
+    
 
     def __str__(self):
         return str(self.car_type) + " " + str(self.car_model)

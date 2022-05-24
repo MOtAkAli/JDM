@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.http import HttpResponse, JsonResponse
 from user.models import CustomUser, Role, RoleEnum
 from django.core.paginator import Paginator
-from .models import Reservation, Car, CarType, PaymentLog, EmployeeLog
+from .models import Reservation, Car, CarType, PaymentLog, EmployeeLog, CarBrand, CarModel
 from django.db.models import Avg, Count
 from django.db.models.functions import TruncMonth, TruncYear
 import calendar
@@ -64,7 +65,8 @@ def cars_count_by_type_dict(cars_count_by_type):
     types_count = {}
     car_types = dict(CarType.CAR_TYPES)
     for car_count_by_type in cars_count_by_type:
-        types_count[car_types.get(car_count_by_type['car_type__name'])] = car_count_by_type['count']
+        types_count[car_types.get(
+            car_count_by_type['car_type__name'])] = car_count_by_type['count']
     return types_count
 
 
@@ -106,10 +108,10 @@ def index(request):
         if request.POST['which_one'] == 'reservations':
             monthly_earnings = monthly_earnings_dict(
                 reservations.
-                    filter(paid=True).
-                    filter(start_date__year=request.POST['year']).
-                    annotate(month=TruncMonth('start_date')).
-                    values('month').annotate(avg=Avg('price'))
+                filter(paid=True).
+                filter(start_date__year=request.POST['year']).
+                annotate(month=TruncMonth('start_date')).
+                values('month').annotate(avg=Avg('price'))
             )
             return JsonResponse(
                 {
@@ -121,29 +123,31 @@ def index(request):
     # reservations / annually_earnings
     annually_earnings = annually_earnings_dict(
         reservations.
-            filter(paid=True).
-            annotate(year=TruncYear('start_date')).
-            values('year').
-            annotate(avg=Avg('price'))
+        filter(paid=True).
+        annotate(year=TruncYear('start_date')).
+        values('year').
+        annotate(avg=Avg('price'))
     )
     years = [year for year in reversed(annually_earnings.keys())]
     max_year = 0 if len(years) == 0 else max(years)
     min_year = 0 if len(years) == 0 else min(years)
-    annually_earnings = [annually_earnings for annually_earnings in reversed(annually_earnings.values())]
+    annually_earnings = [annually_earnings for annually_earnings in reversed(
+        annually_earnings.values())]
     # reservations / monthly_earnings
     monthly_earnings = monthly_earnings_dict(
         reservations.
-            filter(paid=True).
-            filter(start_date__year=years[0] if len(years) > 0 else None).
-            annotate(month=TruncMonth('start_date')).
-            values('month').
-            annotate(avg=Avg('price'))
+        filter(paid=True).
+        filter(start_date__year=years[0] if len(years) > 0 else None).
+        annotate(month=TruncMonth('start_date')).
+        values('month').
+        annotate(avg=Avg('price'))
     )
     months = monthly_earnings.keys()
     monthly_earnings = monthly_earnings.values()
     # car brands counts
     cars_count_by_brand = cars_count_by_brand_dict(
-        cars.values('car_model__car_brand__name').annotate(count=Count('car_model__car_brand__name'))
+        cars.values('car_model__car_brand__name').annotate(
+            count=Count('car_model__car_brand__name'))
     )
     # car types counts
     cars_count_by_type = cars_count_by_type_dict(
@@ -206,7 +210,8 @@ def users(request, search, setof, num_page):
             client.is_active = new_is_active
             client.save()
             EmployeeLog(
-                description='Client account ' + ('activated' if client.is_active else 'deactivated'),
+                description='Client account ' +
+                ('activated' if client.is_active else 'deactivated'),
                 status_reason=request.POST['reason'],
                 employee_id=request.user.id,
                 client_id=client_id,
@@ -298,9 +303,11 @@ def reservations(request, search, setof, num_page):
     if search[0] == 'id':
         reservations = reservations.filter(client__idn__contains=search[1])
     elif search[0] == 'first_name':
-        reservations = reservations.filter(client__first_name__icontains=search[1])
+        reservations = reservations.filter(
+            client__first_name__icontains=search[1])
     elif search[0] == 'last_name':
-        reservations = reservations.filter(client__last_name__contains=search[1])
+        reservations = reservations.filter(
+            client__last_name__contains=search[1])
     elif search[0] == 'email':
         reservations = reservations.filter(client__email__contains=search[1])
     elif search[0] == 'phone':
@@ -342,3 +349,89 @@ def reservation(request, id):
         ).save()
 
     return render(request, 'employee/reservation.html', {"reservation": reservation, })
+
+
+def cars(request, search, setof, num_page):
+    # check user
+    if not request.user.is_authenticated:
+        return redirect('user:login')
+    user_roles = get_custom_user_roles(request.user.id)
+    if not user_roles['is_vehicle_manager']:
+        return redirect('index')
+    #
+    cars = Car.objects.all()
+
+    search = search.split('=')
+
+    if search[0] == 'registration_number':
+        cars = cars.filter(registration_number__contains=search[1])
+    elif search[0] == 'brand_name':
+        cars = cars.filter(car_model__name__contains=search[1])
+
+
+
+    paginator = Paginator(cars, setof)
+    cars_page = paginator.get_page(num_page)
+    if int(num_page) > paginator.num_pages:
+        num_page = paginator.num_pages
+
+    return render(
+        request,
+        'employee/cars.html',
+        {
+            # employee
+            'employee_name': request.user.first_name + ' ' + request.user.last_name,
+            'employee_avatar_url': CustomUser.objects.get(id=request.user.id).picture.url,
+            'is_client_manager': user_roles['is_client_manager'],
+            'is_reservation_manager': user_roles['is_reservation_manager'],
+            'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            #
+            'search_filter': search[0] if len(search) == 2 else '',
+            'search_value': search[1] if len(search) == 2 else '',
+            'search_is_active': True if len(search) == 2 else False,
+            'cars_page': cars_page,
+            'count': paginator.count,
+            'page_has_previous': cars_page.has_previous,
+            'page_has_next': cars_page.has_next,
+            'setof': int(setof),
+            'num_page_previous': int(num_page) - 1,
+            'num_page': int(num_page),
+            'num_page_next': int(num_page) + 1,
+        }
+    )
+
+
+def car(request, id):
+    # check user
+    if not request.user.is_authenticated:
+        return redirect('user:login')
+    user_roles = get_custom_user_roles(request.user.id)
+    if not user_roles['is_vehicle_manager']:
+        return redirect('index')
+    #
+    car = Car.objects.get(id=id)
+    
+    if request.method == 'POST':
+        if request.POST['input']:
+            car.is_active = not car.is_active
+            car.save()
+            EmployeeLog(
+                description='Car have been ' + ('activated' if car.is_active else 'deactivated'),
+                status_reason=request.POST['reason'],
+                employee_id=request.user.id,
+                car_id=car.id,
+            ).save()
+    return render(
+        request, 
+        'employee/car.html', 
+        {
+            # employee
+            'employee_name': request.user.first_name + ' ' + request.user.last_name,
+            'employee_avatar_url': CustomUser.objects.get(id=request.user.id).picture.url,
+            'is_client_manager': user_roles['is_client_manager'],
+            'is_reservation_manager': user_roles['is_reservation_manager'],
+            'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            #
+            'car': car,
+        }
+    )

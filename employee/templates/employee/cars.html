@@ -1,0 +1,196 @@
+
+{% extends 'employee/base.html' %}
+{% load static %} 
+
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %} TABLE - CARS - JDM {% endblock %} </title>
+   
+    <link rel="stylesheet" href="{% static 'employee/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'employee/fonts/fontawesome-all.min.css' %}">
+    
+
+</head>
+
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">table_cars</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">CARS INFO</p>
+        </div>
+           
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" id="show">
+                                <option value="10" {% if setof == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if setof == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if setof == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if setof == 100 %} selected {% endif %}>100</option>
+                            </select>&nbsp;
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
+                            <option value="">Select filter</option>
+                            <option value="registration_number" {% if search_filter == 'registration_number' %} selected {% endif %}>MATRICULE</option>
+                            {% for car in cars_page %}
+                            <option value="brand_name" {% if search_filter == 'name' %} selected {% endif %}> {{car.car_model.car_brand.name}} </option>
+                            {% endfor %}
+                        </select>
+                        <label class="form-label">
+                            <input type="text" id="search_text" value="{{ search_value }}"
+                                   class="form-control form-control-sm" aria-controls="dataTable"
+                                   placeholder="Search">
+                        </label>
+                        <button class="btn btn-primary btn-sm" id="search">Search</button>
+                    </div>
+                </div>
+            </div>
+                </div>
+                
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>   CAR   </th>
+                            <th>MATRICULE</th>
+                            <th><img src="{%static 'employee/img/avatars/icons8-person-66.png'  %}"style="width: 30px; height: 30px;"></th>
+                            <th> <img src="{%static 'employee/img/avatars/icons8-car-door-24.png'  %}"style="width: 30px; height: 30px;"></th>
+                            <th><img src="{%static 'employee/img/avatars/icons8-winter-50.png'  %}"style="width: 30px; height: 30px;"></th>
+                            <th>ACTIVE</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for car in cars_page %}
+                        <tr>
+                          <td> <img class="rounded-circle" src="{{ car.picture.url }}"style="width: 150px; height: 150px;"></td>
+                          <td> {{ car.registration_number }} </td>
+                          <td> {{ car.seats }}</td>
+                          <td> {{car.doors}} </td>
+                          <td> 
+                            <input type="checkbox" class="form-check-input" disabled {% if car.ac %} checked {% endif %}>
+                      
+                            </td>    
+                          <td> 
+                            <input type="checkbox" class="form-check-input" disabled {% if car.is_active %} checked {% endif %}>
+                      
+                            </td>
+                          <td>  <a href="/employee/car/{{ car.id }}" class="btn btn-primary" > detail </a> </td> 
+                          
+                            
+                        </tr>
+                      {% endfor %}  
+                        
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>   CAR   </td>
+                            <td>MATRICULE</td>
+                            <td><img src="{%static 'employee/img/avatars/icons8-person-66.png'  %}"style="width: 30px; height: 30px;"></td>
+                            <td> <img src="{%static 'employee/img/avatars/icons8-car-door-24.png'  %}"style="width: 30px; height: 30px;"></td>
+                            <td><img src="{%static 'employee/img/avatars/icons8-winter-50.png'  %}"style="width: 30px; height: 30px;"></td>
+                            <td>ACTIVE</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+             
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1
+                            to {{ setof }} of {{ count }}
+                        </p>
+                    </div>
+
+                    {% if page_has_previous or page_has_next %}
+                        <div class="col-md-6">
+                            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    {% if page_has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Previous"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_previous }}">
+                                                <span aria-hidden="true">« </span></a></li>
+                                    {% endif %}
+                                    {% if page_has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="page-item active">
+                                        <a class="page-link"
+                                           href="/employee/cars/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                    </li>
+                                    {% if page_has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if page_has_next %}
+
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Next"
+                                               href="/employee/cars/{{ setof }}/{{ num_page_next }}">
+                                                <span aria-hidden="true"> » </span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+  
+    
+
+        <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
+        <script>
+            $('#search').click(function () {
+                let search = $('#search_text').val();
+                let splitInSearch = window.location.href.split('/search/');
+                if (search === '') {
+                    window.location.href = `${splitInSearch[0]}/search//10/1`;
+                } else {
+                    let filter = $('#filter').val();
+                    if (filter === '') {
+                        alert('Choose a search filter');
+                        return;
+                    }
+                    let afterSearchSplit = splitInSearch[1].split('/');
+                    window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${afterSearchSplit[1]}/${afterSearchSplit[2]}`;
+                }
+            });
+    
+    
+            let select = $('#show');
+            select.change('change', function () {
+                let search = $('#search_text').val();
+                if (search === '') {
+                    window.location.href = '/employee/cars/search//' + select.val() + '/1';
+                } else {
+                    let filter = $('#filter').val();
+                    let splitInSearch = window.location.href.split(`${filter}=${search}`);
+                    window.location.href = `${splitInSearch[0]}${filter}=${search}/${select.val()}/1`;
+                }
+            });
+        </script>
+                    
+{% endblock %}
