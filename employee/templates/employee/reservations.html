@@ -71,15 +71,17 @@
                                 </td>
                                 <td>{{ reservation.client.phone }}</td>
                                 <td>{{ reservation.client.email }}</td>
-                                <td>{{ reservation.client.address }} {{ v.client.city }}</td>
-                                <td>{{ reservation.car.carModel }}</td>
-                                <td>{{ reservation.startDate }} to {{ reservation.endDate }}</td>
+                                <td>{{ reservation.client.address }} {{ reservation.client.city }}</td>
+                                <td>{{ reservation.car.car_model }}</td>
+                                <td>{{ reservation.start_date }} to {{ reservation.end_date }}</td>
                                 <td>
-                                    <input class="form-check-input" type="checkbox" id="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" id="flexCheckDefault"
+                                           onchange="setPaid(this, {{ reservation.id }})" {% if reservation.paid %}
+                                           checked disabled {% endif %} {% if not reservation.confirmed %} disabled {% endif %}>
                                     <label class="form-check-label" for="flexCheckDefault">paid</label>
                                 </td>
                                 <td>
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" id="flexCheckDefault" {% if reservation.confirmed %} checked {% endif %} disabled>
                                     <label class="form-check-label" for="flexCheckDefault">confirmed</label>
                                 </td>
 
@@ -115,6 +117,11 @@
                                         <li class="page-item">
                                             <a class="page-link" aria-label="Previous"
                                                href="/employee/reservations/search/
+
+
+
+
+
                                                        {{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_previous }}">
                                                 <span aria-hidden="true">«</span>
                                             </a>
@@ -124,18 +131,33 @@
                                         <li class="page-item">
                                             <a class="page-link"
                                                href="/employee/reservations/search/
+
+
+
+
+
                                                        {{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
                                         </li>
                                     {% endif %}
                                     <li class="page-item active">
                                         <a class="page-link"
                                            href="/employee/reservations/search/
+
+
+
+
+
                                                    {{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
                                     </li>
                                     {% if page_has_next %}
                                         <li class="page-item">
                                             <a class="page-link"
                                                href="/employee/reservations/search/
+
+
+
+
+
                                                        {{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
                                         </li>
                                     {% endif %}
@@ -143,6 +165,11 @@
                                         <li class="page-item">
                                             <a class="page-link" aria-label="Next"
                                                href="/employee/reservations/search/
+
+
+
+
+
                                                        {{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_next }}">
                                                 <span aria-hidden="true">»</span>
                                             </a>
@@ -157,6 +184,7 @@
         </div>
     </div>
     <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
     <script>
         $('#search').click(function () {
             let search = $('#search_text').val();
@@ -186,6 +214,27 @@
                 window.location.href = `${splitInSearch[0]}${filter}=${search}/${select.val()}/1`;
             }
         });
+
+        function setPaid(checkbox, id) {
+            if (!confirm('do you want to confirm the payment of this reservation ! ')) {
+                checkbox.checked = false;
+            } else {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': getCookie('csrftoken'),
+                        'id': id,
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log(response.reservation_is_paid);
+                        alert('reservartion have been paid ');
+                        checkbox.disabled = true;
+                    }
+                });
+            }
+        }
     </script>
 {% endblock %}
 
