@@ -1,9 +1,9 @@
+from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, UserUpdateForm
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login as auth_login
@@ -14,6 +14,7 @@ from user.models import CustomUser
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from django.utils import timezone
 
 from uuid import uuid4
 
@@ -108,7 +109,7 @@ def verify_email(request, token):
     if request.method == 'GET':
         try:
             user = CustomUser.objects.get(email_token=token)
-            user.password_token = None
+            user.email_token = None
             user.email_verified = True
             user.is_active = True
             user.save()
@@ -122,10 +123,14 @@ def reset_password(request, token):
     if request.method == 'POST':
         try:
             user = CustomUser.objects.get(password_token=token)
-            user.password_token = None
-            user.set_password(request.POST['password2'])
-            user.save()
-            messages.success(request, f'Password reset success!')
+            if timezone.now() <= user.password_token_expiration:
+                user.password_token = None
+                user.password_token_expiration = None
+                user.set_password(request.POST['password2'])
+                user.save()
+                messages.success(request, f'Password reset success!')
+            else:
+                messages.error(request, f'Link expired!')
             return redirect('user:login')
         except CustomUser.DoesNotExist:
             return redirect('home:index')
@@ -138,10 +143,11 @@ def password_reset(request):
         try:
             user = CustomUser.objects.get(email=request.POST['email'])
             user.password_token = uuid4()
+            user.password_token_expiration = timezone.now() + timedelta(minutes=15)
             user.save()
             domain = get_current_site(request).domain
             activate_url = 'http://' + domain + '/user/reset-password/' + str(user.password_token)
-            email_body = 'Welcome ' + user.username + ' reset link\n ' + activate_url
+            email_body = 'Welcome ' + user.username + ' reset link will expires after 15 min\n ' + activate_url
             email = EmailMessage(
                 'JDM',
                 email_body,
