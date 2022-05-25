@@ -126,12 +126,12 @@
                             />
                         </li>
                     {% endif %}
-                    <li class="list-group-item">Gearbox : {{ object.gearbox }}</li>
-                    <li class="list-group-item">Fuel : {{ object.fuel }}</li>
+                    <li class="list-group-item">Gearbox : {{ object.get_gearbox_display }}</li>
+                    <li class="list-group-item">Fuel : {{ object.get_fuel_display  }}</li>
                     <li class="list-group-item">year : {{ object.year }}</li>
-                    <li class="list-group-item">Car Type : {{ object.car_type.name }}</li>
+                    <li class="list-group-item">Car Type : {{ object.car_type }}</li>
                     <li class="list-group-item">Car Model : {{ object.car_model.car_brand }}</li>
-                    <li class="list-group-item">Agency : {{ object.agency.city }}</li>
+                    <li class="list-group-item">Agency : {{ object.agency.name }} {{ object.agency.city.name }}</li>
                     <li class="list-group-item">description : {{ object.description }}</li>
                 </ul>
                 <br/>
@@ -150,9 +150,8 @@
 {% endblock %}
 
 {% block js %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'base/js/bootbox.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'base/js/jquery-ui-1.13.1/jquery-ui.min.css' %}">
     <script src="{% static 'base/js/jquery-ui-1.13.1/jquery-ui.min.js' %}"></script>
     <script>
@@ -164,12 +163,31 @@
                         <br/>
                         End date   : <input class="form-control" type="text" id="endDate" placeholder="mm/dd/yyyy">
                         <script>
-                            console.log('hello');
-                            $('#startDate').datepicker({
-                                minDate: 0,
-                            });
-                            $('#endDate').datepicker({
-                                minDate: '+1D',
+                            $.ajax({
+                                url: window.location.href,
+                                type: 'POST',
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                    'car': '{{ object.pk }}',
+                                    'need': 'date_intervals',
+                                },
+                                dataType: 'json',
+                                success: function (response) {
+                                    $('#startDate').datepicker({
+                                        minDate: 0,
+                                        beforeShowDay: function(date){
+                                            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                                            return [ response.dates.indexOf(string) == -1 ]
+                                        }
+                                    });
+                                    $('#endDate').datepicker({
+                                        minDate: '+1D',
+                                        beforeShowDay: function(date){
+                                            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                                            return [ response.dates.indexOf(string) == -1 ]
+                                        }
+                                    });
+                                }
                             });
                         <\/script>
                     `,
@@ -198,12 +216,21 @@
                                     data: data,
                                     url: "{% url 'home:car-detail' object.pk  %}",
                                     success: function (response) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'You rent is done \n an email is sent! \n',
-                                            showConfirmButton: false,
-                                            timer: 2500
-                                        })
+                                        if (response.error) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: response.error,
+                                                showConfirmButton: false,
+                                                timer: 2500
+                                            })
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'You rent is done \n an email is sent! \n',
+                                                showConfirmButton: false,
+                                                timer: 2500
+                                            })
+                                        }
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         Swal.fire({
