@@ -175,31 +175,32 @@
             </div>
         </div>
         <br>
-        <div class="d-flex justify-content-around">
-            <div class="d-flex flex-lg-row flex-column">
+        <div class="container">
+            <div class="row">
                 {% if cars %}
                     {% for car in cars %}
                         <div onclick="location.href='{% url 'home:car-detail' car.pk %}';"
-                            class="d-flex flex-column w-100 h-100">
+                             class="card-car col-md-4 border-0 mb-4" style="width: 30%">
                             <div class="backgroundEffect"></div>
                             <div class="pic">
                                 <img class="" src="{{ car.picture.url }}"/>
+                                <div class="text-center">{{ car.car_model }}</div>
                             </div>
-                            <div class="content d-flex flex-column">
+                            <div class="content">
                                 <p class="h-1 mt-4 fw-bolder" style="text-transform: uppercase">
                                     {{ car.carModel.name }}
                                 </p>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">Doors : {{ car.doors }}</li>
                                     <li class="list-group-item">Seats : {{ car.seats }}</li>
-                                    <li class="list-group-item">
-                                        A/C :
-                                        <input class="form-check-input" type="checkbox" value="" {% if car.ac %} checked {% endif %} disabled></li>
+                                    <li class="list-group-item">A/C :
+                                        <input class="form-check-input" type="checkbox" {% if car.ac %} checked {% endif %} disabled>
+                                    </li>
                                     <li class="list-group-item">Gearbox : {{ car.get_gearbox_display }}</li>
                                     <li class="list-group-item">Fuel : {{ car.get_fuel_display }}</li>
                                     <li class="list-group-item">year : {{ car.year }}</li>
                                 </ul>
-                                <div class="d-flex align-items-center justify-content-between mt-3 pb-3 flex-grow-1">
+                                <div class="d-flex align-items-center justify-content-between mt-3 pb-3">
                                     <a href="{% url 'home:car-detail' car.pk %}"
                                        class="btn btn-block btn-primary"
                                        style="width: 10rem; height: 3rem">
