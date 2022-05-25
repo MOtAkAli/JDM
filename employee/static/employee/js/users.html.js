@@ -50,8 +50,6 @@ function updateStatus(checkbox, id) {
                                 }
                             }
                         });
-                        console.log('after');
-                        return;
                     } else if (reason === '') {
                         Swal.fire({
                             title: 'The reason is required',
@@ -78,9 +76,13 @@ $('#search').click(function () {
     } else {
         let filter = $('#filter').val();
         if (filter === '') {
-            alert('Choose a search filter');
-            return;
+            Swal.fire({
+                title: 'Choose a search filter',
+                icon: 'error',
+                confirmButtonColor: '#4e73df',
+            });
+        } else {
+            window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${splitInSearch[1].split('/')[1]}/1`;
         }
-        window.location.href = `${splitInSearch[0]}/search/${filter}=${search}/${splitInSearch[1].split('/')[1]}/1`;
     }
 });

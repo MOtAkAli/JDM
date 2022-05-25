@@ -96,22 +96,22 @@ def index(request):
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
         exclude(roles__in=Role.objects.filter(
-                name__in=(
-                    RoleEnum.CLIENT_MANAGER.value,
-                    RoleEnum.RESERVATION_MANAGER.value,
-                    RoleEnum.VEHICLE_MANAGER.value,
-                )
-            )
+        name__in=(
+            RoleEnum.CLIENT_MANAGER.value,
+            RoleEnum.RESERVATION_MANAGER.value,
+            RoleEnum.VEHICLE_MANAGER.value,
         )
+    )
+    )
     # ajax reservations stats by year
     if request.method == 'POST':
         if request.POST['which_one'] == 'reservations':
             monthly_earnings = monthly_earnings_dict(
                 reservations.
-                filter(paid=True).
-                filter(start_date__year=request.POST['year']).
-                annotate(month=TruncMonth('start_date')).
-                values('month').annotate(avg=Avg('price'))
+                    filter(paid=True).
+                    filter(start_date__year=request.POST['year']).
+                    annotate(month=TruncMonth('start_date')).
+                    values('month').annotate(avg=Avg('price'))
             )
             return JsonResponse(
                 {
@@ -123,10 +123,10 @@ def index(request):
     # reservations / annually_earnings
     annually_earnings = annually_earnings_dict(
         reservations.
-        filter(paid=True).
-        annotate(year=TruncYear('start_date')).
-        values('year').
-        annotate(avg=Avg('price'))
+            filter(paid=True).
+            annotate(year=TruncYear('start_date')).
+            values('year').
+            annotate(avg=Avg('price'))
     )
     years = [year for year in reversed(annually_earnings.keys())]
     max_year = 0 if len(years) == 0 else max(years)
@@ -136,11 +136,11 @@ def index(request):
     # reservations / monthly_earnings
     monthly_earnings = monthly_earnings_dict(
         reservations.
-        filter(paid=True).
-        filter(start_date__year=years[0] if len(years) > 0 else None).
-        annotate(month=TruncMonth('start_date')).
-        values('month').
-        annotate(avg=Avg('price'))
+            filter(paid=True).
+            filter(start_date__year=years[0] if len(years) > 0 else None).
+            annotate(month=TruncMonth('start_date')).
+            values('month').
+            annotate(avg=Avg('price'))
     )
     months = monthly_earnings.keys()
     monthly_earnings = monthly_earnings.values()
@@ -211,7 +211,7 @@ def users(request, search, setof, num_page):
             client.save()
             EmployeeLog(
                 description='Client account ' +
-                ('activated' if client.is_active else 'deactivated'),
+                            ('activated' if client.is_active else 'deactivated'),
                 status_reason=request.POST['reason'],
                 employee_id=request.user.id,
                 client_id=client_id,
@@ -230,14 +230,14 @@ def users(request, search, setof, num_page):
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
         exclude(
-            roles__in=Role.objects.filter(
-                name__in=(
-                    RoleEnum.CLIENT_MANAGER.value,
-                    RoleEnum.RESERVATION_MANAGER.value,
-                    RoleEnum.VEHICLE_MANAGER.value
-                )
+        roles__in=Role.objects.filter(
+            name__in=(
+                RoleEnum.CLIENT_MANAGER.value,
+                RoleEnum.RESERVATION_MANAGER.value,
+                RoleEnum.VEHICLE_MANAGER.value
             )
-        ). \
+        )
+    ). \
         order_by('id')
 
     if search[0] == 'id':
@@ -282,17 +282,38 @@ def users(request, search, setof, num_page):
 
 
 def reservations(request, search, setof, num_page):
+    # check user
+    if not request.user.is_authenticated:
+        return redirect('user:login')
+    user_roles = get_custom_user_roles(request.user.id)
+    if not user_roles['is_reservation_manager']:
+        return redirect('index')
+    #
     reservations = Reservation.objects.all()
 
     if request.method == 'POST':
         try:
             reservation = reservations.get(id=int(request.POST['id']))
-            reservation.paid = True
-            reservation.save()
-            PaymentLog(reservation_id=reservation.id).save()
-            return JsonResponse({
-                'reservation_is_paid': reservation.paid
-            })
+            if reservation.confirmed:
+                reservation.paid = True
+                reservation.save()
+                EmployeeLog(
+                    description='Reservation have been paid',
+                    status_reason='Client paid the reservation',
+                    employee_id=request.user.id,
+                    reservation_id=reservation.id,
+                ).save()
+                PaymentLog(
+                    reservation_id=reservation.id,
+                    employee_id=request.user.id,
+                ).save()
+                return JsonResponse({
+                    'reservation_is_paid': reservation.paid,
+                })
+            else:
+                return JsonResponse({
+                    'error': 'reservation already paid',
+                })
         except Reservation.DoesNotExist:
             return JsonResponse({
                 'error': 'reservation not found',
@@ -321,6 +342,13 @@ def reservations(request, search, setof, num_page):
         request,
         'employee/reservations.html',
         {
+            # employee
+            'employee_name': request.user.first_name + ' ' + request.user.last_name,
+            'employee_avatar_url': CustomUser.objects.get(id=request.user.id).picture.url,
+            'is_client_manager': user_roles['is_client_manager'],
+            'is_reservation_manager': user_roles['is_reservation_manager'],
+            'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            #
             'search_filter': search[0] if len(search) == 2 else '',
             'search_value': search[1] if len(search) == 2 else '',
             'search_is_active': True if len(search) == 2 else False,
@@ -337,18 +365,51 @@ def reservations(request, search, setof, num_page):
 
 
 def reservation(request, id):
+    # check user
+    if not request.user.is_authenticated:
+        return redirect('user:login')
+    user_roles = get_custom_user_roles(request.user.id)
+    if not user_roles['is_reservation_manager']:
+        return redirect('index')
+    # get reservation by id
     reservation = Reservation.objects.get(id=id)
+    # check if reservation is not affected to any user
+    if not reservation.employee_id:
+        reservation.employee_id = request.user.id
+        reservation.save()
+        EmployeeLog(
+            description='Reservation have been affected to',
+            status_reason='Reservation will be taken by',
+            employee_id=request.user.id,
+        ).save()
+    # check if reservation ownership
+    if reservation.employee_id != request.user.id:
+        return redirect('/employee/reservations/search//10/1')
+    # to be replaced by ajax
     if request.method == 'POST':
         reservation.confirmed = not reservation.confirmed
         reservation.save()
         EmployeeLog(
             description='Reservation have been ' + ('confirmed' if reservation.confirmed else 'unconfirmed'),
             status_reason=request.POST['Reason'],
-            client_id=reservation.client_id,
-            employee_id=1
+            employee_id=request.user.id,
+            reservation_id=reservation.id,
         ).save()
 
-    return render(request, 'employee/reservation.html', {"reservation": reservation, })
+    return render(
+        request,
+        'employee/reservation.html',
+        {
+            # employee
+            'employee_name': request.user.first_name + ' ' + request.user.last_name,
+            'employee_avatar_url': CustomUser.objects.get(id=request.user.id).picture.url,
+            'is_client_manager': user_roles['is_client_manager'],
+            'is_reservation_manager': user_roles['is_reservation_manager'],
+            'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            #
+            "reservation": reservation,
+        }
+    )
 
 
 def cars(request, search, setof, num_page):
@@ -367,8 +428,6 @@ def cars(request, search, setof, num_page):
         cars = cars.filter(registration_number__contains=search[1])
     elif search[0] == 'brand_name':
         cars = cars.filter(car_model__name__contains=search[1])
-
-
 
     paginator = Paginator(cars, setof)
     cars_page = paginator.get_page(num_page)
@@ -410,7 +469,7 @@ def car(request, id):
         return redirect('index')
     #
     car = Car.objects.get(id=id)
-    
+
     if request.method == 'POST':
         if request.POST['input']:
             car.is_active = not car.is_active
@@ -422,8 +481,8 @@ def car(request, id):
                 car_id=car.id,
             ).save()
     return render(
-        request, 
-        'employee/car.html', 
+        request,
+        'employee/car.html',
         {
             # employee
             'employee_name': request.user.first_name + ' ' + request.user.last_name,
