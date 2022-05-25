@@ -153,14 +153,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
-
+    <link rel="stylesheet" href="{% static 'base/js/jquery-ui-1.13.1/jquery-ui.min.css' %}">
+    <script src="{% static 'base/js/jquery-ui-1.13.1/jquery-ui.min.js' %}"></script>
     <script>
         $("#rentBtn").click(function () {
             {% if user.is_authenticated %}
                 bootbox.dialog({
                     message: `
-                        Start date : <input class="form-control" type="date" id="startDate"><br/>
-                        End date   : <input class="form-control" type="date" id="endDate">
+                        Start date : <input class="form-control" type="text" id="startDate" placeholder="mm/dd/yyyy">
+                        <br/>
+                        End date   : <input class="form-control" type="text" id="endDate" placeholder="mm/dd/yyyy">
+                        <script>
+                            console.log('hello');
+                            $('#startDate').datepicker({
+                                minDate: 0,
+                            });
+                            $('#endDate').datepicker({
+                                minDate: '+1D',
+                            });
+                        <\/script>
                     `,
                     title: 'Pick a reservation date',
                     buttons: {

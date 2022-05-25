@@ -8,6 +8,7 @@ from user.models import CustomUser
 from django.core.mail import EmailMessage
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 
 class CarListView(ListView):
@@ -57,7 +58,16 @@ class CarDetailView(DetailView):
         end = datetime.strptime(endDate, '%Y-%m-%d')
         rentdays = end - start
         newprice = float(price) * float(rentdays.days)
-        Reservation.objects.create(start_date=startDate, end_date=endDate, price=newprice, car=car, client=client)
+        reservation_date = Reservation.objects.filter(car_id=car).filter(start_date__gte=timezone.now()).values('start_date', 'end_date')
+        print(reservation_date)
+        exit()
+        Reservation.objects.create(
+            start_date=startDate,
+            end_date=endDate,
+            price=newprice,
+            car=car,
+            client=client
+        )
         email = EmailMessage(
             'JDM no reply',
             'RENT DONE  !! check My rents',
