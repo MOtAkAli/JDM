@@ -102,7 +102,8 @@ class LoginView(LoginView):
         if user.is_active:
             auth_login(self.request, form.get_user())
             user_roles = get_custom_user_roles(user.id)
-            print(user_roles)
+            if user.is_superuser:
+                return redirect('/admin/')
             if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles['is_vehicle_manager']:
                 return redirect('/employee/')
             messages.success(self.request, f'You are now logged in as {user.username}')
@@ -116,6 +117,9 @@ def update(request):
         u_form = UserUpdateForm(request.POST, instance=request.user)
         if u_form.is_valid():
             u_form.save()
+            user_roles = get_custom_user_roles(request.user.id)
+            if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles['is_vehicle_manager']:
+                return redirect('/employee/')
             messages.success(request, f'Your account has been updated!')
             return redirect('user:profil')
     else:
