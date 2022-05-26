@@ -316,7 +316,7 @@ def reservations(request, search, setof, num_page):
     elif search[0] == 'phone':
         reservations = reservations.filter(client__phone__contains=search[1])
 
-    paginator = Paginator(reservations.order_by('date_time'), setof)
+    paginator = Paginator(reservations.order_by('created_at'), setof)
     reservations_page = paginator.get_page(num_page)
     if int(num_page) > paginator.num_pages:
         num_page = paginator.num_pages
@@ -432,8 +432,8 @@ def cars(request, search, setof, num_page):
         if brand_search:
             brand_search = int(brand_search)
             cars = cars.filter(car_model__car_brand_id=brand_search)
-        if model_search:
             car_models = CarModel.objects.all().filter(car_brand_id=brand_search)
+        if model_search:
             model_search = int(model_search)
             cars = cars.filter(car_model_id=model_search)
         is_search = True
@@ -484,15 +484,17 @@ def car(request, id):
     car = Car.objects.get(id=id)
 
     if request.method == 'POST':
-        if request.POST['input']:
-            car.is_active = not car.is_active
-            car.save()
-            EmployeeLog(
-                description='Car have been ' + ('activated' if car.is_active else 'deactivated'),
-                status_reason=request.POST['reason'],
-                employee_id=request.user.id,
-                car_id=car.id,
-            ).save()
+        car.is_active = not car.is_active
+        car.save()
+        EmployeeLog(
+            description='Car have been ' + ('activated' if car.is_active else 'deactivated'),
+            status_reason=request.POST['reason'],
+            employee_id=request.user.id,
+            car_id=car.id,
+        ).save()
+        return JsonResponse({
+            'is_active': car.is_active,
+        })
     return render(
         request,
         'employee/car.html',
