@@ -5,7 +5,7 @@ django-autoslug==1.9.8
 django-cities-light==3.9.0
 django-dotenv==1.4.2
 django-filter==21.1
-Pillow==9.1.0
+Pillow==9.1.1
 progressbar2==4.0.0
 pycodestyle==2.8.0
 python-utils==3.1.0
