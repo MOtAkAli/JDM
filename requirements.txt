@@ -8,7 +8,7 @@ django-filter==21.1
 Pillow==9.1.0
 progressbar2==4.0.0
 pycodestyle==2.8.0
-python-utils==3.1.0
+python-utils==3.2.3
 pytz==2022.1
 sqlparse==0.4.2
 toml==0.10.2
