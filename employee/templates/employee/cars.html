@@ -41,7 +41,7 @@
                         </select>
                         <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="car_models">
                             <option value="">Select model</option>
-                            {% if model_search %}
+                            {% if brand_search %}
                                 {% for car_model in car_models %}
                                     <option value="{{ car_model.id }}"
                                             {% if car_model.id == model_search %} selected {% endif %}>
@@ -162,7 +162,6 @@
                                         </li>
                                     {% endif %}
                                     {% if page_has_next %}
-
                                         <li class="page-item">
                                             <a class="page-link" aria-label="Next"
                                                href="/employee/cars/search/{% if is_search %}registration_number={{ registration_number_search }}&brand={{ brand_search }}&model={{ model_search }}{% endif %}/{{ setof }}/{{ num_page_next }}">
