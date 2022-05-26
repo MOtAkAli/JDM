@@ -75,6 +75,3 @@ python manage.py runserver
 
 # `Needs to be done`
 ### Always check `requirements.txt` if there is some `new packages` to be `installed`
-### When there is big `changes` in `models` and after your merge from `origin/main` to your `working branch` you need to 
-- delete `db.sqlite3` from your local files
-- make and apply `migrations` see above in `migrations section`
