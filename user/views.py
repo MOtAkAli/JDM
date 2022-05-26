@@ -10,7 +10,7 @@ from django.contrib.auth import login as auth_login
 from cities_light.models import City
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
-from user.models import CustomUser, RoleEnum
+from user.models import CustomUser, RoleEnum, Role
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -51,6 +51,7 @@ def register(request):
                 user = form.save(commit=False)
                 user.email_token = uuid4()
                 user.save()
+                user.roles.add(Role.objects.get(name=RoleEnum.CLIENT.value))
                 domain = get_current_site(request).domain
                 activate_url = 'http://' + domain + '/user/email-verification/' + str(user.email_token)
                 email_body = render_to_string('user/email.html', {'activate_url': activate_url})

@@ -73,6 +73,10 @@ def index(request):
     if not request.user.is_authenticated:
         return redirect('user:login')
     user_roles = get_custom_user_roles(request.user.id)
+    if request.user.is_superuser:
+        return redirect('/admin/')
+    if not user_roles['is_client_manager'] or not user_roles['is_reservation_manager'] or not user_roles['is_vehicle_manager']:
+        return redirect('home:index')
     # get all()
     reservations = Reservation.objects.all()
     cars = Car.objects.all()
