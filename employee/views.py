@@ -373,10 +373,13 @@ def reservation(request, id):
         reservation.save()
         EmployeeLog(
             description='Reservation have been ' + ('confirmed' if reservation.confirmed else 'unconfirmed'),
-            status_reason=request.POST['Reason'],
+            status_reason=request.POST['reason'],
             employee_id=request.user.id,
             reservation_id=reservation.id,
         ).save()
+        return JsonResponse({
+            'confirmed': reservation.confirmed,
+        })
 
     return render(
         request,

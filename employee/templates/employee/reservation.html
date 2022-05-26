@@ -79,22 +79,68 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label" for="Reason">
-                                <strong>Reason</strong>
-                                <br>
-                            </label>
-                            <textarea class="form-control" id="Reason" rows="4" name="Reason"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <button class="btn btn-primary btn-sm" type="submit">{% if reservation.confirmed %}
-                                Unconfirm{% else %}Confirm{% endif %}</button>
-                        </div>
-                    </form>
+                    <div class="mb-3">
+                        <button class="btn btn-primary btn-sm" id="submit" type="submit">{% if reservation.confirmed %}
+                            Unconfirm{% else %}Confirm{% endif %}</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'base/js/bootbox.min.js' %}"></script>
+    <script src="{% static 'base/js/sweetalert2.all.min.js' %}"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
+    <script>
+        let btn = $('#submit');
+        btn.click(function () {
+            is_confirm = (btn.text() === 'Confirm');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to ' + btn.text() + ' this reservation ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4e73df',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    bootbox.prompt({
+                        title: "The reason ?",
+                        inputType: 'textarea',
+                        maxlength: 500,
+                        centerVertical: true,
+                        callback: function (reason) {
+                            if (reason) {
+                                $.ajax({
+                                    url: window.location.href,
+                                    type: 'POST',
+                                    data: {
+                                        'csrfmiddlewaretoken': getCookie('csrftoken'),
+                                        'reason': reason
+                                    },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        Swal.fire({
+                                            title: 'Reservation have been ' + ((response.confirmed) ? 'confirmed' : 'unconfirmed'),
+                                            icon: 'success',
+                                            confirmButtonColor: '#4e73df',
+                                        })
+                                        btn.text(((!response.confirmed) ? 'Confirm' : 'Unconfirmed'));
+                                    }
+                                });
+                            } else if (reason === '') {
+                                Swal.fire({
+                                    title: 'The reason is required',
+                                    icon: 'error',
+                                    confirmButtonColor: '#4e73df',
+                                })
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    </script>
 {% endblock %}
