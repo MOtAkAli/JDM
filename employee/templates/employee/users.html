@@ -55,7 +55,7 @@
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Address</th>
-                        <th>Active</th>
+                        <th class="text-center">Active</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,13 +65,14 @@
                             <td>{{ user.idn }}</td>
                             <td>
                                 <img class="rounded-circle me-2" width="30" height="30"
+                                     onclick="window.open('{{ user.picture.url }}','popup','width=300,height=300')"
                                      src="{{ user.picture.url }}" alt="user avatar">
                                 {{ user.first_name }} {{ user.last_name }}
                             </td>
                             <td>{{ user.birthday }}</td>
                             <td>{{ user.phone }}</td>
                             <td>{{ user.email }}</td>
-                            <td>{{ user.address }} {{ user.city }}</td>
+                            <td>{{ user.address }} {{ user.city.name }}</td>
                             <td class="text-center">
                                 <input type="checkbox" class="form-check-input" name="active" onchange="updateStatus(this, {{ user.id }})"
                                         {% if user.is_active %} checked {% endif %}>

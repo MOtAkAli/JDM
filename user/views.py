@@ -10,7 +10,7 @@ from django.contrib.auth import login as auth_login
 from cities_light.models import City
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
-from user.models import CustomUser
+from user.models import CustomUser, RoleEnum
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -19,6 +19,24 @@ from django.utils import timezone
 from uuid import uuid4
 
 User = get_user_model()
+
+
+def get_custom_user_roles(id):
+    roles = {
+        'is_client_manager': False,
+        'is_reservation_manager': False,
+        'is_vehicle_manager': False,
+    }
+    for role in CustomUser.objects.get(id=id).roles.values_list():
+        if role[1] == RoleEnum.CLIENT_MANAGER.value:
+            roles['is_client_manager'] = True
+            continue
+        if role[1] == RoleEnum.RESERVATION_MANAGER.value:
+            roles['is_reservation_manager'] = True
+            continue
+        if role[1] == RoleEnum.VEHICLE_MANAGER.value:
+            roles['is_vehicle_manager'] = True
+    return roles
 
 
 def register(request):
@@ -83,6 +101,10 @@ class LoginView(LoginView):
         user = User.objects.get(username=username)
         if user.is_active:
             auth_login(self.request, form.get_user())
+            user_roles = get_custom_user_roles(user.id)
+            print(user_roles)
+            if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles['is_vehicle_manager']:
+                return redirect('/employee/')
             messages.success(self.request, f'You are now logged in as {user.username}')
             return redirect('/')
 

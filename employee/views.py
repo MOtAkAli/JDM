@@ -3,28 +3,12 @@ from django.http import HttpResponse
 from django.http import HttpResponse, JsonResponse
 from user.models import CustomUser, Role, RoleEnum
 from django.core.paginator import Paginator
+
+from user.views import get_custom_user_roles
 from .models import Reservation, Car, CarType, PaymentLog, EmployeeLog, CarBrand, CarModel
 from django.db.models import Avg, Count
 from django.db.models.functions import TruncMonth, TruncYear
 import calendar
-
-
-def get_custom_user_roles(id):
-    roles = {
-        'is_client_manager': False,
-        'is_reservation_manager': False,
-        'is_vehicle_manager': False,
-    }
-    for role in CustomUser.objects.get(id=id).roles.values_list():
-        if role[1] == RoleEnum.CLIENT_MANAGER.value:
-            roles['is_client_manager'] = True
-            continue
-        if role[1] == RoleEnum.RESERVATION_MANAGER.value:
-            roles['is_reservation_manager'] = True
-            continue
-        if role[1] == RoleEnum.VEHICLE_MANAGER.value:
-            roles['is_vehicle_manager'] = True
-    return roles
 
 
 def monthly_earnings_dict(monthly_earnings):
@@ -96,13 +80,13 @@ def index(request):
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
         exclude(roles__in=Role.objects.filter(
-        name__in=(
-            RoleEnum.CLIENT_MANAGER.value,
-            RoleEnum.RESERVATION_MANAGER.value,
-            RoleEnum.VEHICLE_MANAGER.value,
+                name__in=(
+                    RoleEnum.CLIENT_MANAGER.value,
+                    RoleEnum.RESERVATION_MANAGER.value,
+                    RoleEnum.VEHICLE_MANAGER.value,
+                )
+            )
         )
-    )
-    )
     # ajax reservations stats by year
     if request.method == 'POST':
         if request.POST['which_one'] == 'reservations':
@@ -324,11 +308,9 @@ def reservations(request, search, setof, num_page):
     if search[0] == 'id':
         reservations = reservations.filter(client__idn__contains=search[1])
     elif search[0] == 'first_name':
-        reservations = reservations.filter(
-            client__first_name__icontains=search[1])
+        reservations = reservations.filter(client__first_name__contains=search[1])
     elif search[0] == 'last_name':
-        reservations = reservations.filter(
-            client__last_name__contains=search[1])
+        reservations = reservations.filter(client__last_name__contains=search[1])
     elif search[0] == 'email':
         reservations = reservations.filter(client__email__contains=search[1])
     elif search[0] == 'phone':
