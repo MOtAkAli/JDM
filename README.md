@@ -19,7 +19,7 @@ pip install virtualenv
 ```bash
 cd JDM
 ```
-### Create .env file and fill it
+### Create `.env` file and fill it
 ```
 cat .env-example > .env
 ```
