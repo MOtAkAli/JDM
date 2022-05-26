@@ -8,61 +8,36 @@
 {% endblock %}
 {% block content %}
     <h3 class="text-dark mb-4">Reservation</h3>
-    <div class="row mb-3">
-        <div class="">
-            <div class="row">
-                <div class="col">
-                    <div class="card shadow mb-3 w-100">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Client</p>
-                        </div>
-                        <div class="card-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col-lg-4 col-12">
-                                        <img style="height: 250px; width: 250px; "
-                                             onclick="window.open('{{ user.picture.url }}','popup','width=300,height=300')"
-                                             src="{{ reservation.client.picture.url }}">
-                                    </div>
-                                    <div class="col-lg-8 col-12 row d-flex align-items-center">
-                                        <div class="col-lg-6 col-sm-12 d-flex justify-content-center flex-column">
-                                            <div class="d-inline-block">
-                                                <label> <strong
-                                                        style=" text-decoration: underline;">Name</strong></label>
-                                                <p id="username" name="username">
-                                                    {{ reservation.client.first_name }} {{ reservation.client.last_name }}
-                                                </p>
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <label>
-                                                    <strong style="text-decoration: underline; ">Email Address</strong>
-                                                </label>
-                                                <p id="email" name="email">
-                                                    {{ reservation.client.email }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div>
-                                                <label>
-                                                    <strong style="text-decoration: underline;">Phone Number</strong>
-                                                </label>
-                                                <p id="phone" name="phone">
-                                                    {{ reservation.client.phone }}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <label>
-                                                    <strong style="text-decoration: underline; ">Address</strong>
-                                                </label>
-                                                <p id="address">
-                                                    {{ reservation.client.address }} {{ reservation.client.city.name }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+    <div>
+        <div class="row">
+            <div class="col">
+                <div class="card shadow mb-3 w-100">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Client</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <img style="height: 250px; width: 250px; "
+                                     onclick="window.open('{{ user.picture.url }}','popup','width=300,height=300')"
+                                     src="{{ reservation.client.picture.url }}">
+                            </div>
+                            <div class="col">
+                                <label> <strong style=" text-decoration: underline;">ID</strong></label>
+                                <p id="username"
+                                   name="username"> {{ reservation.client.idn }}</p>
+                                <label> <strong style=" text-decoration: underline;">Name</strong></label>
+                                <p id="username"
+                                   name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}</p>
+                                <label> <strong style="text-decoration: underline; ">Email Address</strong></label>
+                                <p id="email"
+                                   name="email">{{ reservation.client.email }}</p>
+
+                                <label><strong style="text-decoration: underline;">Phone Number</strong></label>
+                                <p id="phone" name="phone">{{ reservation.client.phone }}</p>
+                                <label><strong style="text-decoration: underline; ">Address</strong></label>
+                                <p id="address">{{ reservation.client.address }} {{ reservation.client.city }}</p>
+                            </div>
                         </div>
                     </div>
                     <div class="card shadow">

@@ -53,7 +53,8 @@
                 {% endif %}
                 {% if is_vehicle_manager %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/employee/cars/search//10/1">
+                        <a class="nav-link {% block cars_link_css_class %}{% endblock %}"
+                           href="/employee/cars/search//10/1">
                             <i class="fas fa-table"></i>
                             <span>Cars</span>
                         </a>
@@ -80,7 +81,7 @@
                                     <img class="border rounded-circle img-profile" src="{{ employee_avatar_url }}">
                                 </a>
                                 <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{% url 'user:profil' %}">
                                         <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
                                         &nbsp;Profile
                                     </a>

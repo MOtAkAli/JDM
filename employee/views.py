@@ -80,13 +80,13 @@ def index(request):
         exclude(is_superuser=True). \
         exclude(is_staff=True). \
         exclude(roles__in=Role.objects.filter(
-                name__in=(
-                    RoleEnum.CLIENT_MANAGER.value,
-                    RoleEnum.RESERVATION_MANAGER.value,
-                    RoleEnum.VEHICLE_MANAGER.value,
-                )
-            )
+        name__in=(
+            RoleEnum.CLIENT_MANAGER.value,
+            RoleEnum.RESERVATION_MANAGER.value,
+            RoleEnum.VEHICLE_MANAGER.value,
         )
+    )
+    )
     # ajax reservations stats by year
     if request.method == 'POST':
         if request.POST['which_one'] == 'reservations':
@@ -316,7 +316,7 @@ def reservations(request, search, setof, num_page):
     elif search[0] == 'phone':
         reservations = reservations.filter(client__phone__contains=search[1])
 
-    paginator = Paginator(reservations, setof)
+    paginator = Paginator(reservations.order_by('date_time'), setof)
     reservations_page = paginator.get_page(num_page)
     if int(num_page) > paginator.num_pages:
         num_page = paginator.num_pages
@@ -401,17 +401,41 @@ def cars(request, search, setof, num_page):
     user_roles = get_custom_user_roles(request.user.id)
     if not user_roles['is_vehicle_manager']:
         return redirect('index')
+    # get models by brand using ajax
+    if request.method == 'POST':
+        car_models = CarModel.objects.all().filter(car_brand_id=int(request.POST['brand_id']))
+        return JsonResponse({
+            'car_models': [[car_model.id, car_model.name] for car_model in car_models],
+        })
     #
     cars = Car.objects.all()
 
-    search = search.split('=')
+    car_brands = CarBrand.objects.all()
 
-    if search[0] == 'registration_number':
-        cars = cars.filter(registration_number__contains=search[1])
-    elif search[0] == 'brand_name':
-        cars = cars.filter(car_model__name__contains=search[1])
+    search = search.split('&')
 
-    paginator = Paginator(cars, setof)
+    registration_number_search = ''
+    brand_search = None
+    model_search = None
+    car_models = None
+    is_search = False
+
+    if len(search) == 3:
+        registration_number_search = search[0].split('=')[1]
+        brand_search = search[1].split('=')[1]
+        model_search = search[2].split('=')[1]
+        #
+        cars = cars.filter(registration_number__contains=registration_number_search)
+        if brand_search:
+            brand_search = int(brand_search)
+            cars = cars.filter(car_model__car_brand_id=brand_search)
+        if model_search:
+            car_models = CarModel.objects.all().filter(car_brand_id=brand_search)
+            model_search = int(model_search)
+            cars = cars.filter(car_model_id=model_search)
+        is_search = True
+
+    paginator = Paginator(cars.order_by('id'), setof)
     cars_page = paginator.get_page(num_page)
     if int(num_page) > paginator.num_pages:
         num_page = paginator.num_pages
@@ -426,10 +450,14 @@ def cars(request, search, setof, num_page):
             'is_client_manager': user_roles['is_client_manager'],
             'is_reservation_manager': user_roles['is_reservation_manager'],
             'is_vehicle_manager': user_roles['is_vehicle_manager'],
+            # search
+            'is_search': is_search,
+            'registration_number_search': registration_number_search,
+            'brand_search': brand_search,
+            'model_search': model_search,
             #
-            'search_filter': search[0] if len(search) == 2 else '',
-            'search_value': search[1] if len(search) == 2 else '',
-            'search_is_active': True if len(search) == 2 else False,
+            'car_models': car_models,
+            'car_brands': car_brands,
             'cars_page': cars_page,
             'count': paginator.count,
             'page_has_previous': cars_page.has_previous,
