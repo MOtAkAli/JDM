@@ -71,7 +71,7 @@ python manage.py runserver
 # `Database`
 - `LDM` (Logical Data Model)
 
-`soon to be added`
+![MLD](https://user-images.githubusercontent.com/79842485/170586342-046faf28-5a12-43ec-9c5d-6184c542a64d.png)
 
 # `Needs to be done`
 ### Always check `requirements.txt` if there is some `new packages` to be `installed`
