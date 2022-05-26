@@ -86,7 +86,7 @@ class Car(models.Model):
 class Reservation(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
-    created_at = models.DateTimeField(default=timezone.now())
+    created_at = models.DateTimeField(default=timezone.now)
     price = models.FloatField()
     paid = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
