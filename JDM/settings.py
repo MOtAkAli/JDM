@@ -131,11 +131,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# local
 MEDIA_ROOT = BASE_DIR / 'static/base/images'
-
-# production
-# MEDIA_ROOT = BASE_DIR / 'staticfiles/base/images'
 
 MEDIA_URL = '/images/'
 
