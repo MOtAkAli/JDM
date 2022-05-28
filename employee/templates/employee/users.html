@@ -33,11 +33,11 @@
                         <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
                             <option value="">Select filter</option>
                             <option value="id" {% if search_filter == 'id' %} selected {% endif %}>ID</option>
-                            <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>First
-                                name
+                            <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>
+                                First name
                             </option>
-                            <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>Last
-                                name
+                            <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>
+                                Last name
                             </option>
                             <option value="email" {% if search_filter == 'email' %} selected {% endif %}>Email</option>
                             <option value="phone" {% if search_filter == 'phone' %} selected {% endif %}>Phone</option>
@@ -72,7 +72,7 @@
                                 <img class="rounded-circle me-2" width="30" height="30"
                                      onclick="window.open('{{ user.picture.url }}','popup','width=300,height=300')"
                                      src="{{ user.picture.url }}" alt="user avatar">
-                                {{ user.first_name }} {{ user.last_name }}
+                                    {{ user.first_name }} {{ user.last_name }}
                             </td>
                             <td>{{ user.birthday }}</td>
                             <td>{{ user.phone }}</td>
