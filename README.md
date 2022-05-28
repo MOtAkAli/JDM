@@ -19,6 +19,10 @@ pip install virtualenv
 ```bash
 cd JDM
 ```
+### Create `.env` file and fill it
+```
+cat .env-example > .env
+```
 ### Create python `virtual environment`
 ```bash
 python -m venv venv
@@ -41,7 +45,6 @@ Set-ExecutionPolicy AllSigned
 ```bash
 pip install -r requirements.txt
 ```
-### You need to copy a migration from `JDM/needed` to `venv/Lib/site-packages/cities_light/migrations`
 ### Make `migrations`
 ```bash
 python manage.py makemigrations
@@ -68,10 +71,7 @@ python manage.py runserver
 # `Database`
 - `LDM` (Logical Data Model)
 
-`soon to be added`
+![MLD](https://user-images.githubusercontent.com/79842485/170586342-046faf28-5a12-43ec-9c5d-6184c542a64d.png)
 
 # `Needs to be done`
 ### Always check `requirements.txt` if there is some `new packages` to be `installed`
-### When there is big `changes` in `models` and after your merge from `origin/main` to your `working branch` you need to 
-- delete `db.sqlite3` from your local files
-- make and apply `migrations` see above in `migrations section`

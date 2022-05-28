@@ -1,0 +1,265 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block title %}
+    Cars
+{% endblock %}
+{% block cars_link_css_class %}
+    active
+{% endblock %}
+{% block content %}
+    <h3 class="text-dark mb-4">Cars</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Info</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">
+                            Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" id="show">
+                                <option value="10" {% if setof == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if setof == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if setof == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if setof == 100 %} selected {% endif %}>100</option>
+                            </select>
+                            &nbsp;
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="car_brands">
+                            <option value="">Select brand</option>
+                            {% for car_brand in car_brands %}
+                                <option value="{{ car_brand.id }}"
+                                        {% if car_brand.id == brand_search %} selected {% endif %}>
+                                    {{ car_brand.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="car_models">
+                            <option value="">Select model</option>
+                            {% if brand_search %}
+                                {% for car_model in car_models %}
+                                    <option value="{{ car_model.id }}"
+                                            {% if car_model.id == model_search %} selected {% endif %}>
+                                        {{ car_model.name }}
+                                    </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <label class="form-label">
+                            <input type="text" id="search_text" value="{{ registration_number_search }}"
+                                   class="form-control form-control-sm" aria-controls="dataTable"
+                                   placeholder="Registration number	">
+                        </label>
+                        <button class="btn btn-primary btn-sm" id="search">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Car</th>
+                            <th>Registration number</th>
+                            <th class="text-center">
+                                <img src="{% static 'employee/img/avatars/icons8-person-66.png' %}"
+                                     style="width: 30px; height: 30px;">
+                            </th>
+                            <th class="text-center">
+                                <img src="{% static 'employee/img/avatars/icons8-car-door-24.png' %}"
+                                     style="width: 30px; height: 30px;">
+                            </th>
+                            <th class="text-center">
+                                <img src="{% static 'employee/img/avatars/icons8-winter-50.png' %}"
+                                     style="width: 30px; height: 30px;">
+                            </th>
+                            <th class="text-center">Active</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for car in cars_page %}
+                            <tr class="align-middle">
+                                <td class="text-center">
+                                    <img class="rounded-circle" src="{{ car.picture.url }}"
+                                         onclick="window.open('{{ car.picture.url }}','popup','width=300,height=300')"
+                                         style="width: 150px; height: 150px;">
+                                    <br>
+                                    {{ car.car_model }}
+                                </td>
+                                <td>{{ car.registration_number }}</td>
+                                <td class="text-center">{{ car.seats }}</td>
+                                <td class="text-center">{{ car.doors }}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input" disabled {% if car.ac %}
+                                           checked {% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input" disabled {% if car.is_active %}
+                                           checked {% endif %}>
+                                </td>
+                                <td>
+                                    <a href="/employee/car/{{ car.id }}" class="btn btn-primary">Details</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th class="text-center">Car</th>
+                            <th>Registration number</th>
+                            <th class="text-center">
+                                <img src="{% static 'employee/img/avatars/icons8-person-66.png' %}"
+                                     style="width: 30px; height: 30px;">
+                            </th>
+                            <th class="text-center">
+                                <img src="{% static 'employee/img/avatars/icons8-car-door-24.png' %}"
+                                     style="width: 30px; height: 30px;">
+                            </th>
+                            <th class="text-center">
+                                <img src="{% static 'employee/img/avatars/icons8-winter-50.png' %}"
+                                     style="width: 30px; height: 30px;">
+                            </th>
+                            <th class="text-center">Active</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1
+                            to {{ setof }} of {{ count }}
+                        </p>
+                    </div>
+                    {% if page_has_previous or page_has_next %}
+                        <div class="col-md-6">
+                            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    {% if page_has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Previous"
+                                               href="/employee/cars/search/{% if is_search %}registration_number={{ registration_number_search }}&brand={{ brand_search }}&model={{ model_search }}{% endif %}/{{ setof }}/{{ num_page_previous }}">
+                                                <span aria-hidden="true">« </span></a></li>
+                                    {% endif %}
+                                    {% if page_has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/cars/search/{% if is_search %}registration_number={{ registration_number_search }}&brand={{ brand_search }}&model={{ model_search }}{% endif %}/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="page-item active">
+                                        <a class="page-link"
+                                           href="/employee/cars/search/{% if is_search %}registration_number={{ registration_number_search }}&brand={{ brand_search }}&model={{ model_search }}{% endif %}/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                    </li>
+                                    {% if page_has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="/employee/cars/search/{% if is_search %}registration_number={{ registration_number_search }}&brand={{ brand_search }}&model={{ model_search }}{% endif %}/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if page_has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" aria-label="Next"
+                                               href="/employee/cars/search/{% if is_search %}registration_number={{ registration_number_search }}&brand={{ brand_search }}&model={{ model_search }}{% endif %}/{{ setof }}/{{ num_page_next }}">
+                                                <span aria-hidden="true"> » </span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
+    <script>
+        let select_brand = $('#car_brands');
+        select_brand.change(function () {
+            if (select_brand.val()) {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': getCookie('csrftoken'),
+                        'brand_id': select_brand.val(),
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        let car_models_select = $('#car_models');
+                        car_models_select.empty().append('<option value="">Select model</option>');
+                        for (let i = 0; i < response.car_models.length; i++) {
+                            car_models_select.append(`<option value="${response.car_models[i][0]}">${response.car_models[i][1]}</option>`);
+                        }
+                    }
+                });
+            } else {
+                $('#car_models').empty().append('<option value="">Select model</option>');
+            }
+        });
+        $('#search').click(function () {
+            let registration_number = $('#search_text').val();
+            let brand = $('#car_brands').val();
+            let model = $('#car_models').val();
+            let splitInSearch = window.location.href.split('/search/');
+            if (!registration_number && !brand && !model) {
+                window.location.href = `${splitInSearch[0]}/search//10/1`;
+            } else {
+                let query = '';
+                if (registration_number) {
+                    query += `registration_number=${registration_number}`;
+                } else {
+                    query += `registration_number=`;
+                }
+                if (brand) {
+                    query += `&brand=${brand}`;
+                } else {
+                    query += `&brand=`;
+                }
+                if (model) {
+                    query += `&model=${model}`;
+                } else {
+                    query += `&model=`;
+                }
+                let afterSearchSplit = splitInSearch[1].split('/');
+                window.location.href = `${splitInSearch[0]}/search/${query}/${afterSearchSplit[1]}/${afterSearchSplit[2]}`;
+            }
+        });
+
+        let select = $('#show');
+        select.change('change', function () {
+            let registration_number = $('#search_text').val();
+            let brand = $('#car_brands').val();
+            let model = $('#car_models').val();
+            if (!registration_number && !brand && !model) {
+                window.location.href = '/employee/cars/search//' + select.val() + '/1';
+            } else {
+                let query = '';
+                if (registration_number) {
+                    query += `registration_number=${registration_number}`;
+                } else {
+                    query += `registration_number=`;
+                }
+                if (brand) {
+                    query += `&brand=${brand}`;
+                } else {
+                    query += `&brand=`;
+                }
+                if (model) {
+                    query += `&model=${model}`;
+                } else {
+                    query += `&model=`;
+                }
+                let splitInSearch = window.location.href.split('/search/');
+                window.location.href = `${splitInSearch[0]}/search/${query}/${select.val()}/1`;
+            }
+        });
+    </script>
+{% endblock %}

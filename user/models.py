@@ -21,7 +21,7 @@ class Role(models.Model):
     name = models.CharField(max_length=2, choices=ROLES, unique=True)
 
     def __str__(self):
-        return self.name
+        return dict(self.ROLES).get(self.name)
 
 
 class CustomUserManager(BaseUserManager):
@@ -52,7 +52,10 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     is_active = models.BooleanField(default=False)
-    status_reason = models.CharField(max_length=200, null=True, blank=True, default='Email need to be verified')
+    email_verified = models.BooleanField(default=False)
+    email_token = models.UUIDField(null=True, blank=True)
+    password_token = models.UUIDField(null=True, blank=True)
+    password_token_expiration = models.DateTimeField(null=True, blank=True)
     idn = models.CharField(max_length=8)
     birthday = models.DateField(null=True)
     phone = models.CharField(max_length=15)
