@@ -3,24 +3,17 @@
 {% block title %}
     My Rent
 {% endblock %}
-{% block css %}
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        td {
-        }
-    </style>
-{% endblock css %}
 {% block content %}
     <div class="container">
         {% csrf_token %}
         <table class="table table-striped table-hover text-center">
             <thead class="text-uppercase">
-                <th>car</th>
-                <th>start date</th>
-                <th>end date</th>
-                <th>price</th>
-                <th>paid</th>
-                <th>confirmed</th>
+            <th>car</th>
+            <th>start date</th>
+            <th>end date</th>
+            <th>price</th>
+            <th>paid</th>
+            <th>confirmed</th>
             </thead>
             <tbody>
             {% for Reservation in object_list %}
@@ -40,19 +33,16 @@
                         {{ Reservation.price }} DH
                     </td>
                     <td class="align-middle">
-                        <input type="checkbox" class="form-check-input" disabled {% if Reservation.paid %} checked {% endif %}>
+                        <input type="checkbox" class="form-check-input" disabled {% if Reservation.paid %}
+                               checked {% endif %}>
                     </td>
                     <td class="align-middle">
-                        <input type="checkbox" class="form-check-input" disabled {% if Reservation.confirmed %} checked {% endif %}>
+                        <input type="checkbox" class="form-check-input" disabled {% if Reservation.confirmed %}
+                               checked {% endif %}>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
-
-{% endblock %}
-
-{% block js %}
-
 {% endblock %}

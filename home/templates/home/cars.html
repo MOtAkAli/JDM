@@ -5,8 +5,8 @@
 {% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'home/rent-assets/css/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'home/uikit/all.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'home/uikit/uikit.min.css' %}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/css/uikit.min.css"
+          integrity="sha256-3yXIHp84vCKsIMzEZmizjt6Xn7SnZI1hgGd6zi2dYsw=" crossorigin="anonymous">
     <style>
         .container {
             min-height: 100vh;
@@ -149,10 +149,8 @@
             font-size: 12px;
         }
     </style>
-{% endblock %} {% block js %}
-    <script src=" {% static 'home/uikit/all.min.js' %}"></script>
-    <script src=" {% static 'home/uikit/uikit.min.js' %}"></script>
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
     <div class="section-head" style="margin-bottom: 1rem;">
         <!--  upper part  -->
         <div class="row d-flex justify-content-center">
@@ -194,7 +192,8 @@
                                     <li class="list-group-item">Doors : {{ car.doors }}</li>
                                     <li class="list-group-item">Seats : {{ car.seats }}</li>
                                     <li class="list-group-item">A/C :
-                                        <input class="form-check-input" type="checkbox" {% if car.ac %} checked {% endif %} disabled>
+                                        <input class="form-check-input" type="checkbox" {% if car.ac %}
+                                               checked {% endif %} disabled>
                                     </li>
                                     <li class="list-group-item">Gearbox : {{ car.get_gearbox_display }}</li>
                                     <li class="list-group-item">Fuel : {{ car.get_fuel_display }}</li>
@@ -222,5 +221,8 @@
             </div>
         </div>
     </div>
-
+{% endblock %}
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit.min.js"
+            integrity="sha256-EOB9/pHE8sp1057blFPubwSgoU8Kw3sLGVgNRVLWBZY=" crossorigin="anonymous"></script>
 {% endblock %}

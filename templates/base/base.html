@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="{% static 'base/css/Contact-Details.css' %}">
     <link rel="stylesheet" href="{% static 'base/css/Hero-Carousel.css' %}">
     <link rel="stylesheet" href="{% static 'base/css/styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"
+          integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <style>
         #toast {
             visibility: hidden;
@@ -164,10 +166,8 @@
             }
         }
     </style>
-    </style>
     {% block css %}
     {% endblock %}
-
 </head>
 <body>
 <nav class="navbar navbar-light navbar-expand-md">
@@ -180,7 +180,8 @@
                 <li class="nav-item"><a class="nav-link active" href="/rent/" style="color: rgba(0, 0, 0, 0.9);">Rent a
                     Car</a></li>
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link active" href="/myrents/" style="color: rgba(0, 0, 0, 0.9);">My Rents</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/myrents/" style="color: rgba(0, 0, 0, 0.9);">My
+                        Rents</a></li>
                 {% endif %}
             </ul>
             {% if user.is_authenticated %}
@@ -216,8 +217,8 @@
 {#        <small>Copyright &copy; JDM</small>#}
 {#    </div>#}
 {#</footer>#}
-<script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin="anonymous"></script>
 {% if messages %}
     {% for message in messages %}
         <script>
@@ -231,7 +232,6 @@
         </script>
     {% endfor %}
 {% endif %}
-
 {% block js %}
 {% endblock %}
 </body>

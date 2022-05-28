@@ -1,6 +1,7 @@
-{% extends 'base/base.html' %} {% load static %}
+{% extends 'base/base.html' %}
+{% load static %}
 {% block css %}
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
@@ -127,7 +128,7 @@
                         </li>
                     {% endif %}
                     <li class="list-group-item">Gearbox : {{ object.get_gearbox_display }}</li>
-                    <li class="list-group-item">Fuel : {{ object.get_fuel_display  }}</li>
+                    <li class="list-group-item">Fuel : {{ object.get_fuel_display }}</li>
                     <li class="list-group-item">year : {{ object.year }}</li>
                     <li class="list-group-item">Car Type : {{ object.car_type }}</li>
                     <li class="list-group-item">Car Model : {{ object.car_model.car_brand }}</li>
@@ -150,10 +151,15 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'base/js/bootbox.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'base/js/jquery-ui-1.13.1/jquery-ui.min.css' %}">
-    <script src="{% static 'base/js/jquery-ui-1.13.1/jquery-ui.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script>
         $("#rentBtn").click(function () {
             {% if user.is_authenticated %}
@@ -263,6 +269,4 @@
             {% endif %}
         });
     </script>
-
-
 {% endblock %}
