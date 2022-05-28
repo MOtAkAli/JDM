@@ -85,6 +85,10 @@ DATABASES = {
     }
 }
 
+# production
+# db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# DATABASES['default'].update(db_from_env)
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -117,6 +121,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+# production
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
@@ -133,11 +141,9 @@ MEDIA_URL = '/images/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth User Model
-
 AUTH_USER_MODEL = 'user.CustomUser'
 
 # CITIES_LIGHT
-
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en', 'fr']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['MA']
 
