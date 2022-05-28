@@ -136,7 +136,6 @@
 
     /* section head */
     .section-head{
-        background-image: url("./img/back.jpg");
         background-attachment: fixed;
         background-size: cover;
         background-repeat: repeat-x;
