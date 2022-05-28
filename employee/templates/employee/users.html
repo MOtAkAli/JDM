@@ -33,13 +33,18 @@
                         <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
                             <option value="">Select filter</option>
                             <option value="id" {% if search_filter == 'id' %} selected {% endif %}>ID</option>
-                            <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>First name</option>
-                            <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>Last name</option>
+                            <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>First
+                                name
+                            </option>
+                            <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>Last
+                                name
+                            </option>
                             <option value="email" {% if search_filter == 'email' %} selected {% endif %}>Email</option>
                             <option value="phone" {% if search_filter == 'phone' %} selected {% endif %}>Phone</option>
                         </select>
                         <label class="form-label">
-                            <input type="text" id="search_text" value="{{ search_value }}" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search">
+                            <input type="text" id="search_text" value="{{ search_value }}"
+                                   class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search">
                         </label>
                         <button class="btn btn-primary btn-sm" id="search">Search</button>
                     </div>
@@ -74,7 +79,8 @@
                             <td>{{ user.email }}</td>
                             <td>{{ user.address }} {{ user.city.name }}</td>
                             <td class="text-center">
-                                <input type="checkbox" class="form-check-input" name="active" onchange="updateStatus(this, {{ user.id }})"
+                                <input type="checkbox" class="form-check-input" name="active"
+                                       onchange="updateStatus(this, {{ user.id }})"
                                         {% if user.is_active %} checked {% endif %}>
                             </td>
                         </tr>
@@ -95,7 +101,8 @@
             </div>
             <div class="row">
                 <div class="col-md-6 align-self-center">
-                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to {{ setof }} of {{ count }}</p>
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1
+                        to {{ setof }} of {{ count }}</p>
                 </div>
                 {% if page_has_previous or page_has_next %}
                     <div class="col-md-6">
@@ -135,9 +142,13 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'base/js/bootbox.min.js' %}"></script>
-    <script src="{% static 'base/js/sweetalert2.all.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
     <script src="{% static 'employee/js/functions.js' %}"></script>
     <script src="{% static 'employee/js/users.html.js' %}"></script>
 {% endblock %}

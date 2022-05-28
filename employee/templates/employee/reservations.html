@@ -159,9 +159,13 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'base/js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'base/js/bootbox.min.js' %}"></script>
-    <script src="{% static 'base/js/sweetalert2.all.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
     <script src="{% static 'employee/js/functions.js' %}"></script>
     <script>
         $('#search').click(function () {
@@ -235,5 +239,3 @@
         }
     </script>
 {% endblock %}
-
-
