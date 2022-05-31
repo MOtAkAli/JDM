@@ -53,7 +53,7 @@ def register(request):
                 user.save()
                 user.roles.add(Role.objects.get(name=RoleEnum.CLIENT.value))
                 domain = get_current_site(request).domain
-                activate_url = 'https://' + domain + '/user/email-verification/' + str(user.email_token)
+                activate_url = request.scheme + '://' + domain + '/user/email-verification/' + str(user.email_token)
                 email_body = render_to_string('user/email.html', {'activate_url': activate_url})
                 message = EmailMultiAlternatives(
                     subject='Account Activation',
@@ -173,7 +173,7 @@ def password_reset(request):
             user.password_token_expiration = timezone.now() + timedelta(minutes=15)
             user.save()
             domain = get_current_site(request).domain
-            activate_url = 'https://' + domain + '/user/reset-password/' + str(user.password_token)
+            activate_url = request.scheme + '://' + domain + '/user/reset-password/' + str(user.password_token)
             email_body = 'Welcome ' + user.username + ' reset link will expires after 15 min\n ' + activate_url
             email = EmailMessage(
                 'JDM',
