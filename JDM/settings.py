@@ -29,6 +29,11 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['jdmsc.herokuapp.com', '127.0.0.1']
 
+PRODUCTION = config('PRODUCTION', cast=bool)
+
+if PRODUCTION:
+    SECURE_SSL_REDIRECT = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -86,8 +91,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-PRODUCTION = config('PRODUCTION', cast=bool)
 
 if PRODUCTION:
     db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
