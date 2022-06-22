@@ -25,7 +25,7 @@
             padding-left: 25px;
             padding-top: 15px;
             width: 100%;
-            color: white;
+            color: black;
             font-size: 20px;
             z-index: 5;
         }
@@ -90,28 +90,15 @@
 {% block content %}
     <div class="container">
         {% csrf_token %}
-        <div class="row">
-            <div class="col rounded float-start image">
-                <img
-                        class="rounded"
-                        src="{{ object.picture.url }}"
-                        width="700"
-                        height="500"
-                />
+        <div class="d-flex flex-column flex-xl-row">
+            <div class="rounded float-start image">
+                <img class="img-thumbnail border-0" src="{{ object.picture.url }}"/>
                 <div class="overlay">
-                    <b><p class="amount">{{ object.car_model.car_model_price }} MAD</p></b>
-                    <p class="h4" style="text-transform: uppercase">
-                        {{ object.car_model.name }}
-                    </p>
-                    <ul class="list-unstyled d-flex">
-                        <li><span class="fas fa-star"></span></li>
-                        <li><span class="fas fa-star"></span></li>
-                        <li><span class="fas fa-star"></span></li>
-                        <li><span class="fas fa-star"></span></li>
-                    </ul>
+                    <p class="fw-bold amount">{{ object.car_model.car_model_price }} MAD</p>
+                    <p class="h4">{{ object.car_model }}</p>
                 </div>
             </div>
-            <div class="col">
+            <div class="w-100">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Doors : {{ object.doors }}</li>
                     <li class="list-group-item">Seats : {{ object.seats }}</li>
@@ -149,7 +136,6 @@
         </div>
     </div>
 {% endblock %}
-
 {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
