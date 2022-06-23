@@ -1,81 +1,25 @@
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-        }
-
-        div.polaroid {
-            width: 200px;
-            background-color: white;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-
-        img {
-            width: 200px
-        }
-
-        div.container {
-            text-align: center;
-            padding: 5px 10px;
-        }
-
         #btn {
-            border: none;
-            color: white;
+            font-weight: bold;
             padding: 16px 32px;
-            text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
             margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
             background-color: white;
             color: black;
             border: 2px solid;
         }
-
-        #btn:hover {
-            background-color: black;
-            color: white;
-        }
     </style>
 </head>
-
 <body>
-    <table>
-        <tr>
-            <td>
-                <h2>WELCOME TO <strong>JDM</strong></h2>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h3>Verify your email to activate your account !!</h3>
-            </td>
-            <td>
-                <form action="{{ activate_url }}">
-                    <input type="submit" id="btn" value="Verify" />
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="polaroid">
-                    <img
-                        src="https://cdna.artstation.com/p/assets/images/images/026/618/688/large/armando-deguzman-nissan-skyline-r32-gtr-6.jpg">
-                    <div class="container">
-                        <p><strong>JDM</strong></p>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+<h2>WELCOME TO JDM</h2>
+<h3>Verify your email to activate your account !</h3>
+<a id="btn" href="{{ activate_url }}" target="_blank">Verify</a>
 </body>
-
 </html>
