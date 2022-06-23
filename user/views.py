@@ -56,8 +56,8 @@ def register(request):
                 activate_url = request.scheme + '://' + domain + '/user/email-verification/' + str(user.email_token)
                 email_body = render_to_string('user/email.html', {'activate_url': activate_url})
                 message = EmailMultiAlternatives(
-                    subject='Account Activation',
-                    body="mail testing",
+                    subject='Account Verification',
+                    body='Use this link to verify your account ' + activate_url,
                     from_email=settings.EMAIL_HOST_USER,
                     to=(user.email,)
                 )
