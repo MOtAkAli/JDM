@@ -1,0 +1,151 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block title %}
+    Reservation
+{% endblock %}
+{% block reservations_link_css_class %}
+    active
+{% endblock %}
+{% block content %}
+    <h3 class="text-dark mb-4">Reservation</h3>
+    <div>
+        <div class="row">
+            <div class="col">
+                <div class="card shadow mb-3 w-100">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Client</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <img style="height: 250px; width: 250px; "
+                                     onclick="window.open('{{ user.picture.url }}','popup','width=300,height=300')"
+                                     src="{{ reservation.client.picture.url }}">
+                            </div>
+                            <div class="col">
+                                <label> <strong style=" text-decoration: underline;">ID</strong></label>
+                                <p id="username"
+                                   name="username"> {{ reservation.client.idn }}</p>
+                                <label> <strong style=" text-decoration: underline;">Name</strong></label>
+                                <p id="username"
+                                   name="username"> {{ reservation.client.first_name }} {{ reservation.client.last_name }}</p>
+                                <label> <strong style="text-decoration: underline; ">Email Address</strong></label>
+                                <p id="email"
+                                   name="email">{{ reservation.client.email }}</p>
+
+                                <label><strong style="text-decoration: underline;">Phone Number</strong></label>
+                                <p id="phone" name="phone">{{ reservation.client.phone }}</p>
+                                <label><strong style="text-decoration: underline; ">Address</strong></label>
+                                <p id="address">{{ reservation.client.address }} {{ reservation.client.city }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold"> Car Details</p>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col">
+                                        <img style="height: 250px; width: 250px;"
+                                             onclick="window.open('{{ reservation.car.picture.url }}','popup','width=300,height=300')"
+                                             src="{{ reservation.car.picture.url }}" alt="">
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label"><strong style="text-decoration: underline;">Start
+                                            Date</strong></label>
+                                        <p>{{ reservation.start_date }}</p>
+                                        <label class="form-label"><strong style="text-decoration: underline;">End
+                                            Date</strong></label>
+                                        <p>{{ reservation.end_date }}</p>
+                                        <label> <strong style="text-decoration: underline;">Car Model</strong></label>
+                                        <p>{{ reservation.car.car_model }}</p>
+                                        <label> <strong style="text-decoration: underline;">Car Type</strong></label>
+                                        <p>{{ reservation.car.car_type }}</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-5">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Confirmation</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <button class="btn btn-primary btn-sm" id="submit" type="submit">
+                            {% if reservation.confirmed %}Unconfirm{% else %}Confirm{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
+    <script>
+        let btn = $('#submit');
+        btn.click(function () {
+            is_confirm = (btn.text() === 'Confirm');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to ' + btn.text() + ' this reservation ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4e73df',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    bootbox.prompt({
+                        title: "The reason ?",
+                        inputType: 'textarea',
+                        maxlength: 500,
+                        centerVertical: true,
+                        callback: function (reason) {
+                            if (reason) {
+                                $.ajax({
+                                    url: window.location.href,
+                                    type: 'POST',
+                                    data: {
+                                        'csrfmiddlewaretoken': getCookie('csrftoken'),
+                                        'reason': reason
+                                    },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        Swal.fire({
+                                            title: 'Reservation have been ' + ((response.confirmed) ? 'confirmed' : 'unconfirmed'),
+                                            icon: 'success',
+                                            confirmButtonColor: '#4e73df',
+                                        })
+                                        btn.text(((!response.confirmed) ? 'Confirm' : 'Unconfirmed'));
+                                    }
+                                });
+                            } else if (reason === '') {
+                                Swal.fire({
+                                    title: 'The reason is required',
+                                    icon: 'error',
+                                    confirmButtonColor: '#4e73df',
+                                })
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+{% endblock %}

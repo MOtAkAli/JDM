@@ -1,44 +1,22 @@
 from django.db import models
-from user.models import User
+from django.utils import timezone
+from user.models import CustomUser
+from cities_light.models import City
 
 
-class City(models.Model):
-    name = models.CharField(max_length=187)
-
-    def __str__(self):
-        return self.name
-
-
-class Employee(models.Model):
-    ROLES = (
-        ('A', 'Admin'),
-        ('R', 'Reservation'),
-        ('C', 'Car'),
-    )
-    role = models.CharField(max_length=1, choices=ROLES)
-    nic = models.CharField(max_length=8)
-    firstname = models.CharField(max_length=64)
-    lastname = models.CharField(max_length=64)
-    birthday = models.DateField()
-    phone = models.CharField(max_length=15)
-    email = models.EmailField()
-    password = models.CharField(max_length=255)
-    picture = models.CharField(max_length=260)
-    active = models.BooleanField()
+class Agency(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=15, unique=True)
     address = models.CharField(max_length=200)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.nic + " " + self.firstname + " " + self.lastname
-
-
-class EmployeeLog(models.Model):
-    description = models.CharField(max_length=500)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+        return self.name + ' ' + self.city.name
 
 
 class CarBrand(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
@@ -57,29 +35,19 @@ class CarType(models.Model):
         ('SW', 'Station Wagon'),
         ('PT', 'Pickup Truck'),
     )
-    name = models.CharField(max_length=3, choices=CAR_TYPES)
+    name = models.CharField(max_length=3, choices=CAR_TYPES, unique=True)
 
     def __str__(self):
-        return self.name
+        return dict(self.CAR_TYPES).get(self.name)
 
 
 class CarModel(models.Model):
-    name = models.CharField(max_length=150)
-    carModelPrice = models.FloatField()
-    carBrand = models.ForeignKey(CarBrand, on_delete=models.PROTECT)
+    name = models.CharField(max_length=150, unique=True)
+    car_model_price = models.FloatField()
+    car_brand = models.ForeignKey(CarBrand, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.carBrand.name + " " + self.name
-
-
-class Agency(models.Model):
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    address = models.CharField(max_length=200)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return str(self.id) + " " + self.city.name
+        return self.car_brand.name + " " + self.name
 
 
 class Car(models.Model):
@@ -96,24 +64,57 @@ class Car(models.Model):
         ('BD', 'Bio Diesel'),
         ('E', 'Ethanol'),
     )
+    registration_number = models.CharField(max_length=20, unique=True)
+    is_active = models.BooleanField(default=True)
+    description = models.CharField(max_length=2000)
     doors = models.PositiveSmallIntegerField()
     seats = models.PositiveSmallIntegerField()
     ac = models.BooleanField()
     gearbox = models.CharField(max_length=3, choices=GEARBOXES)
     fuel = models.CharField(max_length=2, choices=FUELS)
     year = models.PositiveSmallIntegerField()
-    carType = models.ForeignKey(CarType, on_delete=models.PROTECT)
-    carModel = models.ForeignKey(CarModel, on_delete=models.PROTECT)
+    picture = models.ImageField(upload_to='cars/', default='cars/default.png')
+    car_type = models.ForeignKey(CarType, on_delete=models.PROTECT)
+    car_model = models.ForeignKey(CarModel, on_delete=models.PROTECT)
     agency = models.ForeignKey(Agency, on_delete=models.PROTECT)
+    
 
     def __str__(self):
-        return self.carType.name + " " + str(self.carModel)
+        return str(self.car_type) + " " + str(self.car_model)
 
 
 class Reservation(models.Model):
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    created_at = models.DateTimeField(default=timezone.now)
     price = models.FloatField()
+    paid = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False)
     car = models.ForeignKey(Car, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    client = models.ForeignKey(CustomUser, related_name='client', on_delete=models.PROTECT)
+    employee = models.ForeignKey(CustomUser, related_name='employee', on_delete=models.PROTECT, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.car) + ' ' + str(self.start_date) + ' ' + str(self.end_date)
+
+
+class EmployeeLog(models.Model):
+    description = models.CharField(max_length=200)
+    status_reason = models.CharField(max_length=500)
+    date_time = models.DateTimeField(default=timezone.now)
+    employee = models.ForeignKey(CustomUser, related_name='employee_who_did', on_delete=models.PROTECT)
+    client = models.ForeignKey(CustomUser, null=True, blank=True, related_name='client_who_got', on_delete=models.PROTECT)
+    car = models.ForeignKey(Car, null=True, blank=True, related_name='car_who_got', on_delete=models.PROTECT)
+    reservation = models.ForeignKey(Reservation, null=True, blank=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.employee.username + ' ' + self.description
+
+
+class PaymentLog(models.Model):
+    date_time = models.DateTimeField(default=timezone.now)
+    reservation = models.OneToOneField(Reservation, on_delete=models.PROTECT)
+    employee = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.date_time) + ' ' + str(self.reservation)

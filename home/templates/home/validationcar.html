@@ -1,0 +1,258 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+
+        p {
+            margin: 0;
+        }
+
+        .container {
+            margin: 25px auto;
+        }
+
+        .image {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .image .overlay {
+            position: absolute;
+            bottom: 0;
+            padding-left: 25px;
+            padding-top: 15px;
+            width: 100%;
+            color: black;
+            font-size: 20px;
+            z-index: 5;
+        }
+
+        .image .overlay::before {
+            content: "";
+            background: #ffff;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            bottom: -150px;
+            z-index: -2;
+            opacity: 0.5;
+            transition: all 0.3s ease-out;
+        }
+
+        .image:hover .overlay {
+            color: black;
+        }
+
+        .container .image:hover .overlay .amount,
+        .container .image:hover .overlay .h4,
+        .container .image:hover .overlay .textmuted,
+        .container .image:hover .overlay .fa-star,
+        .container .image:hover .overlay .fa-star-half-alt,
+        .container .image:hover .overlay .review {
+            color: black;
+        }
+
+        .image:hover .overlay::before {
+            bottom: 0px;
+        }
+
+        .amount {
+            font-size: 15px;
+        }
+
+        .textmuted {
+            color: #f8f8f8;
+            font-weight: 200;
+            font-size: 15px;
+            text-transform: capitalize;
+        }
+
+        .fa-star,
+        .fa-star-half-alt {
+            color: white;
+            font-size: 10px;
+            margin: 0 1px;
+        }
+
+        .review {
+            font-size: 12px;
+            font-weight: 200;
+        }
+    </style>
+
+
+{% endblock css %}
+{% block content %}
+    <div class="container">
+        {% csrf_token %}
+        <div class="d-flex flex-column flex-xl-row">
+            <div class="rounded float-start image">
+                <img class="img-thumbnail border-0" src="{{ object.picture.url }}"/>
+                <div class="overlay">
+                    <p class="fw-bold amount">{{ object.car_model.car_model_price }} MAD</p>
+                    <p class="h4">{{ object.car_model }}</p>
+                </div>
+            </div>
+            <div class="w-100">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Doors : {{ object.doors }}</li>
+                    <li class="list-group-item">Seats : {{ object.seats }}</li>
+                    {% if object.ac == True %}
+                        <li class="list-group-item">
+                            A/C :
+                            <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value=""
+                                    checked
+                                    disabled
+                            />
+                        </li>
+                    {% endif %}
+                    <li class="list-group-item">Gearbox : {{ object.get_gearbox_display }}</li>
+                    <li class="list-group-item">Fuel : {{ object.get_fuel_display }}</li>
+                    <li class="list-group-item">year : {{ object.year }}</li>
+                    <li class="list-group-item">Car Type : {{ object.car_type }}</li>
+                    <li class="list-group-item">Car Model : {{ object.car_model.car_brand }}</li>
+                    <li class="list-group-item">Agency : {{ object.agency.name }} {{ object.agency.city.name }}</li>
+                    <li class="list-group-item">description : {{ object.description }}</li>
+                </ul>
+                <br/>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a
+                            id="rentBtn"
+                            class="btn btn-primary me-md-2"
+                            type="button"
+                            style="background-color: black">
+                        RENT
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script>
+        $("#rentBtn").click(function () {
+            {% if user.is_authenticated %}
+                bootbox.dialog({
+                    message: `
+                        Start date : <input class="form-control" type="text" id="startDate" placeholder="mm/dd/yyyy">
+                        <br/>
+                        End date   : <input class="form-control" type="text" id="endDate" placeholder="mm/dd/yyyy">
+                        <script>
+                            $.ajax({
+                                url: window.location.href,
+                                type: 'POST',
+                                data: {
+                                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                    'car': '{{ object.pk }}',
+                                    'need': 'date_intervals',
+                                },
+                                dataType: 'json',
+                                success: function (response) {
+                                    $('#startDate').datepicker({
+                                        minDate: 0,
+                                        beforeShowDay: function(date){
+                                            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                                            return [ response.dates.indexOf(string) == -1 ]
+                                        }
+                                    });
+                                    $('#endDate').datepicker({
+                                        minDate: '+1D',
+                                        beforeShowDay: function(date){
+                                            var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                                            return [ response.dates.indexOf(string) == -1 ]
+                                        }
+                                    });
+                                }
+                            });
+                        <\/script>
+                    `,
+                    title: 'Pick a reservation date',
+                    buttons: {
+                        main: {
+                            label: 'Rent',
+                            className: 'btn-dark',
+                            callback() {
+                                var csrftoken = "{{ csrf_token }}";
+                                var startDate = $("#startDate").val();
+                                var endDate = $("#endDate").val();
+                                var price = "{{object.car_model.car_model_price}}";
+                                var car = "{{ object.pk }}";
+                                var client = "{{ user.pk }}"
+                                data = {
+                                    csrfmiddlewaretoken: csrftoken,
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                    price: price,
+                                    car: car,
+                                    client: client
+                                }
+                                $.ajax({
+                                    method: "POST",
+                                    data: data,
+                                    url: "{% url 'home:car-detail' object.pk  %}",
+                                    success: function (response) {
+                                        if (response.error) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: response.error,
+                                                showConfirmButton: false,
+                                                timer: 2500
+                                            })
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'You rent is done \n an email is sent! \n',
+                                                showConfirmButton: false,
+                                                timer: 2500
+                                            })
+                                        }
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: errorThrown,
+                                            showConfirmButton: false,
+                                            timer: 2500
+                                        })
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+                });
+            {% else %}
+                Swal.fire({
+                    title: 'Login required to rent',
+                    text: "wanna login ?",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#000',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Login'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.replace("/user/login/")
+                    }
+                })
+            {% endif %}
+        });
+    </script>
+{% endblock %}

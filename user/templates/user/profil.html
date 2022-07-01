@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Profil
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'user/register-assets/css/styles.css' %}"/>
+{% endblock %} {% block content %}
+    <section class="position-relative py-4 py-xl-5">
+        <h2 class="text-center mb-4"><strong>PROFIL</strong></h2>
+        <div class="container position-relative justify-content-center">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+                    <div class="card mb-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="card-body p-sm-5 align-items-center ">
+                                <form
+                                        method="POST"
+                                        action="{% url 'user:profil' %}"
+                                        enctype="multipart/form-data"
+                                >
+                                    {% csrf_token %}
+                                    <div class="bs-icon-xl bs-icon-circle bs-icon my-4 align-items-center d-flex justify-content-center ">
+                                        <img class="img-thumbnail" src="{{ user.picture.url }}"
+                                             style="border: none;"/>
+                                    </div>
+                                    <div class="mb-3"></div>
+                                    {% if form.picture.errors %}
+                                        {% for error in form.picture.errors %}
+                                            <div class="invalid-feedback" style="display: block">
+                                                {{ form.picture.errors }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <div class="mb-3">
+                                        <input
+                                                class="form-control {% if form.username.errors %} is-invalid {% endif %}"
+                                                type="text"
+                                                name="username"
+                                                placeholder="Username"
+                                                value="{{ user.username }}"
+                                                required
+                                        />
+                                    </div>
+                                    {% if form.username.errors %}
+                                        {% for error in form.username.errors %}
+                                            <div class="invalid-feedback" style="display: block">
+                                                {{ form.username.errors }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <div class="mb-3">
+                                        <input
+                                                class="form-control {% if form.email.errors %} is-invalid {% endif %}"
+                                                type="email"
+                                                name="email"
+                                                placeholder="Email"
+                                                value="{{ user.email }}"
+                                                required
+                                        />
+                                    </div>
+                                    {% if form.email.errors %} {% for error in form.email.errors %}
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form.email.errors }}
+                                        </div>
+                                    {% endfor %} {% endif %}
+                                    <div class="mb-3">
+                                        <input
+                                                class="form-control {% if form.phone.errors %} is-invalid {% endif %}"
+                                                type="tel"
+                                                name="phone"
+                                                placeholder="Phone"
+                                                value="{{ user.phone }}"
+                                                required
+                                        />
+                                    </div>
+                                    {% if form.phone.errors %} {% for error in form.phone.errors %}
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form.phone.errors }}
+                                        </div>
+                                    {% endfor %} {% endif %}
+                                    <div class="mb-3">
+                                        <input
+                                                class="form-control {% if form.address.errors %} is-invalid {% endif %}"
+                                                type="text"
+                                                name="address"
+                                                placeholder="Address"
+                                                value="{{ user.address }}"
+                                                required
+                                        />
+                                    </div>
+                                    {% if form.address.errors %} {% for error in form.address.errors %}
+                                        <div class="invalid-feedback" style="display: block">
+                                            {{ form.address.errors }}
+                                        </div>
+                                    {% endfor %} {% endif %}
+                                    <div class="mb-3">
+                                        <select
+                                                class="form-control {% if form.city.errors %} is-invalid {% endif %}"
+                                                name="city"
+                                        >
+                                            <option value="none" selected disabled hidden>
+                                                select a city
+                                            </option>
+                                            {% for results in City %}
+                                                <option value="{{ results.id }}"{% if user.city.id == results.id %}
+                                                        selected {% endif %}>{{ results.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div id="divlog" class="mb-3">
+                                        <button
+                                                class="btn btn-primary d-block w-100"
+                                                type="submit"
+                                                style="background: var(--bs-gray-700); border-style: none"
+                                        >
+                                            UPDATE
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

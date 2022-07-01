@@ -1,0 +1,112 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Rent
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'home/rent-assets/css/style.css' %}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/css/uikit.min.css"
+          integrity="sha256-3yXIHp84vCKsIMzEZmizjt6Xn7SnZI1hgGd6zi2dYsw=" crossorigin="anonymous">
+{% endblock %}
+{% block content %}
+    <div class="section-head" style="margin-bottom: 1rem;">
+        <!--  upper part  -->
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-3 text-left">
+                    <div class="card-body">
+                        <h3 class="card-title">Rent a Car</h3>
+                        <form method="GET" class="row g-2" action="{% url 'home:rent' %}">
+                            {{ carsFilter.form }}
+                            <br>
+                            <div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    SEARCH
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            {% if cars %}
+                {% for car in cars %}
+                    <div class="d-flex flex-column flex-md-row align-items-center mb-5">
+                        <div class="col-md-5">
+                            <img src="{{ car.picture.url }}"
+                                 class="img-thumbnail border-0"
+                                 alt="{{ car.car_model }}"
+                            >
+                        </div>
+                        <div class="w-100">
+                            <h1 class="text-capitalize">{{ car.car_model }}</h1>
+                            <div class="d-flex justify-content-around mb-3">
+                                <div>
+                                    <img alt="Doors" src="{% static 'base/images/car_icons/door.png' %}"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ car.doors }}
+                                </div>
+                                <div>
+                                    <img alt="Seats" src="{% static 'base/images/car_icons/seat.png' %}"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ car.seats }}
+                                </div>
+                                <div>
+                                    <img alt="A/C" src="{% static 'base/images/car_icons/fan_head.png' %}"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    <input type="checkbox" class="form-check-input" disabled
+                                            {% if car.ac %} checked {% endif %}
+                                    >
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column flex-lg-row justify-content-around mb-3">
+                                <div class="mb-2">
+                                    <img alt="Gearbox" src="{% static 'base/images/car_icons/gearbox.png' %}"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ car.get_gearbox_display }}
+                                </div>
+                                <div class="mb-2">
+                                    <img alt="Fuel" src="{% static 'base/images/car_icons/fuel.png' %}"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ car.get_fuel_display }}
+                                </div>
+                                <div class="mb-2">
+                                    <img alt="Year" src="{% static 'base/images/car_icons/calendar.png' %}"
+                                        style="width: 30px; height: 30px;"
+                                    >
+                                    {{ car.year }}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="{% url 'home:car-detail' car.pk %}"
+                               class="btn btn-lg btn-outline-dark text-decoration-none rounded-pill"
+                            >
+                                Rent
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 badge bg-dark text-wrap">
+                    <h1 style="color: #ffffff;">No cars matching your search is available now. Please try
+                        later. </h1>
+                </div>
+                <div class="col-12">
+                    <img src="{% static 'base/images/icons/90421-car-in-movement.gif' %}">
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit.min.js"
+            integrity="sha256-EOB9/pHE8sp1057blFPubwSgoU8Kw3sLGVgNRVLWBZY=" crossorigin="anonymous"></script>
+{% endblock %}

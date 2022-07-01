@@ -1,0 +1,118 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block title %}
+    Car
+{% endblock %}
+{% block cars_link_css_class %}
+    active
+{% endblock %}
+{% block content %}
+    <h3 class="text-dark mb-4">Car</h3>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-3 w-100">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Info</p>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <img src="{{ car.picture.url }}" class="rounded-circle"
+                                 onclick="window.open('{{ car.picture.url }}','popup','width=300,height=300')"
+                                 style="width: 300px; height:300px; "
+                                 class="circle">
+                        </div>
+                        <div class="col">
+                            <p><strong>Brand : </strong>{{ car.car_model.car_brand }} </p>
+                            <p><strong>Doors : </strong>{{ car.doors }} </p>
+                            <p><strong>Seats : </strong>{{ car.seats }} </p>
+                            <p><strong>Gearbox : </strong>{{ car.get_gearbox_display }} </p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Model : </strong>{{ car.car_model.name }} </p>
+                            <p><strong>Fuel : </strong>{{ car.fuel }} </p>
+                            <p><strong>Year : </strong>{{ car.year }} </p>
+                            <p><strong>Type : </strong>{{ car.car_type }} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow mb-5">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Activation</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <button class="btn btn-primary btn-sm" id="submit" type="submit">
+                            {% if car.is_active %}Deactivate{% else %}Activate{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
+    <script>
+        let btn = $('#submit');
+        btn.click(function () {
+            is_active = (btn.text() === 'Activate');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to ' + btn.text() + ' this car ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4e73df',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    bootbox.prompt({
+                        title: "The reason ?",
+                        inputType: 'textarea',
+                        maxlength: 500,
+                        centerVertical: true,
+                        callback: function (reason) {
+                            if (reason) {
+                                $.ajax({
+                                    url: window.location.href,
+                                    type: 'POST',
+                                    data: {
+                                        'csrfmiddlewaretoken': getCookie('csrftoken'),
+                                        'reason': reason
+                                    },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        Swal.fire({
+                                            title: 'Car have been ' + ((response.is_active) ? 'activated' : 'deactivated'),
+                                            icon: 'success',
+                                            confirmButtonColor: '#4e73df',
+                                        })
+                                        btn.text(((!response.is_active) ? 'Activate' : 'Deactivate'));
+                                    }
+                                });
+                            } else if (reason === '') {
+                                Swal.fire({
+                                    title: 'The reason is required',
+                                    icon: 'error',
+                                    confirmButtonColor: '#4e73df',
+                                })
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+{% endblock %}

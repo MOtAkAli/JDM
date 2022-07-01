@@ -1,0 +1,154 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block title %}
+    Users
+{% endblock %}
+{% block users_link_css_class %}
+    active
+{% endblock %}
+{% block content %}
+    <h3 class="text-dark mb-4">Users</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Info</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">
+                            Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" id="show">
+                                <option value="10" {% if setof == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if setof == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if setof == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if setof == 100 %} selected {% endif %}>100</option>
+                            </select>
+                            &nbsp;
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <select class="d-inline-block w-auto mb-2 form-select form-select-sm" id="filter">
+                            <option value="">Select filter</option>
+                            <option value="id" {% if search_filter == 'id' %} selected {% endif %}>ID</option>
+                            <option value="first_name" {% if search_filter == 'first_name' %} selected {% endif %}>
+                                First name
+                            </option>
+                            <option value="last_name" {% if search_filter == 'last_name' %} selected {% endif %}>
+                                Last name
+                            </option>
+                            <option value="email" {% if search_filter == 'email' %} selected {% endif %}>Email</option>
+                            <option value="phone" {% if search_filter == 'phone' %} selected {% endif %}>Phone</option>
+                        </select>
+                        <label class="form-label">
+                            <input type="text" id="search_text" value="{{ search_value }}"
+                                   class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search">
+                        </label>
+                        <button class="btn btn-primary btn-sm" id="search">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th class="text-center">Active</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% csrf_token %}
+                    {% for user in users_page %}
+                        <tr>
+                            <td>{{ user.idn }}</td>
+                            <td>
+                                <img class="rounded-circle me-2" width="30" height="30"
+                                     onclick="window.open('{{ user.picture.url }}','popup','width=300,height=300')"
+                                     src="{{ user.picture.url }}" alt="user avatar">
+                                    {{ user.first_name }} {{ user.last_name }}
+                            </td>
+                            <td>{{ user.birthday }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.address }} {{ user.city.name }}</td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" name="active"
+                                       onchange="updateStatus(this, {{ user.id }})"
+                                        {% if user.is_active %} checked {% endif %}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td><strong>ID</strong></td>
+                        <td><strong>Name</strong></td>
+                        <td><strong>Birthday</strong></td>
+                        <td><strong>Phone</strong></td>
+                        <td><strong>Email</strong></td>
+                        <td><strong>Address</strong></td>
+                        <td><strong>Active</strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6 align-self-center">
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1
+                        to {{ setof }} of {{ count }}</p>
+                </div>
+                {% if page_has_previous or page_has_next %}
+                    <div class="col-md-6">
+                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+                                {% if page_has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" aria-label="Previous" href="/employee/users/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_previous }}">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if page_has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="/employee/users/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_previous }}">{{ num_page_previous }}</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="/employee/users/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page }}">{{ num_page }}</a>
+                                </li>
+                                {% if page_has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="/employee/users/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_next }}">{{ num_page_next }}</a>
+                                    </li>
+                                {% endif %}
+                                {% if page_has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" aria-label="Next" href="/employee/users/search/{{ search_filter }}{% if search_is_active %}={% endif %}{{ search_value }}/{{ setof }}/{{ num_page_next }}">
+                                            <span aria-hidden="true">»</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+            integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
+            integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
+    <script src="{% static 'employee/js/users.html.js' %}"></script>
+{% endblock %}

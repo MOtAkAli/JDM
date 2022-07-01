@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="icon" href="{% static 'base/img/supra logo.ico' %}">
+    <title>
+        {% block title %}
+            Blank Page
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'employee/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0">
+            <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <div class="sidebar-brand-icon">
+                    <img src="{% static 'base/img/supra logo.png' %}" width="50">
+                </div>
+                <div class="sidebar-brand-text mx-3">
+                    <span>JDM</span>
+                </div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li class="nav-item">
+                    <a class="nav-link {% block dashboard_link_css_class %}{% endblock %}" href="/employee/">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                {% if is_client_manager %}
+                    <li class="nav-item">
+                        <a class="nav-link {% block users_link_css_class %}{% endblock %}"
+                           href="/employee/users/search//10/1">
+                            <i class="fas fa-table"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_reservation_manager %}
+                    <li class="nav-item">
+                        <a class="nav-link {% block reservations_link_css_class %}{% endblock %}"
+                           href="/employee/reservations/search//10/1">
+                            <i class="fas fa-table"></i>
+                            <span>Reservations</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_vehicle_manager %}
+                    <li class="nav-item">
+                        <a class="nav-link {% block cars_link_css_class %}{% endblock %}"
+                           href="/employee/cars/search//10/1">
+                            <i class="fas fa-table"></i>
+                            <span>Cars</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="text-center d-none d-md-inline">
+                <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                <div class="container-fluid">
+                    <ul class="navbar-nav flex-nowrap ms-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <div class="nav-item dropdown no-arrow">
+                                <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
+                                   href="#">
+                                    <span class="d-none d-lg-inline me-2 text-gray-600 small">
+                                        {{ employee_name }}
+                                    </span>
+                                    <img class="border rounded-circle img-profile" src="{{ employee_avatar_url }}">
+                                </a>
+                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                                    <a class="dropdown-item" href="{% url 'user:profil' %}">
+                                        <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                                        &nbsp;Profile
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'user:logout' %}">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                        &nbsp;Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                {% block content %}
+                    <h3 class="text-dark mb-1">Blank Page</h3>
+                {% endblock %}
+            </div>
+        </div>
+        <footer class="bg-white sticky-footer">
+            <div class="container my-auto">
+                <div class="text-center my-auto copyright"><span>Copyright © JDM {% now "Y" %}</span></div>
+            </div>
+        </footer>
+    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin="anonymous"></script>
+<script src="{% static 'employee/js/theme.js' %}"></script>
+</body>
+</html>
