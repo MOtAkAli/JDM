@@ -54,15 +54,15 @@ def register(request):
                 user.roles.add(Role.objects.get(name=RoleEnum.CLIENT.value))
                 domain = get_current_site(request).domain
                 activate_url = request.scheme + '://' + domain + '/user/email-verification/' + str(user.email_token)
-                email_body = render_to_string('user/email.html', {'activate_url': activate_url})
-                message = EmailMultiAlternatives(
+                email_body = render_to_string('user/account_verification_body.html', {'activate_url': activate_url})
+                email = EmailMultiAlternatives(
                     subject='Account Verification',
-                    body='Use this link to verify your account ' + activate_url,
+                    body='Use this link to verify your account email ' + activate_url,
                     from_email=settings.EMAIL_HOST_USER,
                     to=(user.email,)
                 )
-                message.attach_alternative(email_body, "text/html")
-                message.send(fail_silently=False)
+                email.attach_alternative(email_body, "text/html")
+                email.send(fail_silently=False)
                 messages.success(request, f'Your account has been successfully created.')
                 return redirect('/')
             else:
