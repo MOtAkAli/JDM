@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rent Notification</title>
+    <style>
+        p{
+            font-size: 18px;
+        }
+        #btn {
+            font-weight: bold;
+            padding: 5px 20px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            background-color: white;
+            color: black;
+            border: 2px solid;
+        }
+    </style>
+</head>
+<body>
+    <h2>Rent Notification</h2>
+    <p>
+        Your rend of <strong>{{ car_model }}</strong> for <strong>{{ days }}</strong> days from <strong>{{ start }}</strong> to <strong>{{ end }}</strong> has been created
+        <br>
+        And we will inform you by email you when it is confirmed
+        <br>
+        Visit <a id="btn" href="{{ my_rents_url }}">My Rents</a> for details
+    </p>
+</body>
+</html>

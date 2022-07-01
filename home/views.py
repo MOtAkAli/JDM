@@ -1,15 +1,18 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from datetime import datetime, timedelta
 from employee.models import Car, Agency, CarModel, CarBrand, CarType, Reservation
 from employee.filters import CarFilter
 from user.models import CustomUser
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.conf import settings
 
 
 class CarListView(ListView):
@@ -93,7 +96,8 @@ class CarDetailView(DetailView):
             car = Car.objects.get(pk=car)
             if not error:
                 rentdays = end - start
-                newprice = float(price) * float(rentdays.days)
+                rentdays = rentdays.days + 1
+                newprice = float(price) * float(rentdays)
                 Reservation.objects.create(
                     start_date=startDate,
                     end_date=endDate,
@@ -101,12 +105,24 @@ class CarDetailView(DetailView):
                     car=car,
                     client=client
                 )
-                email = EmailMessage(
-                    'JDM no reply',
-                    'RENT DONE  !! check My rents',
-                    'jdmrent2022@gmail.com',
-                    [client.email],
+                domain = get_current_site(request).domain
+                my_rents_url = request.scheme + '://' + domain + '/myrents/'
+                email_body = render_to_string('home/rent_notification_body.html', {
+                    'car_model': car.car_model,
+                    'days': rentdays,
+                    'start': start,
+                    'end': end,
+                    'my_rents_url': my_rents_url,
+                })
+                email = EmailMultiAlternatives(
+                    subject='Rent Notification',
+                    body=f'Your rend of {car.car_model} for {rentdays} days from {start} to {end} has been created\n'
+                         f'And we will inform you by email you when it is confirmed'
+                         f'Check {my_rents_url} for details',
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=(request.user.email,)
                 )
+                email.attach_alternative(email_body, "text/html")
                 email.send(fail_silently=False)
                 messages.success(self.request, f'rent done')
             return redirect('home:index')
