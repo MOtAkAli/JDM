@@ -373,6 +373,11 @@ def reservation(request, id):
         return redirect('/employee/reservations/search//10/1')
     # to be replaced by ajax
     if request.method == 'POST':
+        if reservation.paid:
+            return JsonResponse({
+                'error': 'You can\'t unconfirme a paid reservation',
+            })
+
         reservation.confirmed = not reservation.confirmed
         reservation.save()
         EmployeeLog(
