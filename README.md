@@ -20,8 +20,13 @@ pip install virtualenv
 cd JDM
 ```
 ### Create `.env` file and fill it
-```
+```bash
 cat .env-example > .env
+```
+### Use the output of this python code to get random Django SECRET_KEY as your `SECRET_KEY` in `.env file` be aware this code needs Django to be installed use `pip install Django`
+```python
+from django.core.management import utils
+print(utils.get_random_secret_key())
 ```
 ### Create python `virtual environment`
 ```bash
