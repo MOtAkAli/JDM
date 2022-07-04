@@ -1,39 +1,68 @@
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import F
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from datetime import datetime, timedelta
-from employee.models import Car, Agency, CarModel, CarBrand, CarType, Reservation
-from employee.filters import CarFilter
+from employee.models import Car, CarBrand, Reservation, CarModel
+from cities_light.models import City
 from user.models import CustomUser
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.conf import settings
 
 
-class CarListView(ListView):
-    model = Car
-    template_name = 'home/cars.html'
-    paginate_by = 4  # if pagination is desired
-    context_object_name = 'cars'
+def cars_list(request):
+    # get car models by car brand using ajax
+    if request.method == 'POST':
+        car_models = CarModel.objects.filter(car_brand_id=int(request.POST['car_brand_id']))
+        return JsonResponse({
+            'car_models': [[car_model.id, car_model.name] for car_model in car_models],
+        })
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["brands"] = CarBrand.objects.all()
-        context["types"] = CarType.objects.all()
-        context["CarModel"] = CarModel.objects.all()
-        cars = self.model.objects.all().filter(is_active=True)
-        carsFilter = CarFilter(self.request.GET, queryset=cars)
-        cars = carsFilter.qs
+    searched_city_id = \
+        request.user.city_id if request.user.is_authenticated \
+        else City.objects.get(name__contains='Marrakesh').id
 
-        context["carsFilter"] = carsFilter
-        context["cars"] = cars
-        context['title'] = ' Rent a car '
-        return context
+    cars = Car.objects.all()
+    cities_cars = cars.values(city_id=F('agency__city_id'), city_name=F('agency__city__name')).distinct()
+    car_brands = CarBrand.objects.all()
+    car_models = None
+
+    searched_city_id = request.GET.get('city', default=searched_city_id)
+    if searched_city_id != '':
+        searched_city_id = int(searched_city_id)
+        cars = cars.filter(agency__city_id=searched_city_id)
+    else:
+        cars = cars.filter(agency__city_id=searched_city_id)
+
+    searched_car_brand_id = request.GET.get('car_brand', default='')
+    if searched_car_brand_id != '':
+        car_models = CarModel.objects.filter(car_brand_id=searched_car_brand_id)
+        searched_car_brand_id = int(searched_car_brand_id)
+        cars = cars.filter(car_model__car_brand_id=searched_car_brand_id)
+
+    searched_car_model_id = request.GET.get('car_model', default='')
+    if searched_car_model_id != '':
+        searched_car_model_id = int(searched_car_model_id)
+        cars = cars.filter(car_model_id=searched_car_model_id)
+
+    return render(
+        request,
+        'home/cars.html',
+        {
+            'car_brands': car_brands,
+            'searched_car_brand_id': searched_car_brand_id,
+            'car_models': car_models,
+            'searched_car_model_id': searched_car_model_id,
+            'cities_cars': cities_cars,
+            'searched_city_id': searched_city_id,
+            'cars': cars,
+        }
+    )
 
 
 def date_range(start, end):
@@ -66,8 +95,10 @@ class CarDetailView(DetailView):
 
     def post(self, request, *args, **kwargs):
         car = request.POST.get('car')
-        date_intervals = Reservation.objects.filter(car_id=car).filter(start_date__gte=timezone.now()).values('start_date', 'end_date')
-        dates = get_dates_from_intervals([[date_interval['start_date'], date_interval['end_date']] for date_interval in date_intervals])
+        date_intervals = Reservation.objects.filter(car_id=car).filter(start_date__gte=timezone.now()).values(
+            'start_date', 'end_date')
+        dates = get_dates_from_intervals(
+            [[date_interval['start_date'], date_interval['end_date']] for date_interval in date_intervals])
         if request.POST.get('need'):
             return JsonResponse({
                 'dates': dates,

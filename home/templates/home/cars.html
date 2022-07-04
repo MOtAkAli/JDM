@@ -9,28 +9,51 @@
           integrity="sha256-3yXIHp84vCKsIMzEZmizjt6Xn7SnZI1hgGd6zi2dYsw=" crossorigin="anonymous">
 {% endblock %}
 {% block content %}
-    <div class="section-head" style="margin-bottom: 1rem;">
-        <!--  upper part  -->
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-6">
-                <div class="card p-3 text-left">
-                    <div class="card-body">
-                        <h3 class="card-title">Rent a Car</h3>
-                        <form method="GET" class="row g-2" action="{% url 'home:rent' %}">
-                            {{ carsFilter.form }}
-                            <br>
-                            <div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    SEARCH
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <div class="container mt-5">
+        <form method="get" class="row">
+            <div class="col-sm-6 col-md-4">
+                <label class="form-label">Car Brand</label>
+                <select id="car_brands" name="car_brand" class="form-select text-dark btn-dark bg-white">
+                    <option value="">All</option>
+                    {% for car_brand in car_brands %}
+                        <option value="{{ car_brand.id }}"
+                                {% if searched_car_brand_id == car_brand.id %} selected {% endif %}
+                        >
+                            {{ car_brand }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>
-        <br>
-        <div class="container">
+            <div class="col-sm-6 col-md-4">
+                <label class="form-label">Car Model</label>
+                <select id="car_models" name="car_model" class="form-select text-dark btn-dark bg-white">
+                    <option value="">All</option>
+                    {% for car_model in car_models %}
+                        <option value="{{ car_model.id }}"
+                                {% if searched_car_model_id == car_model.id %} selected {% endif %}
+                        >
+                            {{ car_model.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-12 col-md">
+                <label class="form-label">City</label>
+                <select name="city" class="form-select text-dark btn-dark bg-white">
+                    {% for city_cars in cities_cars %}
+                        <option value="{{ city_cars.city_id }}"
+                                {% if searched_city_id == city_cars.city_id %} selected {% endif %}>
+                            {{ city_cars.city_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="text-center mt-3">
+                <input id="search" type="submit" value="search"
+                       class="col-12 col-sm-5 col-md-3 btn btn-primary btn-dark">
+            </div>
+        </form>
+        <div class="container mt-5">
             {% if cars %}
                 {% for car in cars %}
                     <div class="d-flex flex-column flex-md-row align-items-center mb-5">
@@ -45,19 +68,19 @@
                             <div class="d-flex justify-content-around mb-3">
                                 <div>
                                     <img alt="Doors" src="{% static 'base/images/car_icons/door.png' %}"
-                                        style="width: 30px; height: 30px;"
+                                         style="width: 30px; height: 30px;"
                                     >
                                     {{ car.doors }}
                                 </div>
                                 <div>
                                     <img alt="Seats" src="{% static 'base/images/car_icons/seat.png' %}"
-                                        style="width: 30px; height: 30px;"
+                                         style="width: 30px; height: 30px;"
                                     >
                                     {{ car.seats }}
                                 </div>
                                 <div>
                                     <img alt="A/C" src="{% static 'base/images/car_icons/fan_head.png' %}"
-                                        style="width: 30px; height: 30px;"
+                                         style="width: 30px; height: 30px;"
                                     >
                                     <input type="checkbox" class="form-check-input" disabled
                                             {% if car.ac %} checked {% endif %}
@@ -67,26 +90,26 @@
                             <div class="d-flex flex-column flex-lg-row justify-content-around mb-3">
                                 <div class="mb-2">
                                     <img alt="Gearbox" src="{% static 'base/images/car_icons/gearbox.png' %}"
-                                        style="width: 30px; height: 30px;"
+                                         style="width: 30px; height: 30px;"
                                     >
                                     {{ car.get_gearbox_display }}
                                 </div>
                                 <div class="mb-2">
                                     <img alt="Fuel" src="{% static 'base/images/car_icons/fuel.png' %}"
-                                        style="width: 30px; height: 30px;"
+                                         style="width: 30px; height: 30px;"
                                     >
                                     {{ car.get_fuel_display }}
                                 </div>
                                 <div class="mb-2">
                                     <img alt="Year" src="{% static 'base/images/car_icons/calendar.png' %}"
-                                        style="width: 30px; height: 30px;"
+                                         style="width: 30px; height: 30px;"
                                     >
                                     {{ car.year }}
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <a href="{% url 'home:car-detail' car.pk %}"
+                            <a href="{% url 'home:car_rent' car.id %}"
                                class="btn btn-lg btn-outline-dark text-decoration-none rounded-pill"
                             >
                                 Rent
@@ -105,8 +128,32 @@
             {% endif %}
         </div>
     </div>
-{% endblock %}
-{% block js %}
-    <script src="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/js/uikit.min.js"
-            integrity="sha256-EOB9/pHE8sp1057blFPubwSgoU8Kw3sLGVgNRVLWBZY=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="{% static 'employee/js/functions.js' %}"></script>
+    <script>
+        let brand_select = $('#car_brands');
+        brand_select.change(function () {
+            if (brand_select.val()) {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': getCookie('csrftoken'),
+                        'car_brand_id': brand_select.val(),
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        let model_select = $('#car_models');
+                        model_select.empty().append('<option value="">All</option>');
+                        for (let i = 0; i < response.car_models.length; i++) {
+                            model_select.append(`<option value="${response.car_models[i][0]}">${response.car_models[i][1]}</option>`);
+                        }
+                    }
+                });
+            } else {
+                $('#car_models').empty().append('<option value="">All</option>');
+            }
+        });
+    </script>
 {% endblock %}
