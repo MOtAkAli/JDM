@@ -23,21 +23,13 @@ def cars_list(request):
             'car_models': [[car_model.id, car_model.name] for car_model in car_models],
         })
 
-    searched_city_id = \
-        request.user.city_id if request.user.is_authenticated \
-        else City.objects.get(name__contains='Marrakesh').id
-
-    cars = Car.objects.all()
+    cars = Car.objects.filter(is_active=True)
     cities_cars = cars.values(city_id=F('agency__city_id'), city_name=F('agency__city__name')).distinct()
     car_brands = CarBrand.objects.all()
     car_models = None
 
-    searched_city_id = request.GET.get('city', default=searched_city_id)
-    if searched_city_id != '':
-        searched_city_id = int(searched_city_id)
-        cars = cars.filter(agency__city_id=searched_city_id)
-    else:
-        cars = cars.filter(agency__city_id=searched_city_id)
+    searched_city_id = int(request.GET.get('city', default=City.objects.get(name__contains='Marrakesh').id))
+    cars = cars.filter(agency__city_id=searched_city_id)
 
     searched_car_brand_id = request.GET.get('car_brand', default='')
     if searched_car_brand_id != '':
