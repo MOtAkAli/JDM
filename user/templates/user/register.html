@@ -5,46 +5,89 @@
 {% endblock %}
 {% block content %}
     <h2 class="text-center mt-3">Register</h2>
-    <form method="post" class="col-4 mx-auto my-4 p-5 border rounded shadow needs-validation" novalidate>
+    <form method="post" enctype="multipart/form-data" novalidate
+          class="col-xxl-3 col-xl-4 col-lg-5 col-md-6 col-11 mx-auto my-4 p-4 border rounded shadow needs-validation">
         {% csrf_token %}
         <div class="mb-3">
-            <input type="text" name="username" class="form-control" placeholder="Username" required>
+            <input type="text" name="username" class="form-control" placeholder="Username" required
+                   value="{{ username }}">
+            {% for error in form.username.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Username required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="text" name="first_name" class="form-control" placeholder="First name" required>
+            <input type="text" name="first_name" class="form-control" placeholder="First name" required
+                   value="{{ first_name }}">
+            {% for error in form.first_name.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 First name required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="text" name="last_name" class="form-control" placeholder="Last name" required>
+            <input type="text" name="last_name" class="form-control" placeholder="Last name" required
+                   value="{{ last_name }}">
+            {% for error in form.last_name.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Last name required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="text" name="idn" class="form-control" placeholder="ID number" required>
+            <input type="text" name="idn" class="form-control" placeholder="ID number" required
+                   value="{{ idn }}">
+            {% for error in form.idn.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 ID number required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="date" name="birthday" class="form-control" placeholder="Birthday" required>
+            <input type="date" name="birthday" class="form-control" placeholder="Birthday" required
+                   value="{{ birthday }}">
+            {% for error in form.birthday.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Birthday required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="tel" name="phone" class="form-control" placeholder="Phone number" required>
+            <input type="tel" name="phone" class="form-control" placeholder="Phone number" required
+                   value="{{ phone }}">
+            {% for error in form.phone.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Phone number required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="text" name="address" class="form-control" placeholder="Address" required>
+            <input type="text" name="address" class="form-control" placeholder="Address" required
+                   value="{{ address }}">
+            {% for error in form.address.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Address required.
             </div>
@@ -53,33 +96,58 @@
             <select class="form-select" name="city" required>
                 <option value="" selected disabled hidden>City</option>
                 {% for city in cities %}
-                    <option value="{{ city.id }}">{{ city.name }}</option>
+                    <option value="{{ city.id }}" {% if city.id == city_id %} selected {% endif %}>
+                        {{ city.name }}
+                    </option>
                 {% endfor %}
             </select>
+            {% for error in form.city.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 City required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="email" name="email" class="form-control" placeholder="Email" required>
+            <input type="email" name="email" class="form-control" placeholder="Email" required
+                   value="{{ email }}">
+            {% for error in form.email.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Email required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="password" name="password1" class="form-control" placeholder="Password" required>
+            <input type="password" name="password1" class="form-control" placeholder="Password"
+                   required>
+            {% for error in form.password1.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Password required.
             </div>
         </div>
         <div class="mb-3">
-            <input type="password" name="password2" class="form-control" placeholder="Confirm password" required>
+            <input type="password" name="password2" class="form-control" placeholder="Confirm password"
+                   required>
+            {% for error in form.password2.errors %}
+                <div class="invalid-feedback" style="display: block">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <div class="invalid-feedback">
                 Confirm password required.
             </div>
         </div>
         <div class="input-group mb-3">
-            <label class="input-group-text">Image</label>
+            <label class="input-group-text">Picture</label>
             <input type="file" name="picture" class="form-control">
         </div>
         <div class="d-grid gap-2 mt-3">
