@@ -206,7 +206,7 @@
                                 $.ajax({
                                     method: "POST",
                                     data: data,
-                                    url: "{% url 'home:car-detail' object.pk  %}",
+                                    url: "{% url 'home:car_rent' object.pk  %}",
                                     success: function (response) {
                                         if (response.error) {
                                             Swal.fire({
