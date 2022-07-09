@@ -32,7 +32,7 @@
                                 <img class="img-thumbnail" src="{% static 'base/images/icons/profile.png' %}"
                                      style="border: none;"/>
                             </div>
-                            <form class="text-center" method="post" action="{% url 'user:login' %}">
+                            <form class="text-center" method="post">
                                 {% csrf_token %}
                                 <div class="mb-3"><input class="form-control" type="text" name="username"
                                                          placeholder="Username" required>
@@ -57,16 +57,16 @@
 {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
             integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
-    {% if form.errors %}
+    {% if error %}
         <script>
+            let error_message = '{{ error_message }}'
             Swal.fire({
-                title: 'Wrong Credentials',
-                text: 'Your username or password is incorrect. Please try again',
+                text: error_message,
                 imageUrl: "{% static 'base/images/icons/wrong_credential.gif' %}",
                 imageWidth: 400,
                 imageHeight: 400,
-                imageAlt: 'Wrong Credentials',
-            })
+                imageAlt: 'Error',
+            });
         </script>
     {% endif %}
 {% endblock %}

@@ -1,22 +1,21 @@
-from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
-from .forms import UserRegisterForm, UserUpdateForm
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.urls import reverse
+from .forms import UserRegistrationForm, UserResetPasswordForm, UserUpdateForm
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.views import LoginView
-from django.contrib.auth import login as auth_login
 from cities_light.models import City
-from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from user.models import CustomUser, RoleEnum, Role
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-from django.utils import timezone
-
-from uuid import uuid4
+from django.core.validators import validate_email
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from .utils import EmailVerificationTokenGenerator
 
 User = get_user_model()
 
@@ -39,87 +38,111 @@ def get_custom_user_roles(id):
     return roles
 
 
-def register(request):
-    results = City.objects.all
+def send_email_verification(request, user):
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+    token = EmailVerificationTokenGenerator().make_token(user)
+    domain = get_current_site(request).domain
+    activate_url = request.scheme + '://' + domain + reverse('user:verify_email', args=(uidb64, token))
+    email_template = render_to_string('user/email_verification_email.html', {'activate_url': activate_url})
+    email = EmailMultiAlternatives(
+        subject='Account Verification',
+        body='Use this link to verify your account email ' + activate_url,
+        from_email=settings.EMAIL_HOST_USER,
+        to=(user.email,)
+    )
+    email.attach_alternative(email_template, "text/html")
+    email.send(fail_silently=False)
+
+
+def register_view(request):
     if request.user.is_authenticated:
-        messages.warning(request, f'Your are already logged in')
-        return render(request, '/')
-    else:
-        if request.method == 'POST':
-            form = UserRegisterForm(request.POST, request.FILES, )
-            if form.is_valid():
-                user = form.save(commit=False)
-                user.email_token = uuid4()
-                user.save()
-                user.roles.add(Role.objects.get(name=RoleEnum.CLIENT.value))
-                domain = get_current_site(request).domain
-                activate_url = request.scheme + '://' + domain + '/user/email-verification/' + str(user.email_token)
-                email_body = render_to_string('user/account_verification_body.html', {'activate_url': activate_url})
-                email = EmailMultiAlternatives(
-                    subject='Account Verification',
-                    body='Use this link to verify your account email ' + activate_url,
-                    from_email=settings.EMAIL_HOST_USER,
-                    to=(user.email,)
-                )
-                email.attach_alternative(email_body, "text/html")
-                email.send(fail_silently=False)
-                messages.success(request, f'Your account has been successfully created.')
-                return redirect('/')
-            else:
-                return render(
-                    request,
-                    'user/register.html',
-                    {
-                        'form': form,
-                        "City": results,
-                        "username": request.POST['username'],
-                        "first_name": request.POST['first_name'],
-                        "last_name": request.POST['last_name'],
-                        "email": request.POST['email'],
-                        "phone": request.POST['phone'],
-                        "idn": request.POST['idn'],
-                        "address": request.POST['address'],
-                        "city": request.POST['city'],
-                        "birthday": request.POST['birthday'],
-                        "city_id": int(request.POST['city']),
-                    }
-                )
+        messages.info(request, 'Your are already logged in.')
+        return render(request, 'home/index.html')
+
+    cities = City.objects.all()
+
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            user.roles.add(Role.objects.get(name=RoleEnum.CLIENT.value))
+            send_email_verification(request, user)
+            messages.success(request, 'Your account has been successfully created check your email.')
+            return redirect('home:index')
         else:
-            form = UserRegisterForm()
-        messages.error(request, form.errors)
-        return render(request, 'user/register.html', {'form': form, "City": results})
+            return render(
+                request,
+                'user/register.html',
+                {
+                    'form': form,
+                    'cities': cities,
+                    'username': request.POST.get('username'),
+                    'first_name': request.POST.get('first_name'),
+                    'last_name': request.POST.get('last_name'),
+                    'idn': request.POST.get('idn'),
+                    'birthday': request.POST.get('birthday'),
+                    'phone': request.POST.get('phone'),
+                    'address': request.POST.get('address'),
+                    'city_id': int(request.POST.get('city')),
+                    'email': request.POST.get('email'),
+                }
+            )
+    return render(request, 'user/register.html', {'cities': cities})
 
 
-class LoginView(LoginView):
-    template_name = 'user/login.html'
+def login_view(request):
+    if request.user.is_authenticated:
+        messages.success(request, 'You already logged in.')
+        return redirect("home:index")
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            return render(request, 'user/login.html', {
+                'error': True,
+                'error_message': 'Your username or password is incorrect. Please try again',
+            })
+        # if email is not verified
+        if not user.email_verified:
+            send_email_verification(request, user)
+            return render(request, 'user/login.html', {
+                'error': True,
+                'error_message': 'Check your email address for verification',
+            })
+        if not user.is_active:
+            return render(request, 'user/login.html', {
+                'error': True,
+                'error_message': 'Your account is deactivated contact us via jdmrent2022@gmail.com',
+            })
+        login(request, user)
+        user_roles = get_custom_user_roles(user.id)
+        if user.is_superuser:
+            return redirect('admin:index')
+        if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles[
+            'is_vehicle_manager']:
+            return redirect('employee:index')
+        messages.success(request, f'You are now logged in as {user.username}')
+        return redirect('home:index')
+    return render(request, 'user/login.html')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
-    def form_valid(self, form):
-        username = form.get_user()
-        user = User.objects.get(username=username)
-        if user.is_active:
-            auth_login(self.request, form.get_user())
-            user_roles = get_custom_user_roles(user.id)
-            if user.is_superuser:
-                return redirect('/admin/')
-            if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles['is_vehicle_manager']:
-                return redirect('/employee/')
-            messages.success(self.request, f'You are now logged in as {user.username}')
-            return redirect('/')
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'Successful logout')
+    return redirect('home:index')
 
 
 @login_required
-def update(request):
+def update_view(request):
     results = City.objects.all
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         if u_form.is_valid():
             u_form.save()
             user_roles = get_custom_user_roles(request.user.id)
-            if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles['is_vehicle_manager']:
+            if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles[
+                'is_vehicle_manager']:
                 return redirect('/employee/')
             messages.success(request, f'Your account has been updated!')
             return redirect('user:profil')
@@ -132,59 +155,78 @@ def update(request):
     return render(request, 'user/profil.html', context)
 
 
-def verify_email(request, token):
-    if request.method == 'GET':
+def verify_email_view(request, uidb64, token):
+    try:
+        user_pk = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=user_pk)
         try:
-            user = CustomUser.objects.get(email_token=token)
-            user.email_token = None
-            user.email_verified = True
-            user.is_active = True
-            user.save()
-            messages.success(request, f'Account activated!')
-            return redirect('user:login')
-        except CustomUser.DoesNotExist:
-            return redirect('home:index')
+            if not EmailVerificationTokenGenerator().check_token(user, token):
+                raise ValidationError(message='Invalid token')
+        except ValidationError:
+            return render(request, 'user/email_verification_error.html')
+        user.email_verified = True
+        user.is_active = True
+        user.save()
+        messages.success(request, 'Email verification done.')
+        return redirect('user:login')
+    except ValueError or CustomUser.DoesNotExist:
+        return render(request, 'user/email_verification_error.html')
 
 
-def reset_password(request, token):
-    if request.method == 'POST':
+def reset_password_view(request, uidb64, token):
+    try:
+        user_pk = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=user_pk)
         try:
-            user = CustomUser.objects.get(password_token=token)
-            if timezone.now() <= user.password_token_expiration:
-                user.password_token = None
-                user.password_token_expiration = None
-                user.set_password(request.POST['password2'])
-                user.save()
-                messages.success(request, f'Password reset success!')
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise ValidationError(message='Invalid token')
+        except ValidationError:
+            return render(request, 'user/password_reset_error.html')
+        if request.method == 'POST':
+            form = UserResetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Reset password success')
+                return redirect('user:login')
             else:
-                messages.error(request, f'Link expired!')
-            return redirect('user:login')
-        except CustomUser.DoesNotExist:
-            return redirect('home:index')
-    else:
-        return render(request, 'user/resetpassword.html', {'token': token})
+                return render(request, 'user/reset_password.html', {
+                    'form': form,
+                })
+        return render(request, 'user/reset_password.html')
+    except ValueError or CustomUser.DoesNotExist:
+        return render(request, 'user/password_reset_error.html')
 
 
-def password_reset(request):
+def password_reset_view(request):
     if request.method == 'POST':
         try:
-            user = CustomUser.objects.get(email=request.POST['email'])
-            user.password_token = uuid4()
-            user.password_token_expiration = timezone.now() + timedelta(minutes=15)
-            user.save()
+            email = request.POST['email']
+            validate_email(email)
+            user = CustomUser.objects.get(email=email)
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = PasswordResetTokenGenerator().make_token(user)
             domain = get_current_site(request).domain
-            activate_url = request.scheme + '://' + domain + '/user/reset-password/' + str(user.password_token)
-            email_body = 'Welcome ' + user.username + ' reset link will expires after 15 min\n ' + activate_url
-            email = EmailMessage(
-                'JDM',
-                email_body,
-                'jdmrent2022@gmail.com',
-                [user.email],
+            password_reset_url = request.scheme + '://' + domain + reverse('user:reset_password', args=(uidb64, token))
+            email_template = render_to_string('user/password_reset_email.html', {
+                'username': user.username,
+                'password_reset_url': password_reset_url,
+            })
+            email = EmailMultiAlternatives(
+                subject='Password Reset',
+                body=f'Hey {user.username} you have requested a password reset.'
+                     f'Be aware that the link will expire after 20 min.'
+                     f'{password_reset_url}',
+                from_email=settings.EMAIL_HOST_USER,
+                to=(user.email,),
             )
+            email.attach_alternative(email_template, "text/html")
             email.send(fail_silently=False)
-            messages.success(request, f'reset password link sent in email.')
-            return redirect('home:index')
+            return render(request, 'user/password_reset_done.html')
+        except ValidationError:
+            messages.error(request, 'Enter valid email address')
+            return redirect('user:password_reset')
         except CustomUser.DoesNotExist:
-            return redirect('home:index')
-    else:
-        return render(request, 'user/emailforestpassword.html')
+            messages.error(request, 'Provided email address did not match any user')
+            return redirect('user:password_reset')
+
+    return render(request, 'user/password_reset.html')

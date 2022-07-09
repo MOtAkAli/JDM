@@ -162,6 +162,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Auth User Model
 AUTH_USER_MODEL = 'user.CustomUser'
 
+LOGOUT_REDIRECT_URL = '/'
+
+# Used by the PasswordResetConfirmView.
+# 1200 s = 20 min
+PASSWORD_RESET_TIMEOUT = 1200
+
 # CITIES_LIGHT
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en', 'fr']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['MA']
