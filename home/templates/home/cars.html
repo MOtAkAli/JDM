@@ -1,13 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title %}
-    Rent
-{% endblock %}
-{% block css %}
-    <link rel="stylesheet" href="{% static 'home/rent-assets/css/style.css' %}"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.14.3/dist/css/uikit.min.css"
-          integrity="sha256-3yXIHp84vCKsIMzEZmizjt6Xn7SnZI1hgGd6zi2dYsw=" crossorigin="anonymous">
-{% endblock %}
+{% block title %}Rent{% endblock %}
 {% block content %}
     <div class="container mt-5">
         <form method="get" class="row">
@@ -122,8 +115,8 @@
                     <h1 style="color: #ffffff;">No cars matching your search is available now. Please try
                         later. </h1>
                 </div>
-                <div class="col-12">
-                    <img src="{% static 'base/images/icons/90421-car-in-movement.gif' %}">
+                <div class="col-12 text-center">
+                    <img src="{% static 'base/images/icons/car_in_movement.gif' %}">
                 </div>
             {% endif %}
         </div>
