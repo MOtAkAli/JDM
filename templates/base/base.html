@@ -3,237 +3,81 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link rel="icon" href="{% static 'base/img/supra logo.ico' %}">
-    <title>
-        {% block title %}
-            JDM
-        {% endblock %}
-    </title>
-    <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'base/css/Contact-Details.css' %}">
-    <link rel="stylesheet" href="{% static 'base/css/Hero-Carousel.css' %}">
-    <link rel="stylesheet" href="{% static 'base/css/styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"
-          integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <style>
-        #toast {
-            visibility: hidden;
-            max-width: 50px;
-            height: 50px;
-            /*margin-left: -125px;*/
-            margin: auto;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 2px;
-
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            right: 0;
-            bottom: 30px;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        #toast #img {
-            width: 50px;
-            height: 50px;
-
-            float: left;
-
-
-            box-sizing: border-box;
-
-
-            background-color: #111;
-            color: #fff;
-        }
-
-        #toast #desc {
-
-
-            color: #fff;
-
-            padding: 16px;
-
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        #toast.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, expand 0.5s 0.5s, stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, expand 0.5s 0.5s, stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
-        }
-
-        @-webkit-keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @-webkit-keyframes expand {
-            from {
-                min-width: 50px
-            }
-            to {
-                min-width: 350px
-            }
-        }
-
-        @keyframes expand {
-            from {
-                min-width: 50px
-            }
-            to {
-                min-width: 350px
-            }
-        }
-
-        @-webkit-keyframes stay {
-            from {
-                min-width: 350px
-            }
-            to {
-                min-width: 350px
-            }
-        }
-
-        @keyframes stay {
-            from {
-                min-width: 350px
-            }
-            to {
-                min-width: 350px
-            }
-        }
-
-        @-webkit-keyframes shrink {
-            from {
-                min-width: 350px;
-            }
-            to {
-                min-width: 50px;
-            }
-        }
-
-        @keyframes shrink {
-            from {
-                min-width: 350px;
-            }
-            to {
-                min-width: 50px;
-            }
-        }
-
-        @-webkit-keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 60px;
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 60px;
-                opacity: 0;
-            }
-        }
-    </style>
-    {% block css %}
-    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'base/images/landing_page/supra_logo.ico' %}">
+    <title>{% block title %}JDM{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    {% block css %}{% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-light navbar-expand-md">
-    <div class="container-fluid"><img src="{% static 'base/img/supra%20logo.png' %}" style="width: 30px;">
-        <a class="navbar-brand fs-4" href="/"><strong>JDM</strong></a>
-        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
-                class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse border-2 border-light" id="navcol-1">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item"><a class="nav-link active" href="/rent/" style="color: rgba(0, 0, 0, 0.9);">Rent a
-                    Car</a></li>
+<nav class="navbar navbar-expand-sm navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand text-decoration-none" href="{% url 'home:index' %}">
+            <img src="{% static 'base/images/landing_page/supra_logo.png' %}" alt="JDM Logo"
+                 style="width: 35px; height: 35px;">
+            <span class="fw-bold fs-4 align-middle">JDM</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active text-decoration-none" id="nav_rent" href="{% url 'home:rent' %}">
+                        Rent a Car
+                    </a>
+                </li>
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link active" href="/myrents/" style="color: rgba(0, 0, 0, 0.9);">My
-                        Rents</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-decoration-none" href="{% url 'home:my_rents' %}">
+                            My Rents
+                        </a>
+                    </li>
                 {% endif %}
             </ul>
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary border rounded-pill border-2 border-dark me-1 "
-                   style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;margin: 0px;"
-                   href="{% url 'user:profil' %}">Profil
-                </a>
-                <a class="btn btn-danger border rounded-pill border-2 border-dark ms-auto"
-                   style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;"
-                   href="{% url 'user:logout' %}">Logout
-                </a>
-            {% else %}
-                <a class="btn btn-primary border rounded-pill border-2 border-dark me-1"
-                   style="color: rgb(0,0,0);background: rgb(255,255,255);width: 85px;margin: 0px;"
-                   href="{% url 'user:register' %}">Register
-                </a>
-                <a class="btn btn-primary fw-normal text-center border rounded-pill border-2 border-light"
-                   style="color: rgba(255,255,255,0.9);background: rgba(0,0,0,0.9);width: 85px;"
-                   href="{% url 'user:login' %}">Login
-                </a>
-            {% endif %}
+            <div>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-outline-dark border border-dark border-2 rounded-pill px-4 text-decoration-none"
+                       href="{% url 'user:profil' %}">
+                        Profil
+                    </a>
+                    <a class="btn btn-outline-dark border border-dark border-2 rounded-pill px-3 text-decoration-none"
+                       href="{% url 'user:logout' %}">
+                        Logout
+                    </a>
+                {% else %}
+                    <a class="btn btn-outline-dark border border-dark border-2 rounded-pill text-decoration-none"
+                       href="{% url 'user:register' %}" style="background-color: white; color: black;">
+                        Register
+                    </a>
+                    <a class="btn btn-dark rounded-pill px-4 text-decoration-none"
+                       href="{% url 'user:login' %}">
+                        Login
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </nav>
-<div id="toast">
-    <div id="img"><img src="{% static 'base/images/icons/validate-icon-3.jpg' %}" style="max-width: 100%;"></div>
-    <div id="desc">A notification message..</div>
-</div>
-{% block content %}
-{% endblock %}
-{#<footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50">#}
-{#    <div class="container text-center">#}
-{#        <small>Copyright &copy; JDM</small>#}
-{#    </div>#}
-{#</footer>#}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin="anonymous"></script>
+{% block content %}{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.5/dist/notiflix-aio-3.2.5.min.js"
+        integrity="sha256-LQj8h+SKqntnw8M/FP7QM+3dTqgHvB1JzZMVPD868Rg=" crossorigin="anonymous"></script>
 {% for message in messages %}
     {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
         <script>
-            var x = document.getElementById("toast")
-            var message = document.getElementById("desc")
-            x.className = "show";
-            message.textContent = "{{ message }}";
-            setTimeout(function () {
-                x.className = x.className.replace("show", "");
-            }, 5000);
+            Notiflix.Notify.success('{{ message }}', {
+                position: 'center-bottom',
+                fontSize: '17px',
+                cssAnimationStyle: 'from-bottom',
+            });
         </script>
     {% endif %}
 {% endfor %}
-{% block js %}
-{% endblock %}
+{% block js %}{% endblock %}
 </body>
 </html>
