@@ -6,94 +6,100 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 {% endblock %}
 {% block content %}
-    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
-                    aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active" data-bs-interval="2500">
-                <img src="{% static 'home/images/landing_page/GTR34Skyline.jpg' %}" class="d-block w-100"
-                     alt="GTR34" style="max-height: 650px; object-fit: cover">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 class="text-capitalize animate__animated animate__zoomInUp">Nissan Skyline GT-R</h5>
+    <div class="d-flex flex-column" style="height: 91vh;">
+        <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                        aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                        aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="2500">
+                    <img src="{% static 'home/images/landing_page/GTR34Skyline.jpg' %}" class="d-block w-100"
+                         alt="GTR34" style="max-height: 65vh; object-fit: cover">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 class="text-capitalize animate__animated animate__zoomInUp">Nissan Skyline GT-R</h5>
+                    </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="2500">
+                    <img src="{% static 'home/images/landing_page/HondaNSX.jpg' %}" class="d-block w-100"
+                         alt="NSX" style="max-height: 65vh; object-fit: cover">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 class="text-capitalize animate__animated animate__zoomInUp">Honda NSX</h5>
+                    </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="2500">
+                    <img src="{% static 'home/images/landing_page/ToyotaSupraMK4.jpg' %}" class="d-block w-100"
+                         alt="MK4" style="max-height: 65vh; object-fit: cover">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 class="text-capitalize animate__animated animate__zoomInUp">toyota supra mk4</h5>
+                    </div>
                 </div>
             </div>
-            <div class="carousel-item" data-bs-interval="2500">
-                <img src="{% static 'home/images/landing_page/HondaNSX.jpg' %}" class="d-block w-100"
-                     alt="NSX" style="max-height: 650px; object-fit: cover">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 class="text-capitalize animate__animated animate__zoomInUp">Honda NSX</h5>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <div class="flex-grow-1 d-flex flex-column justify-content-evenly">
+            <figure class="container text-center animate__animated animate__zoomIn">
+                <blockquote class="blockquote">
+                    <p>I bought my wife a new car. She called and said, 'There's water in the carburettor'. I said,
+                        'Where's
+                        the car?' She said, 'In the lake'.</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                    Henry Youngman <cite title="Source Title"> - American comedian</cite>
+                </figcaption>
+            </figure>
+            <div class="d-flex flex-column flex-sm-row justify-content-evenly" style="overflow: hidden;">
+                <div class="d-flex align-items-center mb-3 mb-sm-0 animate__animated animate__bounceInLeft animate__delay-2s">
+                    <div class="col-6 d-flex justify-content-end">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                             class="bi bi-telephone-fill me-3 me-sm-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"></path>
+                        </svg>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">Phone</span>
+                        <a href="tel:+123456789" class="text-decoration-none text-black">+123456789</a>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="2500">
-                <img src="{% static 'home/images/landing_page/ToyotaSupraMK4.jpg' %}" class="d-block w-100"
-                     alt="MK4" style="max-height: 650px; object-fit: cover">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5 class="text-capitalize animate__animated animate__zoomInUp">toyota supra mk4</h5>
+                <div class="d-flex align-items-center mb-3 mb-sm-0 animate__animated animate__bounceInUp animate__delay-1s">
+                    <div class="col-6 d-flex justify-content-end">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                             class="bi bi-envelope-fill me-3 me-sm-3" viewBox="0 0 16 16">
+                            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"></path>
+                        </svg>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">Email</span>
+                        <a href="mailto:jdm@jdm.ma" class="text-decoration-none text-black">jdm@jdm.ma</a>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
-                data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
-                data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
-    <figure class="container text-center mt-5 animate__animated animate__zoomIn">
-        <blockquote class="blockquote">
-            <p>I bought my wife a new car. She called and said, 'There's water in the carburettor'. I said, 'Where's
-                the car?' She said, 'In the lake'.</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            Henry Youngman <cite title="Source Title"> - American comedian</cite>
-        </figcaption>
-    </figure>
-    <div class="d-flex flex-column flex-sm-row justify-content-evenly mt-5" style="overflow: hidden;">
-        <div class="d-flex align-items-center mb-3 mb-sm-0 animate__animated animate__bounceInLeft animate__delay-2s">
-            <div class="col-6 d-flex justify-content-end">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                     class="bi bi-telephone-fill me-3 me-sm-2" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                          d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"></path>
-                </svg>
-            </div>
-            <div class="d-flex flex-column">
-                <span class="fw-bold">Phone</span>
-                <a href="tel:+123456789" class="text-decoration-none text-black">+123456789</a>
-            </div>
-        </div>
-        <div class="d-flex align-items-center mb-3 mb-sm-0 animate__animated animate__bounceInUp animate__delay-1s">
-            <div class="col-6 d-flex justify-content-end">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                     class="bi bi-envelope-fill me-3 me-sm-3" viewBox="0 0 16 16">
-                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"></path>
-                </svg>
-            </div>
-            <div class="d-flex flex-column">
-                <span class="fw-bold">Email</span>
-                <a href="mailto:jdm@jdm.ma" class="text-decoration-none text-black">jdm@jdm.ma</a>
-            </div>
-        </div>
-        <div class="d-flex align-items-center mb-3 mb-sm-0 animate__animated animate__bounceInRight animate__delay-2s">
-            <div class="col-6 d-flex justify-content-end">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                     class="bi bi-geo-alt-fill me-3 me-sm-2" viewBox="0 0 16 16">
-                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"></path>
-                </svg>
-            </div>
-            <div class="d-flex flex-column">
-                <span class="fw-bold">Location</span>
-                <a href="https://goo.gl/maps/yis1mLAw494J4pMT7" target="_blank" class="text-decoration-none text-black">Morocco</a>
+                <div class="d-flex align-items-center mb-3 mb-sm-0 animate__animated animate__bounceInRight animate__delay-2s">
+                    <div class="col-6 d-flex justify-content-end">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                             class="bi bi-geo-alt-fill me-3 me-sm-2" viewBox="0 0 16 16">
+                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"></path>
+                        </svg>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">Location</span>
+                        <a href="https://goo.gl/maps/yis1mLAw494J4pMT7" target="_blank"
+                           class="text-decoration-none text-black">Morocco</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
