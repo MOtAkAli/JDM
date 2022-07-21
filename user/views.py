@@ -97,32 +97,32 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        if not username or not password:
+            return render(request, 'user/login.html', {
+                'error_message': 'Username and Password are required.',
+            })
         user = authenticate(request, username=username, password=password)
         if user is None:
             return render(request, 'user/login.html', {
-                'error': True,
-                'error_message': 'Your username or password is incorrect. Please try again',
+                'error_message': 'Your username or password is invalid.',
             })
         # if email is not verified
         if not user.email_verified:
             send_email_verification(request, user)
             return render(request, 'user/login.html', {
-                'error': True,
-                'error_message': 'Check your email address for verification',
+                'error_message': 'Check your email for verification.',
             })
         if not user.is_active:
             return render(request, 'user/login.html', {
-                'error': True,
-                'error_message': 'Your account is deactivated contact us via jdmrent2022@gmail.com',
+                'error_message': 'Your account is deactivated contact administration.',
             })
         login(request, user)
         user_roles = get_custom_user_roles(user.id)
         if user.is_superuser:
             return redirect('admin:index')
-        if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles[
-            'is_vehicle_manager']:
+        if user_roles['is_client_manager'] or user_roles['is_reservation_manager'] or user_roles['is_vehicle_manager']:
             return redirect('employee:index')
-        messages.success(request, f'You are now logged in as {user.username}')
+        messages.success(request, 'Successful login.')
         return redirect('home:index')
     return render(request, 'user/login.html')
 
