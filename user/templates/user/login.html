@@ -1,71 +1,52 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title %}
-    login
-{% endblock %}
-{% block css %}
-    <link rel="stylesheet" href="{% static 'user/login-assets/css/Login-Form-Basic.css' %}">
-    <link rel="stylesheet" href="{% static 'user/login-assets/css/styles.css' %}">
-    <style>
-        .swal2-title {
-            color: red;
-        }
-
-        .swal2-styled.swal2-confirm {
-            background-color: red;
-        }
-    </style>
-{% endblock %}
+{% block title %}login{% endblock %}
 {% block content %}
-    <section class="position-relative py-4 py-xl-5">
-        <div class="container">
-            <div class="row mb-5">
-                <div class="col-md-8 col-xl-6 text-center mx-auto">
-                    <h2><strong>LOGIN</strong></h2>
+    <h2 class="text-center mt-3">Login</h2>
+    <div class="container col-xxl-2 col-xl-3 col-lg-4 col-md-5 col-sm-6 col-10 mt-5 p-4 border rounded shadow">
+        <img src="{% static 'user/images/profile.png' %}" alt="user" width="70" class="d-block mx-auto mb-4">
+        <form method="post" class="mx-auto needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+                <input type="text" name="username" required class="form-control" placeholder="Username">
+                <label>Username</label>
+                <div class="invalid-feedback">
+                    Username required.
                 </div>
             </div>
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-6 col-xl-4">
-                    <div class="card mb-5">
-                        <div class="card-body d-flex flex-column align-items-center">
-                            <div class="bs-icon-xl bs-icon-circle bs-icon my-4">
-                                <img class="img-thumbnail" src="{% static 'base/images/icons/profile.png' %}"
-                                     style="border: none;"/>
-                            </div>
-                            <form class="text-center" method="post">
-                                {% csrf_token %}
-                                <div class="mb-3"><input class="form-control" type="text" name="username"
-                                                         placeholder="Username" required>
-                                </div>
-                                <div class="mb-3"><input class="form-control" type="password" name="password"
-                                                         placeholder="Password" required></div>
-                                <div class="mb-3">
-                                    <button class="btn btn-primary d-block w-100" type="submit"
-                                            style="background: var(--bs-gray-700);border-style: none;">Login
-                                    </button>
-                                    <a href="../register" style="color: var(--bs-gray-700);">Register</a></div>
-                                <a href="{% url 'user:password_reset' %}" style="color: var(--bs-gray-700);"><p
-                                        class="text-muted">Forgot your password?</p></a>
-                            </form>
-                        </div>
-                    </div>
+            <div class="form-floating">
+                <input type="password" name="password" required class="form-control" placeholder="Password">
+                <label>Password</label>
+                <div class="invalid-feedback">
+                    Password required.
                 </div>
             </div>
-        </div>
-    </section>
+            <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-secondary">Sign in</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const form = document.querySelector('.needs-validation')
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+    </script>
 {% endblock %}
 {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.17/dist/sweetalert2.all.min.js"
             integrity="sha256-RhRrbx+dLJ7yhikmlbEyQjEaFMSutv6AzLv3m6mQ6PQ=" crossorigin="anonymous"></script>
-    {% if error %}
+    {% if error_message %}
         <script>
-            let error_message = '{{ error_message }}'
             Swal.fire({
-                text: error_message,
-                imageUrl: "{% static 'base/images/icons/wrong_credential.gif' %}",
-                imageWidth: 400,
-                imageHeight: 400,
-                imageAlt: 'Error',
+                icon: 'error',
+                confirmButtonColor: '#6c757d',
+                text: '{{ error_message }}',
             });
         </script>
     {% endif %}
