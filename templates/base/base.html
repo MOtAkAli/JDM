@@ -43,10 +43,11 @@
                        href="{% url 'user:profil' %}">
                         Profil
                     </a>
-                    <a class="btn btn-outline-dark border border-dark border-2 rounded-pill px-3 text-decoration-none"
-                       href="{% url 'user:logout' %}">
-                        Logout
-                    </a>
+                    <form method="post" action="{% url 'user:logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <input type="submit" value="Logout"
+                               class="btn btn-outline-dark border border-dark border-2 rounded-pill px-3">
+                    </form>
                 {% else %}
                     <a class="btn btn-outline-dark border border-dark border-2 rounded-pill text-decoration-none"
                        href="{% url 'user:register' %}" style="background-color: white; color: black;">
@@ -71,6 +72,14 @@
     {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
         <script>
             Notiflix.Notify.success('{{ message }}', {
+                position: 'center-bottom',
+                fontSize: '17px',
+                cssAnimationStyle: 'from-bottom',
+            });
+        </script>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+            Notiflix.Notify.failure('{{ message }}', {
                 position: 'center-bottom',
                 fontSize: '17px',
                 cssAnimationStyle: 'from-bottom',

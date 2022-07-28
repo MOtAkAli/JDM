@@ -128,8 +128,12 @@ def login_view(request):
 
 
 def logout_view(request):
-    logout(request)
-    messages.success(request, 'Successful logout')
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, 'Successful logout')
+        return redirect('home:index')
+
+    messages.error(request, 'Unsuccessful logout')
     return redirect('home:index')
 
 
